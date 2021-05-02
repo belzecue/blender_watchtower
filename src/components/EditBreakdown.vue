@@ -1,7 +1,19 @@
 <template>
-  <div class="hello">
+  <div class="container">
     <h1>{{ msg }}</h1>
-    <video-player :options="videoOptions"/>
+    <div class="columns">
+      <div class="column is-two-thirds">
+        The Grid
+      </div>
+      <div class="column">
+        <video-player :options="videoOptions"/>
+        <div>Properties editor</div>
+      </div>
+    </div>
+    <div class="columns">
+      <div>Timeline</div>
+    </div>
+
   </div>
 </template>
 
