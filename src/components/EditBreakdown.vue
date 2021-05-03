@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
     <div class="columns">
       <div class="column is-two-thirds">
-        The Grid
+        <thumbnail-view></thumbnail-view>
       </div>
       <div class="column">
         <video-player :options="videoOptions"/>
@@ -20,11 +20,13 @@
 <script>
 
 import VideoPlayer from "./VideoPlayer.vue";
+import ThumbnailView from "./ThumbnailView";
 
 export default {
   name: 'EditBreakdown',
   components: {
-    VideoPlayer
+    VideoPlayer,
+    ThumbnailView
   },
   props: {
     msg: String
@@ -62,5 +64,9 @@ li {
 }
 a {
   color: #42b983;
+}
+canvas {
+  border: 2px solid black;
+  background-color: black;
 }
 </style>
