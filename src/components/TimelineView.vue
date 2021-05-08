@@ -16,6 +16,7 @@ export default {
   name: "TimelineView",
   props: {
     currentFrame: Number,
+    totalFrames: Number,
   },
   data () {
     return {
@@ -156,12 +157,8 @@ export default {
       );
 
       // Determine playhead position
-      const total_frames = 1700;
-      const curr_frame = this.currentFrame;
       const rect = this.canvasRect;
-      const playhead_pos = curr_frame * rect.width / total_frames;
-      console.log(playhead_pos);
-
+      const playhead_pos = this.currentFrame * rect.width / this.totalFrames;
       const playhead_pos_shader = (playhead_pos / rect.width) * 2.0 - 1.0;
       const pixel = 0.01;
       const playhead_triangle_width = 16.0;

@@ -13,7 +13,7 @@
     </div>
     <div class="columns is-gapless">
       <div class="column is-full">
-        <TimelineView :current-frame="currentFrame"/>
+        <TimelineView :current-frame="currentFrame" :total-frames="totalFrames"/>
       </div>
     </div>
 
@@ -35,6 +35,7 @@ export default {
   data () {
     return {
       currentFrame: 0,
+      totalFrames:1700, // WIP
       videoOptions: {
         autoplay: true,
         controls: true,
