@@ -39,8 +39,10 @@ function initCanvas() {
 
   // Fragment shader.
   const fs_source = `
+    uniform highp vec4 fill_color;
+
     void main() {
-      gl_FragColor = vec4(0.3, 0.0, 0.3, 1.0);
+      gl_FragColor = fill_color;
     }
   `;
 
@@ -53,6 +55,9 @@ function initCanvas() {
     attrs: {
       vertex_pos: bind_attr(gl, shader_program, 'v_pos'),
     },
+    uniforms: {
+      fill_color: gl.getUniformLocation(shader_program, 'fill_color'),
+    }
   };
 
   // Create data for the shader to use
@@ -66,6 +71,8 @@ function initCanvas() {
   const pos_buffer = gl.createBuffer(); // Generate a buffer ID
   gl.bindBuffer(gl.ARRAY_BUFFER, pos_buffer);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
+
+  const playhead_pos_buffer = gl.createBuffer(); // Generate a buffer ID
 
   // Make the draw call tick
   //var last_timestamp = 0; // Start time in ms
@@ -87,14 +94,14 @@ function initCanvas() {
   function resizeCanvas() {
     canvas.width = canvasContainer.offsetWidth;
     canvas.height = 100;
-    draw(gl, program_info, { pos: pos_buffer });
+    draw(gl, program_info, { pos: pos_buffer }, playhead_pos_buffer);
   }
 
-  draw(gl, program_info, { pos: pos_buffer });
+  draw(gl, program_info, { pos: pos_buffer }, playhead_pos_buffer);
 }
 
 
-function draw(gl, program_info, buffers) {
+function draw(gl, program_info, buffers, playhead_pos_buffer) {
 
   // Clear the color buffer with specified clear color
   gl.clearColor(0.18, 0.18, 0.18, 1.0);
@@ -114,9 +121,40 @@ function draw(gl, program_info, buffers) {
     0          // Pointer offset to start of data
   );
 
+  // Set the color
+  gl.uniform4f(program_info.uniforms.fill_color, 0.0, 0.4, 0.4, 1.0);
+
   gl.drawArrays(gl.TRIANGLE_STRIP,
     0, // Offset.
     4  // Vertex count.
+  );
+
+  // Bind the playhead position to the position vertex data
+  // Transfer data to GPU
+  const playhead_position = new Float32Array([
+       0.07,  0.35,
+      -0.07,  0.35,
+       0.01,  0.2,
+      -0.01,  0.2,
+       0.01, -0.7,
+      -0.01, -0.7,
+  ]);
+  // Upload the buffer data to the GPU memory
+  gl.bindBuffer(gl.ARRAY_BUFFER, playhead_pos_buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, playhead_position, gl.STATIC_DRAW);
+  gl.vertexAttribPointer(
+    program_info.attrs.vertex_pos, // Shader attribute index
+    2,         // Number of elements per vertex
+    gl.FLOAT,  // Data type of each element
+    false,     // Normalized?
+    0,         // Stride if data is interleaved
+    0          // Pointer offset to start of data
+  );
+  gl.uniform4f(program_info.uniforms.fill_color, 0.4, 0.4, 0.4, 1.0);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP,
+    0, // Offset.
+    6  // Vertex count.
   );
 
   gl.disableVertexAttribArray(program_info.attrs.vertex_pos);
