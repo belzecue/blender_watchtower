@@ -5,6 +5,9 @@
 </template>
 
 <script>
+
+import { init_shader_program, bind_attr } from './../shading.js';
+
 export default {
   name: "TimelineView",
   mounted: function () {
@@ -16,17 +19,6 @@ export default {
 function initCanvas() {
   const canvas = document.getElementById('canvas-timeline');
   const canvasContainer = document.getElementById('canvas-timeline-container');
-
-  canvas.width = canvasContainer.offsetWidth;
-  canvas.height = 100;
-  // Resize the canvas to fill browser window dynamically
-  window.addEventListener('resize', resizeCanvas, false);
-
-  function resizeCanvas() {
-    canvas.width = canvasContainer.offsetWidth;
-    canvas.height = 100;
-    draw(canvas);
-  }
 
   // Initialize the GL context.
   const gl = canvas.getContext('webgl');
@@ -81,13 +73,25 @@ function initCanvas() {
   //  const delta_ms = timestamp - last_timestamp;
   //  last_timestamp = timestamp;
 
-    draw(gl, program_info, { pos: pos_buffer });
+    //draw(gl, program_info, { pos: pos_buffer });
 
   //  requestAnimationFrame(render);
   //}
   //requestAnimationFrame(render);
-}
 
+  canvas.width = canvasContainer.offsetWidth;
+  canvas.height = 100;
+  // Resize the canvas to fill browser window dynamically
+  window.addEventListener('resize', resizeCanvas, false);
+
+  function resizeCanvas() {
+    canvas.width = canvasContainer.offsetWidth;
+    canvas.height = 100;
+    draw(gl, program_info, { pos: pos_buffer });
+  }
+
+  draw(gl, program_info, { pos: pos_buffer });
+}
 
 
 function draw(gl, program_info, buffers) {
@@ -118,60 +122,6 @@ function draw(gl, program_info, buffers) {
   gl.disableVertexAttribArray(program_info.attrs.vertex_pos);
   gl.useProgram(null);
 }
-
-
-// Get the shader location of an attribute of a shader by name.
-function bind_attr(gl, program, attr_name) {
-  const attr_idx = gl.getAttribLocation(program, attr_name);
-  if (attr_idx == -1)
-    console.error("Can not bind attribute'", attr_name, "'for shader.");
-  return attr_idx;
-}
-
-
-// Initialize a shader program with th given vertex and fragment shader source code.
-function init_shader_program(gl, vs_source, fs_source) {
-
-  const vs = load_shader(gl, gl.VERTEX_SHADER, vs_source);
-  const fs = load_shader(gl, gl.FRAGMENT_SHADER, fs_source);
-
-  // Create the shader program
-  const program = gl.createProgram();
-  gl.attachShader(program, vs);
-  gl.attachShader(program, fs);
-  gl.linkProgram(program);
-
-  // Check for failure
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('An error occurred compiling a shader program: ' + gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
-    return null;
-  }
-
-  return program;
-}
-
-
-// Creates a shader of the given type with the given source code and compiles it.
-function load_shader(gl, shader_type, source_code) {
-
-  const shader = gl.createShader(shader_type);
-
-  console.log("Compiling", (shader_type==gl.VERTEX_SHADER)? "Vertex" : "Fragment", "Shader...");
-
-  gl.shaderSource(shader, source_code);
-  gl.compileShader(shader);
-
-  // See if it compiled successfully
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error('An error occurred compiling a shader: ' + gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
-
-  return shader;
-}
-
 
 </script>
 
