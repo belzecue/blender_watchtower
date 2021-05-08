@@ -1,12 +1,12 @@
 <template>
-  <div id="canvas-thumb-grid-container" class="column">
-    <canvas id="canvas-thumb-grid"></canvas>
+  <div id="canvas-timeline-container" class="column">
+    <canvas id="canvas-timeline"></canvas>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ThumbnailView",
+  name: "TimelineView",
   mounted: function () {
     initCanvas();
   },
@@ -14,17 +14,17 @@ export default {
 
 
 function initCanvas() {
-  const canvas = document.getElementById('canvas-thumb-grid');
-  const canvasContainer = document.getElementById('canvas-thumb-grid-container');
+  const canvas = document.getElementById('canvas-timeline');
+  const canvasContainer = document.getElementById('canvas-timeline-container');
 
   canvas.width = canvasContainer.offsetWidth;
-  canvas.height = window.innerHeight - 400;
+  canvas.height = 100;
   // Resize the canvas to fill browser window dynamically
   window.addEventListener('resize', resizeCanvas, false);
 
   function resizeCanvas() {
     canvas.width = canvasContainer.offsetWidth;
-    canvas.height = window.innerHeight - 400;
+    canvas.height = 100;
     draw(canvas);
   }
 
@@ -39,23 +39,16 @@ function initCanvas() {
   // Vertex shader.
   const vs_source = `
     attribute vec2 v_pos;
-    attribute vec2 v_tex_coord;
-
-    varying highp vec2 tex_coord;
 
     void main() {
       gl_Position = vec4(v_pos, 0.0, 1.0);
-      tex_coord = v_tex_coord;
     }
   `;
 
   // Fragment shader.
   const fs_source = `
-    uniform sampler2D sampler;
-    varying highp vec2 tex_coord;
-
     void main() {
-      gl_FragColor = texture2D(sampler, tex_coord);
+      gl_FragColor = vec4(0.3, 0.0, 0.3, 1.0);
     }
   `;
 
@@ -67,11 +60,7 @@ function initCanvas() {
     program: shader_program,
     attrs: {
       vertex_pos: bind_attr(gl, shader_program, 'v_pos'),
-      tex_coord: bind_attr(gl, shader_program, 'v_tex_coord'),
     },
-    uniforms: {
-      sampler: gl.getUniformLocation(shader_program, 'sampler'),
-    }
   };
 
   // Create data for the shader to use
@@ -86,25 +75,13 @@ function initCanvas() {
   gl.bindBuffer(gl.ARRAY_BUFFER, pos_buffer);
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
 
-  const tex_coords = new Float32Array([
-    0.0, 1.0,
-    1.0, 1.0,
-    1.0, 0.0,
-    0.0, 0.0
-  ]);
-  const tex_coord_buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, tex_coord_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, tex_coords, gl.STATIC_DRAW);
-
-  const texture = loadTexture(gl, 'toad.png');
-
   // Make the draw call tick
   //var last_timestamp = 0; // Start time in ms
   //function render(timestamp) {
   //  const delta_ms = timestamp - last_timestamp;
   //  last_timestamp = timestamp;
 
-    draw(gl, program_info, { pos: pos_buffer, tex_coord: tex_coord_buffer }, texture);
+    draw(gl, program_info, { pos: pos_buffer });
 
   //  requestAnimationFrame(render);
   //}
@@ -113,7 +90,7 @@ function initCanvas() {
 
 
 
-function draw(gl, program_info, buffers, texture) {
+function draw(gl, program_info, buffers) {
 
   // Clear the color buffer with specified clear color
   gl.clearColor(0.18, 0.18, 0.18, 1.0);
@@ -133,85 +110,13 @@ function draw(gl, program_info, buffers, texture) {
     0          // Pointer offset to start of data
   );
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.tex_coord);
-  gl.enableVertexAttribArray(program_info.attrs.tex_coord);
-  gl.vertexAttribPointer(
-    program_info.attrs.tex_coord, // Shader attribute index
-    2,         // Number of elements per vertex
-    gl.FLOAT,  // Data type of each element
-    false,     // Normalized?
-    0,         // Stride if data is interleaved
-    0          // Pointer offset to start of data
-  );
-
-  // Bind the texture
-  gl.activeTexture(gl.TEXTURE0); // Set context to use TextureUnit 0
-  gl.bindTexture(gl.TEXTURE_2D, texture); // Bind the texture to TextureUnit 0
-  gl.uniform1i(program_info.uniforms.sampler, 0); // Set shader sampler to use TextureUnit 0
-
   gl.drawArrays(gl.TRIANGLE_STRIP,
     0, // Offset.
     4  // Vertex count.
   );
 
-  gl.disableVertexAttribArray(program_info.attrs.tex_coord);
   gl.disableVertexAttribArray(program_info.attrs.vertex_pos);
   gl.useProgram(null);
-}
-
-
-function isPowerOf2(value) {
-  return (value & (value - 1)) == 0;
-}
-
-
-// Initialize a texture and load an image.
-// When the image finished loading copy it into the texture.
-function loadTexture(gl, url) {
-
-  const texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-
-  // Because image loading is asynchronous,
-  // they might take a moment until they are ready.
-  // Until then put a single pixel in the texture so we can
-  // use it immediately. When the image has finished downloading
-  // we'll update the texture with the contents of the image.
-  const level = 0;
-  const internalFormat = gl.RGBA;
-  const width = 1;
-  const height = 1;
-  const border = 0;
-  const srcFormat = gl.RGBA;
-  const srcType = gl.UNSIGNED_BYTE;
-  const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
-  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                width, height, border, srcFormat, srcType,
-                pixel);
-
-  const image = new Image();
-  image.onload = function() {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                  srcFormat, srcType, image);
-
-    // WebGL1 has different requirements for power of 2 images
-    // vs non power of 2 images so check if the image is a
-    // power of 2 in both dimensions.
-    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-       // Yes, it's a power of 2. Generate mips.
-       gl.generateMipmap(gl.TEXTURE_2D);
-    } else {
-       // No, it's not a power of 2. Turn of mips and set
-       // wrapping to clamp to edge
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    }
-  };
-  image.src = url;
-
-  return texture;
 }
 
 

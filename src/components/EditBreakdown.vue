@@ -12,6 +12,7 @@
     </div>
     <div class="columns">
       <div>Timeline</div>
+        <timeline-view></timeline-view>
     </div>
 
   </div>
@@ -20,13 +21,15 @@
 <script>
 
 import VideoPlayer from "./VideoPlayer.vue";
-import ThumbnailView from "./ThumbnailView";
+import ThumbnailView from "./ThumbnailView.vue";
+import TimelineView from "./TimelineView.vue";
 
 export default {
   name: 'EditBreakdown',
   components: {
     VideoPlayer,
-    ThumbnailView
+    ThumbnailView,
+    TimelineView,
   },
   props: {
     msg: String
