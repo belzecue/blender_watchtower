@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container is-fluid">
     <h1>Edit Breakdown Web</h1>
     <div class="columns">
       <div class="column is-two-thirds">
@@ -11,9 +11,10 @@
         <div>Properties editor</div>
       </div>
     </div>
-    <div class="columns">
-      <div>Timeline</div>
+    <div class="columns is-gapless">
+      <div class="column is-full">
         <TimelineView />
+      </div>
     </div>
 
   </div>
