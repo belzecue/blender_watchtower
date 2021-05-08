@@ -21,8 +21,8 @@ export default {
   methods: {
     setCurrentFrame: function () {
       if (!this.player) {return}
-      let currentTime = this.player.currentTime()
-      this.$emit('set-current-frame', currentTime)
+      let currentFrame = this.player.currentTime() * 1000 / 24
+      this.$emit('set-current-frame', Math.round(currentFrame))
       this.animationFrameQueue = this.player.requestAnimationFrame(this.setCurrentFrame)
     },
     cancelSetCurrentFrame: function () {
