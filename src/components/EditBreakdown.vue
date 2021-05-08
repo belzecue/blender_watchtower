@@ -6,7 +6,7 @@
         <thumbnail-view></thumbnail-view>
       </div>
       <div class="column">
-        <video-player :options="videoOptions"/>
+        <video-player v-on="$listeners" :options="videoOptions"/>
         <div>Properties editor</div>
       </div>
     </div>
@@ -32,7 +32,8 @@ export default {
     TimelineView,
   },
   props: {
-    msg: String
+    msg: String,
+    currentFrame: Number,
   },
   data() {
     return {

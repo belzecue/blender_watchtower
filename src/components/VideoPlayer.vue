@@ -18,15 +18,29 @@ export default {
       }
     }
   },
+  methods: {
+    setCurrentFrame: function () {
+      if (!this.player) {return}
+      let currentTime = this.player.currentTime()
+      this.$emit('set-current-frame', currentTime)
+      this.animationFrameQueue = this.player.requestAnimationFrame(this.setCurrentFrame)
+    },
+    cancelSetCurrentFrame: function () {
+      this.player.cancelAnimationFrame(this.animationFrameQueue)
+    }
+  },
   data() {
     return {
-      player: null
+      player: null,
+      animationFrameQueue: null
     }
   },
   mounted() {
     this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
       console.log('onPlayerReady', this);
     })
+    this.player.on('play', this.setCurrentFrame)
+    this.player.on('pause', this.cancelSetCurrentFrame)
   },
   beforeDestroy() {
     if (this.player) {

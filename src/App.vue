@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <EditBreakdown msg="Edit Breakdown Web"/>
+    <EditBreakdown @set-current-frame="setCurrentFrame" :current-frame="currentFrame" msg="Edit Breakdown Web"/>
   </div>
 </template>
 
@@ -11,6 +11,16 @@ export default {
   name: 'App',
   components: {
     EditBreakdown
+  },
+  data: function () {
+    return {
+      currentFrame: 0,
+    }
+  },
+  methods: {
+    setCurrentFrame: function (frame) {
+      this.currentFrame = frame
+    }
   }
 }
 </script>
