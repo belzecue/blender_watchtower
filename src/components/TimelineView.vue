@@ -27,7 +27,6 @@ export default {
     }
   },
   computed: {
-    // get only
     canvasRect: function () {
       return this.canvas.getBoundingClientRect();
     },
@@ -100,24 +99,16 @@ export default {
         }
       };
 
-      // Create data for the shader to use
-      const positions = new Float32Array([
-         0.7,  0.7,
-        -0.7,  0.7,
-         0.7, -0.7,
-        -0.7, -0.7,
-      ]);
-      // Upload the buffer data to the GPU memory
-      const pos_buffer = gl.createBuffer(); // Generate a buffer ID
-      gl.bindBuffer(gl.ARRAY_BUFFER, pos_buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
-
-      const playhead_pos_buffer = gl.createBuffer(); // Generate a buffer ID
+      // Generate GPU buffer IDs that will be filled with data later for the shader to use
+      const pos_buffer = gl.createBuffer();
+      const playhead_pos_buffer = gl.createBuffer();
 
       this.buffers = {
         pos: pos_buffer,
         playhead_pos: playhead_pos_buffer
       };
+
+      gl.clearColor(0.18, 0.18, 0.18, 1.0);
 
       // Resize the canvas to fill browser window dynamically
       window.addEventListener('resize', this.resizeCanvas, false);
@@ -130,14 +121,36 @@ export default {
 
       const gl = this.gl;
 
+      // UI items layout. Everything in px.
+      const rect = this.canvasRect;
+      const timeline_box = { pad: {x: 20, y: 25} };
+      const timeline_width = rect.width - timeline_box.pad.x * 2.0;
+      const playhead = { triangle: {width: 16.0, height: 8.0}, line_width: 2.0, pad: {y: 8} };
+      const playhead_pos = timeline_box.pad.x + this.currentFrame * timeline_width / this.totalFrames;
+
+      const dpi = window.devicePixelRatio;
+      const pixel = {
+        x: 2.0 * dpi / rect.width, // Shader clip space is [-1,1], therefore divide 2.
+        y: 2.0 * dpi / rect.height
+      }
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
       // Clear the color buffer with specified clear color
-      gl.clearColor(0.18, 0.18, 0.18, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
       gl.useProgram(this.shader_program_info.program);
 
       // Bind the data for the shader to use and specify how to interpret it.
+      const h_pad_shader = pixel.x * timeline_box.pad.x;
+      const v_pad_shader = pixel.y * timeline_box.pad.y;
+      const positions = new Float32Array([
+         1.0 - h_pad_shader,  1.0 - v_pad_shader,
+        -1.0 + h_pad_shader,  1.0 - v_pad_shader,
+         1.0 - h_pad_shader, -1.0 + v_pad_shader,
+        -1.0 + h_pad_shader, -1.0 + v_pad_shader,
+      ]);
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.pos);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
       gl.enableVertexAttribArray(this.shader_program_info.attrs.vertex_pos);
       gl.vertexAttribPointer(
         this.shader_program_info.attrs.vertex_pos, // Shader attribute index
@@ -156,26 +169,23 @@ export default {
         4  // Vertex count.
       );
 
-      // Determine playhead position
-      const rect = this.canvasRect;
-      const playhead_pos = this.currentFrame * rect.width / this.totalFrames;
-      const playhead_pos_shader = (playhead_pos / rect.width) * 2.0 - 1.0;
-      const pixel = 0.01;
-      const playhead_triangle_width = 16.0;
-
       // Bind the playhead position to the position vertex data
-      // Transfer data to GPU
+      const playhead_pos_shader = (playhead_pos / rect.width) * 2.0 - 1.0;
+      const playhead_top_width_shader = pixel.x * playhead.triangle.width * 0.5;
+      const playhead_top_height_shader = pixel.y * playhead.triangle.height;
+      const playhead_line_width_shader = pixel.x * playhead.line_width * 0.5;
+      const playhead_v_pad_shader = pixel.y * playhead.pad.y;
       const playhead_position = new Float32Array([
-          playhead_pos_shader + pixel * playhead_triangle_width * 0.5,  0.3,
-          playhead_pos_shader - pixel * playhead_triangle_width * 0.5,  0.3,
-          playhead_pos_shader + pixel,  0.15,
-          playhead_pos_shader - pixel,  0.15,
-          playhead_pos_shader + pixel, -0.7,
-          playhead_pos_shader - pixel, -0.7,
+          playhead_pos_shader + playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
+          playhead_pos_shader - playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
+          playhead_pos_shader + playhead_line_width_shader, 1.0 - playhead_v_pad_shader - playhead_top_height_shader,
+          playhead_pos_shader - playhead_line_width_shader, 1.0 - playhead_v_pad_shader - playhead_top_height_shader,
+          playhead_pos_shader + playhead_line_width_shader, -1.0 + playhead_v_pad_shader,
+          playhead_pos_shader - playhead_line_width_shader, -1.0 + playhead_v_pad_shader,
       ]);
       // Upload the buffer data to the GPU memory
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.playhead_pos);
-      gl.bufferData(gl.ARRAY_BUFFER, playhead_position, gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, playhead_position, gl.STATIC_DRAW); // Transfer data to GPU
       gl.vertexAttribPointer(
         this.shader_program_info.attrs.vertex_pos, // Shader attribute index
         2,         // Number of elements per vertex
