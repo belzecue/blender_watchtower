@@ -24,12 +24,18 @@ export default {
       gl: null,
       shader_program_info: null,
       buffers: null,
+      ui_elements: {
+        playhead: {
+          pos_x: 0,
+          pad_y: 8,
+          triangle: {width: 16.0, height: 8.0},
+          line_width: 2.0,
+        },
+        timeline: {
+          pad: {x: 20, y: 25}
+        }
+      }
     }
-  },
-  computed: {
-    canvasRect: function () {
-      return this.canvas.getBoundingClientRect();
-    },
   },
   watch: {
     currentFrame: function () {
@@ -40,8 +46,12 @@ export default {
     this.initCanvas();
   },
   methods: {
+    getCanvasRect: function () {
+      return this.canvas.getBoundingClientRect();
+    },
+
     clientToCanvasCoords: function (event) {
-      var rect = this.canvasRect;
+      var rect = this.getCanvasRect();
       return {
          x: event.clientX - rect.left,
          y: event.clientY - rect.top
@@ -122,11 +132,10 @@ export default {
       const gl = this.gl;
 
       // UI items layout. Everything in px.
-      const rect = this.canvasRect;
-      const timeline_box = { pad: {x: 20, y: 25} };
-      const timeline_width = rect.width - timeline_box.pad.x * 2.0;
-      const playhead = { triangle: {width: 16.0, height: 8.0}, line_width: 2.0, pad: {y: 8} };
-      const playhead_pos = timeline_box.pad.x + this.currentFrame * timeline_width / this.totalFrames;
+      const rect = this.getCanvasRect();
+      const timeline_h_pad = this.ui_elements.timeline.pad.x;
+      const timeline_width = rect.width - timeline_h_pad * 2.0;
+      this.ui_elements.playhead.pos_x = timeline_h_pad + this.currentFrame * timeline_width / this.totalFrames;
 
       const dpi = window.devicePixelRatio;
       const pixel = {
@@ -141,8 +150,8 @@ export default {
       gl.useProgram(this.shader_program_info.program);
 
       // Bind the data for the shader to use and specify how to interpret it.
-      const h_pad_shader = pixel.x * timeline_box.pad.x;
-      const v_pad_shader = pixel.y * timeline_box.pad.y;
+      const h_pad_shader = pixel.x * this.ui_elements.timeline.pad.x;
+      const v_pad_shader = pixel.y * this.ui_elements.timeline.pad.y;
       const positions = new Float32Array([
          1.0 - h_pad_shader,  1.0 - v_pad_shader,
         -1.0 + h_pad_shader,  1.0 - v_pad_shader,
@@ -170,11 +179,12 @@ export default {
       );
 
       // Bind the playhead position to the position vertex data
-      const playhead_pos_shader = (playhead_pos / rect.width) * 2.0 - 1.0;
+      const playhead = this.ui_elements.playhead;
+      const playhead_pos_shader = (playhead.pos_x / rect.width) * 2.0 - 1.0;
       const playhead_top_width_shader = pixel.x * playhead.triangle.width * 0.5;
       const playhead_top_height_shader = pixel.y * playhead.triangle.height;
       const playhead_line_width_shader = pixel.x * playhead.line_width * 0.5;
-      const playhead_v_pad_shader = pixel.y * playhead.pad.y;
+      const playhead_v_pad_shader = pixel.y * playhead.pad_y;
       const playhead_position = new Float32Array([
           playhead_pos_shader + playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
           playhead_pos_shader - playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
@@ -206,13 +216,58 @@ export default {
     },
 
     onMouseEvent: function (event) {
+      const hit_tolerance = 4;
       if (event.type === 'mouseup') {
-        console.log("hi froggo");
-        var mouse = this.clientToCanvasCoords(event);
+        const mouse = this.clientToCanvasCoords(event);
         console.log(mouse.x, mouse.y);
+
+        const rect = this.getCanvasRect();
+        const pad = this.ui_elements.timeline.pad;
+        const timeline_rect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
+        if (timeline_rect.widened(hit_tolerance).contains(mouse.x, mouse.y)) {
+          const new_curr_frame = (mouse.x - timeline_rect.left) / timeline_rect.width * this.totalFrames;
+          console.log("Setting frame to", new_curr_frame);
+          this.$emit('set-current-frame', Math.round(new_curr_frame));
+        }
       }
     },
   }
+}
+
+
+function Rect (x, y, w, h) {
+
+  this.left   = x;
+  this.right  = x + w;
+  this.top    = y;
+  this.bottom = y + h;
+  this.width  = w;
+  this.height = h;
+
+  this.contains = function (mouse) {
+    console.log("trampolin");
+    return this.contains(mouse.x, mouse.y);
+  }
+  this.contains = function (x, y) {
+    console.log(x, this.left, this.right, (this.left <= x && x <= this.right));
+    console.log(y, this.top, this.bottom, (this.top  <= y && y <= this.bottom));
+    return this.left <= x && x <= this.right &&
+           this.top  <= y && y <= this.bottom;
+  }
+
+  this.widen = function (val) {
+    this.left -= val;
+    this.top -= val;
+    this.width += val * 2.0;
+    this.height += val * 2.0;
+    this.right = this.left + this.width;
+    this.bottom = this.top + this.height;
+  }
+  this.widened = function (val) {
+    return new Rect(this.left - val, this.top - val,
+                this.width + val * 2.0, this.height + val * 2.0);
+  }
+
 }
 
 </script>
