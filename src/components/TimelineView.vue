@@ -224,7 +224,6 @@ export default {
       const timelineRect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
       let newCurrentFrame = (canvasX - timelineRect.left) / timelineRect.width * this.totalFrames;
       newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
-      console.log("Setting frame to", newCurrentFrame);
       this.$emit('set-current-frame', Math.round(newCurrentFrame));
     },
 
