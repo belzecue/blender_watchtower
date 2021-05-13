@@ -6,7 +6,7 @@
         <ThumbnailView />
       </div>
       <div class="column">
-        <VideoPlayer @set-current-frame="setCurrentFrame" :options="videoOptions" />
+        <VideoPlayer @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :options="videoOptions" />
         <div> Frame {{ currentFrame }}</div>
         <div>Properties editor</div>
       </div>

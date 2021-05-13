@@ -11,6 +11,7 @@ import './../../node_modules/video.js/dist/video-js.css'
 export default {
   name: "VideoPlayer",
   props: {
+    currentFrame: Number,
     options: {
       type: Object,
       default() {
@@ -18,33 +19,46 @@ export default {
       }
     }
   },
-  methods: {
-      setCurrentFrame: function () {
-      if (!this.player) {return}
-      let currentFrame = this.player.currentTime() * 1000 / 24
-      this.$emit('set-current-frame', Math.round(currentFrame))
-      this.animationFrameQueue = this.player.requestAnimationFrame(this.setCurrentFrame)
-    },
-    cancelSetCurrentFrame: function () {
-      this.player.cancelAnimationFrame(this.animationFrameQueue)
-    }
-  },
   data() {
     return {
       player: null,
-      animationFrameQueue: null
+      animationFrameQueue: null,
     }
   },
   mounted() {
     this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
       console.log('onPlayerReady', this);
     })
-    this.player.on('play', this.setCurrentFrame)
-    this.player.on('pause', this.cancelSetCurrentFrame)
+    this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
+    this.player.on('pause', this.cancelSetCurrentFrame);
+    this.player.on('seeking', this.setCurrentFrame);
+  },
+  watch: {
+    currentFrame: function () {
+      // this.player.currentTime(this.currentFrame / 24000)
+      if (! this.player.paused()) {return}
+      let currentTime = this.currentFrame * 24 / 1000;
+      this.player.currentTime(currentTime);
+    },
+  },
+  methods: {
+    setCurrentFrame: function () {
+      if (!this.player) {return}
+      let currentFrame = this.player.currentTime() * 1000 / 24;
+      this.$emit('set-current-frame', Math.round(currentFrame));
+    },
+    setCurrentFrameAndRequestAnimationFrame: function () {
+      if (!this.player) {return}
+      this.setCurrentFrame();
+      this.animationFrameQueue = this.player.requestAnimationFrame(this.setCurrentFrameAndRequestAnimationFrame);
+    },
+    cancelSetCurrentFrame: function () {
+      this.player.cancelAnimationFrame(this.animationFrameQueue);
+    }
   },
   beforeDestroy() {
     if (this.player) {
-      this.player.dispose()
+      this.player.dispose();
     }
   }
 }
