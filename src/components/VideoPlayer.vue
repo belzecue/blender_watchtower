@@ -25,20 +25,21 @@ export default {
       animationFrameQueue: null,
     }
   },
-  mounted() {
-    this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
-      console.log('onPlayerReady', this);
-    })
-    this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
-    this.player.on('pause', this.cancelSetCurrentFrame);
-    this.player.on('seeking', this.setCurrentFrame);
-  },
   watch: {
     currentFrame: function () {
       // this.player.currentTime(this.currentFrame / 24000)
       if (! this.player.paused()) {return}
       let currentTime = this.currentFrame / 24;
       this.player.currentTime(currentTime);
+    },
+    options: function () {
+      if (this.player) {this.player.dispose()}
+      this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
+        console.log('Player is ready');
+      })
+      this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
+      this.player.on('pause', this.cancelSetCurrentFrame);
+      this.player.on('seeking', this.setCurrentFrame);
     },
   },
   methods: {

@@ -10,9 +10,17 @@ import { init_shader_program, bind_attr, loadTexture } from './../shading.js';
 
 export default {
   name: "ThumbnailView",
+  props: {
+    shots: Array,
+  },
   mounted: function () {
     initCanvas();
   },
+  watch: {
+    shots: function () {
+      console.log("Loaded " + this.shots.length + " shots")
+    }
+  }
 }
 
 

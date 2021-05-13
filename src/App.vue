@@ -3,10 +3,10 @@
     <h1>Edit Breakdown Web</h1>
     <div class="columns">
       <div class="column is-two-thirds">
-        <ThumbnailView />
+        <ThumbnailView :shots="shots" />
       </div>
       <div class="column">
-        <VideoPlayer @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :options="videoOptions" />
+        <VideoPlayer @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :options="videoPlayerOptions" />
         <div> Frame {{ currentFrame }}</div>
         <div>Properties editor</div>
       </div>
@@ -34,19 +34,10 @@ export default {
   },
   data () {
     return {
+      shots: [],
       currentFrame: 0,
-      totalFrames:1700, // WIP
-      videoOptions: {
-        autoplay: true,
-        controls: true,
-        sources: [
-          {
-            src:
-              "/spring.mp4",
-              type: "video/mp4"
-          }
-        ]
-      }
+      videoPlayerOptions: null,
+      totalFrames: null,
     }
   },
   methods: {
@@ -54,6 +45,25 @@ export default {
       this.currentFrame = frame
     }
   },
+  mounted() {
+    fetch('edit.json')
+      .then(response => response.json())
+      .then(data => {
+        this.shots = data.shots;
+        this.totalFrames = data.totalFrames;
+        this.videoPlayerOptions = {
+          autoplay: false,
+          controls: true,
+          sources: [
+            {
+              src: data.source,
+              type: data.sourceType,
+            }
+          ]
+        };
+      })
+  },
+
 }
 
 </script>
