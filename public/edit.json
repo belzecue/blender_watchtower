@@ -1,0 +1,727 @@
+{"source": "https://www.fsiddi.com/spring/spring_hp.webm",
+  "sourceType": "video/webm",
+  "totalFrames": 11140,
+  "shots": [
+  {
+    "name": "Color",
+    "startFrame": 0,
+    "timestamp": "00:00:00.000",
+    "durationSeconds": 7.3,
+    "scene": ""
+  },
+  {
+    "name": "Color.001",
+    "startFrame": 176,
+    "timestamp": "00:00:07.333",
+    "durationSeconds": 4.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.002",
+    "startFrame": 290,
+    "timestamp": "00:00:12.083",
+    "durationSeconds": 10.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.003",
+    "startFrame": 548,
+    "timestamp": "00:00:22.833",
+    "durationSeconds": 7,
+    "scene": ""
+  },
+  {
+    "name": "Color.004",
+    "startFrame": 715,
+    "timestamp": "00:00:29.791",
+    "durationSeconds": 13.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.005",
+    "startFrame": 1040,
+    "timestamp": "00:00:43.333",
+    "durationSeconds": 5,
+    "scene": ""
+  },
+  {
+    "name": "Color.006",
+    "startFrame": 1159,
+    "timestamp": "00:00:48.291",
+    "durationSeconds": 4.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.007",
+    "startFrame": 1265,
+    "timestamp": "00:00:52.708",
+    "durationSeconds": 4.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.008",
+    "startFrame": 1379,
+    "timestamp": "00:00:57.458",
+    "durationSeconds": 6.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.009",
+    "startFrame": 1525,
+    "timestamp": "00:01:03.541",
+    "durationSeconds": 8,
+    "scene": ""
+  },
+  {
+    "name": "Color.010",
+    "startFrame": 1716,
+    "timestamp": "00:01:11.500",
+    "durationSeconds": 5.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.011",
+    "startFrame": 1858,
+    "timestamp": "00:01:17.416",
+    "durationSeconds": 4.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.012",
+    "startFrame": 1957,
+    "timestamp": "00:01:21.541",
+    "durationSeconds": 9.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.013",
+    "startFrame": 2194,
+    "timestamp": "00:01:31.416",
+    "durationSeconds": 7.3,
+    "scene": ""
+  },
+  {
+    "name": "Color.014",
+    "startFrame": 2370,
+    "timestamp": "00:01:38.750",
+    "durationSeconds": 5.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.015",
+    "startFrame": 2492,
+    "timestamp": "00:01:43.833",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.016",
+    "startFrame": 2588,
+    "timestamp": "00:01:47.833",
+    "durationSeconds": 3.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.017",
+    "startFrame": 2671,
+    "timestamp": "00:01:51.291",
+    "durationSeconds": 10.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.018",
+    "startFrame": 2914,
+    "timestamp": "00:02:01.416",
+    "durationSeconds": 3.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.019",
+    "startFrame": 2999,
+    "timestamp": "00:02:04.958",
+    "durationSeconds": 6.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.020",
+    "startFrame": 3157,
+    "timestamp": "00:02:11.541",
+    "durationSeconds": 2.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.021",
+    "startFrame": 3211,
+    "timestamp": "00:02:13.791",
+    "durationSeconds": 10.7,
+    "scene": ""
+  },
+  {
+    "name": "Color.022",
+    "startFrame": 3468,
+    "timestamp": "00:02:24.500",
+    "durationSeconds": 1.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.023",
+    "startFrame": 3501,
+    "timestamp": "00:02:25.875",
+    "durationSeconds": 2.7,
+    "scene": ""
+  },
+  {
+    "name": "Color.024",
+    "startFrame": 3566,
+    "timestamp": "00:02:28.583",
+    "durationSeconds": 2.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.025",
+    "startFrame": 3624,
+    "timestamp": "00:02:31.000",
+    "durationSeconds": 11.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.026",
+    "startFrame": 3903,
+    "timestamp": "00:02:42.625",
+    "durationSeconds": 3.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.027",
+    "startFrame": 3988,
+    "timestamp": "00:02:46.166",
+    "durationSeconds": 1.3,
+    "scene": ""
+  },
+  {
+    "name": "Color.028",
+    "startFrame": 4019,
+    "timestamp": "00:02:47.458",
+    "durationSeconds": 2,
+    "scene": ""
+  },
+  {
+    "name": "Color.029",
+    "startFrame": 4066,
+    "timestamp": "00:02:49.416",
+    "durationSeconds": 7,
+    "scene": ""
+  },
+  {
+    "name": "Color.030",
+    "startFrame": 4235,
+    "timestamp": "00:02:56.458",
+    "durationSeconds": 2.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.031",
+    "startFrame": 4285,
+    "timestamp": "00:02:58.541",
+    "durationSeconds": 3.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.032",
+    "startFrame": 4361,
+    "timestamp": "00:03:01.708",
+    "durationSeconds": 7.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.033",
+    "startFrame": 4547,
+    "timestamp": "00:03:09.458",
+    "durationSeconds": 5.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.034",
+    "startFrame": 4671,
+    "timestamp": "00:03:14.625",
+    "durationSeconds": 2.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.035",
+    "startFrame": 4728,
+    "timestamp": "00:03:17.000",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.036",
+    "startFrame": 4824,
+    "timestamp": "00:03:21.000",
+    "durationSeconds": 4.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.037",
+    "startFrame": 4934,
+    "timestamp": "00:03:25.583",
+    "durationSeconds": 2.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.038",
+    "startFrame": 4997,
+    "timestamp": "00:03:28.208",
+    "durationSeconds": 3,
+    "scene": ""
+  },
+  {
+    "name": "Color.039",
+    "startFrame": 5070,
+    "timestamp": "00:03:31.250",
+    "durationSeconds": 4.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.040",
+    "startFrame": 5178,
+    "timestamp": "00:03:35.750",
+    "durationSeconds": 3.3,
+    "scene": ""
+  },
+  {
+    "name": "Color.041",
+    "startFrame": 5257,
+    "timestamp": "00:03:39.041",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.042",
+    "startFrame": 5299,
+    "timestamp": "00:03:40.791",
+    "durationSeconds": 2.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.043",
+    "startFrame": 5360,
+    "timestamp": "00:03:43.333",
+    "durationSeconds": 12.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.044",
+    "startFrame": 5657,
+    "timestamp": "00:03:55.708",
+    "durationSeconds": 0.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.045",
+    "startFrame": 5677,
+    "timestamp": "00:03:56.541",
+    "durationSeconds": 2.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.046",
+    "startFrame": 5727,
+    "timestamp": "00:03:58.625",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.047",
+    "startFrame": 5822,
+    "timestamp": "00:04:02.583",
+    "durationSeconds": 2.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.048",
+    "startFrame": 5892,
+    "timestamp": "00:04:05.500",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.049",
+    "startFrame": 5934,
+    "timestamp": "00:04:07.250",
+    "durationSeconds": 1.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.050",
+    "startFrame": 5969,
+    "timestamp": "00:04:08.708",
+    "durationSeconds": 2,
+    "scene": ""
+  },
+  {
+    "name": "Color.051",
+    "startFrame": 6018,
+    "timestamp": "00:04:10.750",
+    "durationSeconds": 5,
+    "scene": ""
+  },
+  {
+    "name": "Color.052",
+    "startFrame": 6138,
+    "timestamp": "00:04:15.750",
+    "durationSeconds": 2.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.053",
+    "startFrame": 6189,
+    "timestamp": "00:04:17.875",
+    "durationSeconds": 0.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.054",
+    "startFrame": 6204,
+    "timestamp": "00:04:18.500",
+    "durationSeconds": 0.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.055",
+    "startFrame": 6216,
+    "timestamp": "00:04:19.000",
+    "durationSeconds": 1.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.056",
+    "startFrame": 6251,
+    "timestamp": "00:04:20.458",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.057",
+    "startFrame": 6294,
+    "timestamp": "00:04:22.250",
+    "durationSeconds": 0.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.058",
+    "startFrame": 6308,
+    "timestamp": "00:04:22.833",
+    "durationSeconds": 0.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.059",
+    "startFrame": 6321,
+    "timestamp": "00:04:23.375",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.060",
+    "startFrame": 6365,
+    "timestamp": "00:04:25.208",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.061",
+    "startFrame": 6408,
+    "timestamp": "00:04:27.000",
+    "durationSeconds": 5.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.062",
+    "startFrame": 6542,
+    "timestamp": "00:04:32.583",
+    "durationSeconds": 5,
+    "scene": ""
+  },
+  {
+    "name": "Color.063",
+    "startFrame": 6661,
+    "timestamp": "00:04:37.541",
+    "durationSeconds": 1.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.064",
+    "startFrame": 6695,
+    "timestamp": "00:04:38.958",
+    "durationSeconds": 2.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.065",
+    "startFrame": 6746,
+    "timestamp": "00:04:41.083",
+    "durationSeconds": 1,
+    "scene": ""
+  },
+  {
+    "name": "Color.066",
+    "startFrame": 6769,
+    "timestamp": "00:04:42.041",
+    "durationSeconds": 2.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.067",
+    "startFrame": 6839,
+    "timestamp": "00:04:44.958",
+    "durationSeconds": 2.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.068",
+    "startFrame": 6906,
+    "timestamp": "00:04:47.750",
+    "durationSeconds": 1.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.069",
+    "startFrame": 6949,
+    "timestamp": "00:04:49.541",
+    "durationSeconds": 3.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.070",
+    "startFrame": 7024,
+    "timestamp": "00:04:52.666",
+    "durationSeconds": 2.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.071",
+    "startFrame": 7086,
+    "timestamp": "00:04:55.250",
+    "durationSeconds": 1.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.072",
+    "startFrame": 7115,
+    "timestamp": "00:04:56.458",
+    "durationSeconds": 2.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.073",
+    "startFrame": 7174,
+    "timestamp": "00:04:58.916",
+    "durationSeconds": 1.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.074",
+    "startFrame": 7219,
+    "timestamp": "00:05:00.791",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.075",
+    "startFrame": 7315,
+    "timestamp": "00:05:04.791",
+    "durationSeconds": 4.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.076",
+    "startFrame": 7430,
+    "timestamp": "00:05:09.583",
+    "durationSeconds": 2.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.077",
+    "startFrame": 7492,
+    "timestamp": "00:05:12.166",
+    "durationSeconds": 4.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.078",
+    "startFrame": 7609,
+    "timestamp": "00:05:17.041",
+    "durationSeconds": 1.7,
+    "scene": ""
+  },
+  {
+    "name": "Color.079",
+    "startFrame": 7649,
+    "timestamp": "00:05:18.708",
+    "durationSeconds": 1.4,
+    "scene": ""
+  },
+  {
+    "name": "Color.080",
+    "startFrame": 7682,
+    "timestamp": "00:05:20.083",
+    "durationSeconds": 4.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.081",
+    "startFrame": 7782,
+    "timestamp": "00:05:24.250",
+    "durationSeconds": 5.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.082",
+    "startFrame": 7916,
+    "timestamp": "00:05:29.833",
+    "durationSeconds": 3.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.083",
+    "startFrame": 7999,
+    "timestamp": "00:05:33.291",
+    "durationSeconds": 2.3,
+    "scene": ""
+  },
+  {
+    "name": "Color.084",
+    "startFrame": 8055,
+    "timestamp": "00:05:35.625",
+    "durationSeconds": 2.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.085",
+    "startFrame": 8116,
+    "timestamp": "00:05:38.166",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.086",
+    "startFrame": 8212,
+    "timestamp": "00:05:42.166",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.087",
+    "startFrame": 8307,
+    "timestamp": "00:05:46.125",
+    "durationSeconds": 3,
+    "scene": ""
+  },
+  {
+    "name": "Color.088",
+    "startFrame": 8380,
+    "timestamp": "00:05:49.166",
+    "durationSeconds": 5.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.089",
+    "startFrame": 8521,
+    "timestamp": "00:05:55.041",
+    "durationSeconds": 3.6,
+    "scene": ""
+  },
+  {
+    "name": "Color.090",
+    "startFrame": 8607,
+    "timestamp": "00:05:58.625",
+    "durationSeconds": 3.2,
+    "scene": ""
+  },
+  {
+    "name": "Color.091",
+    "startFrame": 8684,
+    "timestamp": "00:06:01.833",
+    "durationSeconds": 2.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.092",
+    "startFrame": 8751,
+    "timestamp": "00:06:04.625",
+    "durationSeconds": 3.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.093",
+    "startFrame": 8836,
+    "timestamp": "00:06:08.166",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.094",
+    "startFrame": 8932,
+    "timestamp": "00:06:12.166",
+    "durationSeconds": 4,
+    "scene": ""
+  },
+  {
+    "name": "Color.095",
+    "startFrame": 9028,
+    "timestamp": "00:06:16.166",
+    "durationSeconds": 3.1,
+    "scene": ""
+  },
+  {
+    "name": "Color.096",
+    "startFrame": 9102,
+    "timestamp": "00:06:19.250",
+    "durationSeconds": 3,
+    "scene": ""
+  },
+  {
+    "name": "Color.097",
+    "startFrame": 9173,
+    "timestamp": "00:06:22.208",
+    "durationSeconds": 12.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.098",
+    "startFrame": 9479,
+    "timestamp": "00:06:34.958",
+    "durationSeconds": 8,
+    "scene": ""
+  },
+  {
+    "name": "Color.099",
+    "startFrame": 9671,
+    "timestamp": "00:06:42.958",
+    "durationSeconds": 4.5,
+    "scene": ""
+  },
+  {
+    "name": "Color.100",
+    "startFrame": 9778,
+    "timestamp": "00:06:47.416",
+    "durationSeconds": 10.8,
+    "scene": ""
+  },
+  {
+    "name": "Color.101",
+    "startFrame": 10037,
+    "timestamp": "00:06:58.208",
+    "durationSeconds": 7.9,
+    "scene": ""
+  },
+  {
+    "name": "Color.102",
+    "startFrame": 10226,
+    "timestamp": "00:07:06.083",
+    "durationSeconds": 38,
+    "scene": ""
+  }
+]
+}
