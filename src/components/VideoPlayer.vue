@@ -19,7 +19,7 @@ export default {
     }
   },
   methods: {
-    setCurrentFrame: function () {
+      setCurrentFrame: function () {
       if (!this.player) {return}
       let currentFrame = this.player.currentTime() * 1000 / 24
       this.$emit('set-current-frame', Math.round(currentFrame))

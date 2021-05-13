@@ -3,7 +3,9 @@
     <canvas id="canvas-timeline"
       @mousedown="onMouseEvent($event)"
       @mouseup="onMouseEvent($event)"
-      @mousemove="onMouseEvent($event)">
+      @mousemove="onMouseEvent($event)"
+      @mouseleave="onMouseEvent($event)"
+    >
     </canvas>
   </div>
 </template>
@@ -24,6 +26,7 @@ export default {
       gl: null,
       shader_program_info: null,
       buffers: null,
+      isPlayheadDraggable: false,
       ui_elements: {
         playhead: {
           pos_x: 0,
@@ -215,20 +218,25 @@ export default {
       gl.useProgram(null);
     },
 
-    onMouseEvent: function (event) {
-      const hit_tolerance = 4;
-      if (event.type === 'mouseup') {
-        const mouse = this.clientToCanvasCoords(event);
-        console.log(mouse.x, mouse.y);
+    setCurrentFrame: function (canvasX) {
+      const rect = this.getCanvasRect();
+      const pad = this.ui_elements.timeline.pad;
+      const timelineRect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
+      let newCurrentFrame = (canvasX - timelineRect.left) / timelineRect.width * this.totalFrames;
+      newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
+      console.log("Setting frame to", newCurrentFrame);
+      this.$emit('set-current-frame', Math.round(newCurrentFrame));
+    },
 
-        const rect = this.getCanvasRect();
-        const pad = this.ui_elements.timeline.pad;
-        const timeline_rect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
-        if (timeline_rect.widened(hit_tolerance).contains(mouse.x, mouse.y)) {
-          const new_curr_frame = (mouse.x - timeline_rect.left) / timeline_rect.width * this.totalFrames;
-          console.log("Setting frame to", new_curr_frame);
-          this.$emit('set-current-frame', Math.round(new_curr_frame));
-        }
+    onMouseEvent: function (event) {
+      if (event.type === 'mousedown') {
+        this.isPlayheadDraggable = true;
+      } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
+        this.isPlayheadDraggable = false;
+      }
+      if ((event.type === 'mousemove' && this.isPlayheadDraggable)) {
+        const mouse = this.clientToCanvasCoords(event);
+        this.setCurrentFrame(mouse.x);
       }
     },
   }

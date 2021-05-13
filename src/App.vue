@@ -13,7 +13,7 @@
     </div>
     <div class="columns is-gapless">
       <div class="column is-full">
-        <TimelineView :current-frame="currentFrame" :total-frames="totalFrames"/>
+        <TimelineView @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :total-frames="totalFrames"/>
       </div>
     </div>
 
