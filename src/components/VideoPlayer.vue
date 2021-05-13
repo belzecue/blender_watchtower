@@ -37,14 +37,14 @@ export default {
     currentFrame: function () {
       // this.player.currentTime(this.currentFrame / 24000)
       if (! this.player.paused()) {return}
-      let currentTime = this.currentFrame * 24 / 1000;
+      let currentTime = this.currentFrame / 24;
       this.player.currentTime(currentTime);
     },
   },
   methods: {
     setCurrentFrame: function () {
       if (!this.player) {return}
-      let currentFrame = this.player.currentTime() * 1000 / 24;
+      let currentFrame = this.player.currentTime() * 24;
       this.$emit('set-current-frame', Math.round(currentFrame));
     },
     setCurrentFrameAndRequestAnimationFrame: function () {
