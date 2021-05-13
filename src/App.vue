@@ -49,14 +49,21 @@ export default {
     fetch('edit.json')
       .then(response => response.json())
       .then(data => {
+        for (let i = 0; i < data.shots.length; i++) {
+          let parsedShot = data.shots[i];
+          parsedShot.thumbnailUrl = data.sourceBase + 'thumbnails/' + parsedShot.thumbnailFile;
+          this.shots.push(parsedShot)
+        }
+
         this.shots = data.shots;
         this.totalFrames = data.totalFrames;
         this.videoPlayerOptions = {
           autoplay: false,
           controls: true,
+          preload: 'auto',
           sources: [
             {
-              src: data.source,
+              src: data.sourceBase + data.sourceName,
               type: data.sourceType,
             }
           ]
