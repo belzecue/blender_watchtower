@@ -13,163 +13,192 @@ export default {
   props: {
     shots: Array,
   },
-  mounted: function () {
-    initCanvas();
+  data () {
+    return {
+      canvas: null,
+      gl: null,
+      shaderProgramInfo: null,
+      buffers: null,
+      uiElements: {
+      },
+      frog: null,
+    }
   },
   watch: {
     shots: function () {
-      console.log("Loaded " + this.shots.length + " shots")
+      console.log("Thumbnail View: Loaded " + this.shots.length + " shots")
     }
-  }
-}
-
-
-function initCanvas() {
-  const canvas = document.getElementById('canvas-thumb-grid');
-  const canvasContainer = document.getElementById('canvas-thumb-grid-container');
-
-  // Initialize the GL context.
-  const gl = canvas.getContext('webgl');
-  if (!gl) {
-    // Only continue if WebGL is available and working.
-    alert('Unable to initialize WebGL. Your browser or machine may not support it.');
-    return;
-  }
-
-  // Vertex shader.
-  const vs_source = `
-    attribute vec2 v_pos;
-    attribute vec2 v_tex_coord;
-
-    varying highp vec2 tex_coord;
-
-    void main() {
-      gl_Position = vec4(v_pos, 0.0, 1.0);
-      tex_coord = v_tex_coord;
-    }
-  `;
-
-  // Fragment shader.
-  const fs_source = `
-    uniform sampler2D sampler;
-    varying highp vec2 tex_coord;
-
-    void main() {
-      gl_FragColor = texture2D(sampler, tex_coord);
-    }
-  `;
-
-  // Load and compile shaders
-  const shader_program = init_shader_program(gl, vs_source, fs_source);
-
-  // Collect the shader's attribute locations.
-  const program_info = {
-    program: shader_program,
-    attrs: {
-      vertex_pos: bind_attr(gl, shader_program, 'v_pos'),
-      tex_coord: bind_attr(gl, shader_program, 'v_tex_coord'),
+  },
+  mounted: function () {
+    this.initCanvas();
+    this.frog = loadTexture(this.gl, 'toad.png');
+  },
+  methods: {
+    getCanvasRect: function () {
+      return this.canvas.getBoundingClientRect();
     },
-    uniforms: {
-      sampler: gl.getUniformLocation(shader_program, 'sampler'),
-    }
-  };
 
-  // Create data for the shader to use
-  const positions = new Float32Array([
-     0.7,  0.7,
-    -0.7,  0.7,
-     0.7, -0.7,
-    -0.7, -0.7,
-  ]);
-  // Upload the buffer data to the GPU memory
-  const pos_buffer = gl.createBuffer(); // Generate a buffer ID
-  gl.bindBuffer(gl.ARRAY_BUFFER, pos_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
+    clientToCanvasCoords: function (event) {
+      var rect = this.getCanvasRect();
+      return {
+         x: event.clientX - rect.left,
+         y: event.clientY - rect.top
+      };
+    },
 
-  const tex_coords = new Float32Array([
-    0.0, 1.0,
-    1.0, 1.0,
-    1.0, 0.0,
-    0.0, 0.0
-  ]);
-  const tex_coord_buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, tex_coord_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, tex_coords, gl.STATIC_DRAW);
+    resizeCanvas: function () {
+      const canvasContainer = document.getElementById('canvas-thumb-grid-container');
+      this.canvas.width = canvasContainer.offsetWidth;
+      this.canvas.height = window.innerHeight - 400;
+      this.draw();
+    },
 
-  const texture = loadTexture(gl, 'toad.png');
+    initCanvas: function () {
+      this.canvas = document.getElementById('canvas-thumb-grid');
 
-  // Make the draw call tick
-  //var last_timestamp = 0; // Start time in ms
-  //function render(timestamp) {
-  //  const delta_ms = timestamp - last_timestamp;
-  //  last_timestamp = timestamp;
+      // Initialize the GL context.
+      const gl = this.canvas.getContext('webgl');
+      if (!gl) {
+        // Only continue if WebGL is available and working.
+        alert('Unable to initialize WebGL. Your browser or machine may not support it.');
+        return;
+      }
+      this.gl = gl;
 
-    //draw(gl, program_info, { pos: pos_buffer, tex_coord: tex_coord_buffer }, texture);
+      // Vertex shader.
+      const vs_source = `
+        attribute vec2 v_pos;
+        attribute vec2 v_tex_coord;
+        uniform mat4 mvp;
 
-  //  requestAnimationFrame(render);
-  //}
-  //requestAnimationFrame(render);
+        varying highp vec2 tex_coord;
 
-  canvas.width = canvasContainer.offsetWidth;
-  canvas.height = window.innerHeight - 400;
-  // Resize the canvas to fill browser window dynamically
-  window.addEventListener('resize', resizeCanvas, false);
+        void main() {
+          gl_Position = mvp * vec4(v_pos, 0.0, 1.0);
+          tex_coord = v_tex_coord;
+        }
+      `;
 
-  function resizeCanvas() {
-    canvas.width = canvasContainer.offsetWidth;
-    canvas.height = window.innerHeight - 400;
-    draw(gl, program_info, { pos: pos_buffer, tex_coord: tex_coord_buffer }, texture);
+      // Fragment shader.
+      const fs_source = `
+        uniform sampler2D sampler;
+        varying highp vec2 tex_coord;
+
+        void main() {
+          gl_FragColor = texture2D(sampler, tex_coord);
+        }
+      `;
+
+      // Load and compile shaders
+      const shaderProgram = init_shader_program(gl, vs_source, fs_source);
+
+      // Collect the shader's attribute locations.
+      this.shaderProgramInfo = {
+        program: shaderProgram,
+        attrs: {
+          vertexPos: bind_attr(gl, shaderProgram, 'v_pos'),
+          texCoord: bind_attr(gl, shaderProgram, 'v_tex_coord'),
+        },
+        uniforms: {
+          modelViewProj: gl.getUniformLocation(shaderProgram, 'mvp'),
+          sampler: gl.getUniformLocation(shaderProgram, 'sampler'),
+        }
+      };
+
+      // Generate GPU buffer IDs that will be filled with data later for the shader to use
+      const posBuffer = gl.createBuffer();
+      const texCoordBuffer = gl.createBuffer();
+
+      this.buffers = {
+        pos: posBuffer,
+        texCoords: texCoordBuffer
+      };
+
+      // Upload the texture coordinate data to the GPU
+      const texCoords = new Float32Array([
+        1.0, 1.0,
+        0.0, 1.0,
+        1.0, 0.0,
+        0.0, 0.0,
+      ]);
+      gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
+
+      gl.clearColor(0.18, 0.18, 0.18, 1.0);
+
+      // Resize the canvas to fill browser window dynamically
+      window.addEventListener('resize', this.resizeCanvas, false);
+
+      // Call the re-size once to trigger the sizing and initial draw of this component.
+      this.resizeCanvas();
+    },
+
+    draw: function () {
+
+      const gl = this.gl;
+
+      // UI items layout. Everything in px.
+      //const rect = this.getCanvasRect();
+
+      /*const dpi = window.devicePixelRatio;
+      const pixel = {
+        x: 2.0 * dpi / rect.width, // Shader clip space is [-1,1], therefore divide 2.
+        y: 2.0 * dpi / rect.height
+      }*/
+      const mvp = [1,0,0,0, 0,-1,0,0, 0,0,1,0, 0,0,0,1];
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+      // Clear the color buffer with specified clear color
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      gl.useProgram(this.shaderProgramInfo.program);
+      gl.uniformMatrix4fv(this.shaderProgramInfo.uniforms.modelViewProj, false, mvp);
+
+      // Bind the data for the shader to use and specify how to interpret it.
+      const positions = new Float32Array([
+         0.7,  0.7,
+        -0.7,  0.7,
+         0.7, -0.7,
+        -0.7, -0.7,
+      ]);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.pos);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
+      gl.enableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
+      gl.vertexAttribPointer(
+        this.shaderProgramInfo.attrs.vertexPos, // Shader attribute index
+        2,         // Number of elements per vertex
+        gl.FLOAT,  // Data type of each element
+        false,     // Normalized?
+        0,         // Stride if data is interleaved
+        0          // Pointer offset to start of data
+      );
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.texCoords);
+      gl.enableVertexAttribArray(this.shaderProgramInfo.attrs.texCoord);
+      gl.vertexAttribPointer(
+        this.shaderProgramInfo.attrs.texCoord, // Shader attribute index
+        2,         // Number of elements per vertex
+        gl.FLOAT,  // Data type of each element
+        false,     // Normalized?
+        0,         // Stride if data is interleaved
+        0          // Pointer offset to start of data
+      );
+
+      // Bind the texture
+      gl.activeTexture(gl.TEXTURE0); // Set context to use TextureUnit 0
+      gl.bindTexture(gl.TEXTURE_2D, this.frog); // Bind the texture to TextureUnit 0
+      gl.uniform1i(this.shaderProgramInfo.uniforms.sampler, 0); // Set shader sampler to use TextureUnit 0
+
+      gl.drawArrays(gl.TRIANGLE_STRIP,
+        0, // Offset.
+        4  // Vertex count.
+      );
+
+      gl.disableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
+      gl.disableVertexAttribArray(this.shaderProgramInfo.attrs.texCoord);
+      gl.useProgram(null);
+    },
   }
-
-  draw(gl, program_info, { pos: pos_buffer, tex_coord: tex_coord_buffer }, texture);
-}
-
-
-
-function draw(gl, program_info, buffers, texture) {
-
-  // Clear the color buffer with specified clear color
-  gl.clearColor(0.18, 0.18, 0.18, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  gl.useProgram(program_info.program);
-
-  // Bind the data for the shader to use and specify how to interpret it.
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.pos);
-  gl.enableVertexAttribArray(program_info.attrs.vertex_pos);
-  gl.vertexAttribPointer(
-    program_info.attrs.vertex_pos, // Shader attribute index
-    2,         // Number of elements per vertex
-    gl.FLOAT,  // Data type of each element
-    false,     // Normalized?
-    0,         // Stride if data is interleaved
-    0          // Pointer offset to start of data
-  );
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.tex_coord);
-  gl.enableVertexAttribArray(program_info.attrs.tex_coord);
-  gl.vertexAttribPointer(
-    program_info.attrs.tex_coord, // Shader attribute index
-    2,         // Number of elements per vertex
-    gl.FLOAT,  // Data type of each element
-    false,     // Normalized?
-    0,         // Stride if data is interleaved
-    0          // Pointer offset to start of data
-  );
-
-  // Bind the texture
-  gl.activeTexture(gl.TEXTURE0); // Set context to use TextureUnit 0
-  gl.bindTexture(gl.TEXTURE_2D, texture); // Bind the texture to TextureUnit 0
-  gl.uniform1i(program_info.uniforms.sampler, 0); // Set shader sampler to use TextureUnit 0
-
-  gl.drawArrays(gl.TRIANGLE_STRIP,
-    0, // Offset.
-    4  // Vertex count.
-  );
-
-  gl.disableVertexAttribArray(program_info.attrs.tex_coord);
-  gl.disableVertexAttribArray(program_info.attrs.vertex_pos);
-  gl.useProgram(null);
 }
 
 </script>
