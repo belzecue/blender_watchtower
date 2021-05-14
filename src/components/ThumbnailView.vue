@@ -244,8 +244,8 @@ export default {
       const rect = this.getCanvasRect();
       const totalAvailableW = rect.width;
       const totalAvailableH = rect.height;
-      console.log(rect);
-      console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
+      //console.log(rect);
+      //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
       const totalSpacing = this.uiElements.totalSpacing;
@@ -258,8 +258,7 @@ export default {
       // Assume all images in the edit have the same aspect ratio.
       const originalImageW = this.uiElements.originalImageSize[0];
       const originalImageH = this.uiElements.originalImageSize[1];
-      const aspectRatio = originalImageW / originalImageH;
-      console.log("Image a.ratio=", aspectRatio, "(", originalImageW, "x", originalImageH,")");
+      //console.log("Image a.ratio=", originalImageW / originalImageH, "(", originalImageW, "x", originalImageH,")");
 
       // Calculate by how much images need to be scaled in order to fit. (won't be perfect)
       const availableArea = availableW * availableH;
@@ -270,14 +269,14 @@ export default {
         return
       }
       var scaleFactor = Math.sqrt(thumbnailArea / (originalImageW * originalImageH));
-      console.log("Scale factor:", scaleFactor);
+      //console.log("Scale factor:", scaleFactor);
 
       var thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
 
       const numImagesPerRow = Math.ceil(availableW / thumbnailSize[0]);
       const numImagesPerCol = Math.ceil(numImages / numImagesPerRow);
-      console.log("Thumbnail width ", thumbnailSize[0], "px, # per row:", numImagesPerRow);
-      console.log("Thumbnail height", thumbnailSize[1], "px, # per col:", numImagesPerCol);
+      //console.log("Thumbnail width ", thumbnailSize[0], "px, # per row:", numImagesPerRow);
+      //console.log("Thumbnail height", thumbnailSize[1], "px, # per col:", numImagesPerCol);
 
       // Make sure that both a row and a column of images at the current scale will fit.
       // It is possible that, with few images and a region aspect ratio that is very different from
@@ -287,14 +286,14 @@ export default {
         scaleFactor = maxThumbSize[0] / (originalImageW * numImagesPerRow)
       if (originalImageH * scaleFactor * numImagesPerCol > maxThumbSize[1])
         scaleFactor = maxThumbSize[1] / (originalImageH * numImagesPerCol)
-      console.log("Reduced scale factor:", scaleFactor);
+      //console.log("Reduced scale factor:", scaleFactor);
 
       thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
       this.uiElements.thumbnailSize = thumbnailSize
 
-      console.log("X");
+      //console.log("X");
       const spaceW = calculateSpacing(totalAvailableW, thumbnailSize[0], numImagesPerRow, minMargin);
-      console.log("Y");
+      //console.log("Y");
       const spaceH = calculateSpacing(totalAvailableH, thumbnailSize[1], numImagesPerCol, minMargin);
 
       const margins = [spaceW[0], spaceH[0]];
@@ -326,18 +325,18 @@ export default {
 function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
 
   const availableSpace = totalAvailable - thumbSize * numThumbs;
-  console.log("remaining space", availableSpace, "px");
+  //console.log("remaining space", availableSpace, "px");
 
   var spacing = 0;
   if (numThumbs > 1) {
     spacing = (availableSpace - minMargin) / (numThumbs - 1);
-    console.log("spacing", spacing);
+    //console.log("spacing", spacing);
     // Spacing between images should never be bigger than the margins;
     spacing = Math.min(Math.ceil(spacing), minMargin);
   }
 
   var margin = (availableSpace - spacing * (numThumbs - 1)) / 2;
-  console.log("margins", margin);
+  //console.log("margins", margin);
   margin = Math.floor(margin);
 
   return [margin, spacing];
