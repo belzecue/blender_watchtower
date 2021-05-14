@@ -24,15 +24,15 @@ export default {
     return {
       canvas: null,
       gl: null,
-      shader_program_info: null,
+      shaderProgramInfo: null,
       buffers: null,
       isPlayheadDraggable: false,
-      ui_elements: {
+      uiElements: {
         playhead: {
-          pos_x: 0,
-          pad_y: 8,
+          posX: 0,
+          padY: 8,
           triangle: {width: 16.0, height: 8.0},
-          line_width: 2.0,
+          lineWidth: 2.0,
         },
         timeline: {
           pad: {x: 20, y: 25}
@@ -99,26 +99,26 @@ export default {
       `;
 
       // Load and compile shaders
-      const shader_program = init_shader_program(gl, vs_source, fs_source);
+      const shaderProgram = init_shader_program(gl, vs_source, fs_source);
 
       // Collect the shader's attribute locations.
-      this.shader_program_info = {
-        program: shader_program,
+      this.shaderProgramInfo = {
+        program: shaderProgram,
         attrs: {
-          vertex_pos: bind_attr(gl, shader_program, 'v_pos'),
+          vertexPos: bind_attr(gl, shaderProgram, 'v_pos'),
         },
         uniforms: {
-          fill_color: gl.getUniformLocation(shader_program, 'fill_color'),
+          fillColor: gl.getUniformLocation(shaderProgram, 'fill_color'),
         }
       };
 
       // Generate GPU buffer IDs that will be filled with data later for the shader to use
-      const pos_buffer = gl.createBuffer();
-      const playhead_pos_buffer = gl.createBuffer();
+      const posBuffer = gl.createBuffer();
+      const playheadPosBuffer = gl.createBuffer();
 
       this.buffers = {
-        pos: pos_buffer,
-        playhead_pos: playhead_pos_buffer
+        pos: posBuffer,
+        playheadPos: playheadPosBuffer
       };
 
       gl.clearColor(0.18, 0.18, 0.18, 1.0);
@@ -136,9 +136,9 @@ export default {
 
       // UI items layout. Everything in px.
       const rect = this.getCanvasRect();
-      const timeline_h_pad = this.ui_elements.timeline.pad.x;
-      const timeline_width = rect.width - timeline_h_pad * 2.0;
-      this.ui_elements.playhead.pos_x = timeline_h_pad + this.currentFrame * timeline_width / this.totalFrames;
+      const timeline = this.uiElements.timeline;
+      const timelineWidth = rect.width - timeline.pad.x * 2.0;
+      this.uiElements.playhead.posX = timeline.pad.x + this.currentFrame * timelineWidth / this.totalFrames;
 
       const dpi = window.devicePixelRatio;
       const pixel = {
@@ -150,22 +150,22 @@ export default {
       // Clear the color buffer with specified clear color
       gl.clear(gl.COLOR_BUFFER_BIT);
 
-      gl.useProgram(this.shader_program_info.program);
+      gl.useProgram(this.shaderProgramInfo.program);
 
       // Bind the data for the shader to use and specify how to interpret it.
-      const h_pad_shader = pixel.x * this.ui_elements.timeline.pad.x;
-      const v_pad_shader = pixel.y * this.ui_elements.timeline.pad.y;
+      const shaderPadH = pixel.x * this.uiElements.timeline.pad.x;
+      const shaderPadV = pixel.y * this.uiElements.timeline.pad.y;
       const positions = new Float32Array([
-         1.0 - h_pad_shader,  1.0 - v_pad_shader,
-        -1.0 + h_pad_shader,  1.0 - v_pad_shader,
-         1.0 - h_pad_shader, -1.0 + v_pad_shader,
-        -1.0 + h_pad_shader, -1.0 + v_pad_shader,
+         1.0 - shaderPadH,  1.0 - shaderPadV,
+        -1.0 + shaderPadH,  1.0 - shaderPadV,
+         1.0 - shaderPadH, -1.0 + shaderPadV,
+        -1.0 + shaderPadH, -1.0 + shaderPadV,
       ]);
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.pos);
       gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
-      gl.enableVertexAttribArray(this.shader_program_info.attrs.vertex_pos);
+      gl.enableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
       gl.vertexAttribPointer(
-        this.shader_program_info.attrs.vertex_pos, // Shader attribute index
+        this.shaderProgramInfo.attrs.vertexPos, // Shader attribute index
         2,         // Number of elements per vertex
         gl.FLOAT,  // Data type of each element
         false,     // Normalized?
@@ -174,7 +174,7 @@ export default {
       );
 
       // Set the color
-      gl.uniform4f(this.shader_program_info.uniforms.fill_color, 0.0, 0.4, 0.4, 1.0);
+      gl.uniform4f(this.shaderProgramInfo.uniforms.fillColor, 0.0, 0.4, 0.4, 1.0);
 
       gl.drawArrays(gl.TRIANGLE_STRIP,
         0, // Offset.
@@ -182,45 +182,45 @@ export default {
       );
 
       // Bind the playhead position to the position vertex data
-      const playhead = this.ui_elements.playhead;
-      const playhead_pos_shader = (playhead.pos_x / rect.width) * 2.0 - 1.0;
-      const playhead_top_width_shader = pixel.x * playhead.triangle.width * 0.5;
-      const playhead_top_height_shader = pixel.y * playhead.triangle.height;
-      const playhead_line_width_shader = pixel.x * playhead.line_width * 0.5;
-      const playhead_v_pad_shader = pixel.y * playhead.pad_y;
-      const playhead_position = new Float32Array([
-          playhead_pos_shader + playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
-          playhead_pos_shader - playhead_top_width_shader, 1.0 - playhead_v_pad_shader,
-          playhead_pos_shader + playhead_line_width_shader, 1.0 - playhead_v_pad_shader - playhead_top_height_shader,
-          playhead_pos_shader - playhead_line_width_shader, 1.0 - playhead_v_pad_shader - playhead_top_height_shader,
-          playhead_pos_shader + playhead_line_width_shader, -1.0 + playhead_v_pad_shader,
-          playhead_pos_shader - playhead_line_width_shader, -1.0 + playhead_v_pad_shader,
+      const playhead = this.uiElements.playhead;
+      const playheadPosShader = (playhead.posX / rect.width) * 2.0 - 1.0;
+      const playheadTopWidthShader = pixel.x * playhead.triangle.width * 0.5;
+      const playheadTopHeightShader = pixel.y * playhead.triangle.height;
+      const playheadLineWidthShader = pixel.x * playhead.lineWidth * 0.5;
+      const playheadHeightPadShader = pixel.y * playhead.padY;
+      const playheadVerts = new Float32Array([
+          playheadPosShader + playheadTopWidthShader, 1.0 - playheadHeightPadShader,
+          playheadPosShader - playheadTopWidthShader, 1.0 - playheadHeightPadShader,
+          playheadPosShader + playheadLineWidthShader, 1.0 - playheadHeightPadShader - playheadTopHeightShader,
+          playheadPosShader - playheadLineWidthShader, 1.0 - playheadHeightPadShader - playheadTopHeightShader,
+          playheadPosShader + playheadLineWidthShader, -1.0 + playheadHeightPadShader,
+          playheadPosShader - playheadLineWidthShader, -1.0 + playheadHeightPadShader,
       ]);
       // Upload the buffer data to the GPU memory
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.playhead_pos);
-      gl.bufferData(gl.ARRAY_BUFFER, playhead_position, gl.STATIC_DRAW); // Transfer data to GPU
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.playheadPos);
+      gl.bufferData(gl.ARRAY_BUFFER, playheadVerts, gl.STATIC_DRAW); // Transfer data to GPU
       gl.vertexAttribPointer(
-        this.shader_program_info.attrs.vertex_pos, // Shader attribute index
+        this.shaderProgramInfo.attrs.vertexPos, // Shader attribute index
         2,         // Number of elements per vertex
         gl.FLOAT,  // Data type of each element
         false,     // Normalized?
         0,         // Stride if data is interleaved
         0          // Pointer offset to start of data
       );
-      gl.uniform4f(this.shader_program_info.uniforms.fill_color, 0.4, 0.4, 0.4, 1.0);
+      gl.uniform4f(this.shaderProgramInfo.uniforms.fillColor, 0.4, 0.4, 0.4, 1.0);
 
       gl.drawArrays(gl.TRIANGLE_STRIP,
         0, // Offset.
         6  // Vertex count.
       );
 
-      gl.disableVertexAttribArray(this.shader_program_info.attrs.vertex_pos);
+      gl.disableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
       gl.useProgram(null);
     },
 
     setCurrentFrame: function (canvasX) {
       const rect = this.getCanvasRect();
-      const pad = this.ui_elements.timeline.pad;
+      const pad = this.uiElements.timeline.pad;
       const timelineRect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
       let newCurrentFrame = (canvasX - timelineRect.left) / timelineRect.width * this.totalFrames;
       newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
@@ -229,7 +229,6 @@ export default {
 
     onMouseEvent: function (event) {
       // Set a new playhead position when LMB clicking or dragging.
-      console.log(this.isPlayheadDraggable, (event.type === 'mousemove' || event.type === 'mouseup'))
       if (this.isPlayheadDraggable
         && (event.type === 'mousemove' || event.type === 'mouseup')) {
         const mouse = this.clientToCanvasCoords(event);
@@ -256,13 +255,7 @@ function Rect (x, y, w, h) {
   this.width  = w;
   this.height = h;
 
-  this.contains = function (mouse) {
-    console.log("trampolin");
-    return this.contains(mouse.x, mouse.y);
-  }
   this.contains = function (x, y) {
-    console.log(x, this.left, this.right, (this.left <= x && x <= this.right));
-    console.log(y, this.top, this.bottom, (this.top  <= y && y <= this.bottom));
     return this.left <= x && x <= this.right &&
            this.top  <= y && y <= this.bottom;
   }
