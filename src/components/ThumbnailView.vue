@@ -1,6 +1,12 @@
 <template>
   <div id="canvas-thumb-grid-container" class="column">
-    <canvas id="canvas-thumb-grid"></canvas>
+    <canvas id="canvas-thumb-grid"
+      @mousedown="onMouseEvent($event)"
+      @mouseup="onMouseEvent($event)"
+      @mousemove="onMouseEvent($event)"
+      @mouseleave="onMouseEvent($event)"
+    >
+    </canvas>
   </div>
 </template>
 
@@ -12,6 +18,7 @@ export default {
   name: "ThumbnailView",
   props: {
     shots: Array,
+    currentFrame: Number,
   },
   data () {
     return {
@@ -26,6 +33,8 @@ export default {
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
       },
+      isMouseDragging: false,
+      thumbforCurrentFrame: null,
       frog: null,
     }
   },
@@ -37,18 +46,32 @@ export default {
         this.uiElements.originalImageSize = [1920, 1080]; // 249. 140 // WIP
 
         for (const shot of this.shots) {
-          this.uiElements.thumbnails.push(new ThumbnailImage (shot, null));
+          //const glTextureID = loadTexture(this.gl, shot.thumbnailUrl, this.draw);
+          const glTextureID = this.frog;
+          this.uiElements.thumbnails.push(new ThumbnailImage(shot, glTextureID));
         }
       }
 
       this.layout();
       this.draw();
-    }
+    },
+    currentFrame: function () {
+      // Find the thumbnail shot that should be highlighted.
+      var thumbforCurrentFrame = null;
+      for (const thumb of this.uiElements.thumbnails) {
+        if(thumb.shot.startFrame > this.currentFrame)
+          break;
+        thumbforCurrentFrame = thumb;
+      }
+      this.thumbforCurrentFrame = thumbforCurrentFrame;
+
+      this.draw();
+    },
   },
   mounted: function () {
     console.log("Thumbnail View: Initializing...");
     this.initCanvas();
-    this.frog = loadTexture(this.gl, 'toad.png', this.draw);
+    this.frog = loadTexture(this.gl, "toad.png", this.draw);
   },
   methods: {
     getCanvasRect: function () {
@@ -186,11 +209,17 @@ export default {
         );
 
         for (const thumb of this.uiElements.thumbnails) {
+
+          // Draw the thumbnail for the current frame bigger than the others.
+          var growSize = 0;
+          if (thumb === this.thumbforCurrentFrame)
+              growSize = 5;
+
           // Bind the data for the shader to use and specify how to interpret it.
-          const shaderPadH = pixel.x * thumb.pos[0];
-          const shaderPadV = pixel.y * thumb.pos[1];
-          const shaderThumbH = pixel.x * this.uiElements.thumbnailSize[0];
-          const shaderThumbV = pixel.y * this.uiElements.thumbnailSize[1];
+          const shaderPadH = pixel.x * (thumb.pos[0] - growSize);
+          const shaderPadV = pixel.y * (thumb.pos[1] - growSize);
+          const shaderThumbH = pixel.x * (this.uiElements.thumbnailSize[0] + growSize * 2);
+          const shaderThumbV = pixel.y * (this.uiElements.thumbnailSize[1] + growSize * 2);
           const positions = new Float32Array([
             -1.0 + shaderPadH + shaderThumbH, -1.0 + shaderPadV + shaderThumbV,
             -1.0 + shaderPadH,                -1.0 + shaderPadV + shaderThumbV,
@@ -211,7 +240,7 @@ export default {
 
           // Bind the texture
           gl.activeTexture(gl.TEXTURE0); // Set context to use TextureUnit 0
-          gl.bindTexture(gl.TEXTURE_2D, this.frog); // Bind the texture to TextureUnit 0
+          gl.bindTexture(gl.TEXTURE_2D, thumb.glTextureID); // Bind the texture to TextureUnit 0
           gl.uniform1i(this.shaderProgramInfo.uniforms.sampler, 0); // Set shader sampler to use TextureUnit 0
 
           gl.drawArrays(gl.TRIANGLE_STRIP,
@@ -316,6 +345,42 @@ export default {
         }
       }
     },
+
+    setCurrentFrame: function (thumb) {
+      const newCurrentFrame = thumb.shot.startFrame;
+      this.$emit('set-current-frame', newCurrentFrame);
+    },
+
+    onMouseEvent: function (event) {
+      // Set a new current frame when LMB clicking or dragging.
+      if (this.isMouseDragging
+        && (event.type === 'mousemove' || event.type === 'mouseup')) {
+        // Hit test against each thumbnail
+        const mouse = this.clientToCanvasCoords(event);
+        const thumbSize = this.uiElements.thumbnailSize;
+        for (const thumb of this.uiElements.thumbnails) {
+
+          // Draw the thumbnail for the current frame bigger than the others.
+          var growSize = 0;
+          if (thumb === this.thumbforCurrentFrame)
+              growSize = 5;
+
+          if ( thumb.pos[0] - growSize <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0] + growSize * 2
+            && thumb.pos[1] - growSize <= mouse.y && mouse.y <= thumb.pos[1] + thumbSize[1] + growSize * 2) {
+
+            this.setCurrentFrame(thumb);
+            break;
+          }
+        }
+      }
+
+      // Update mouse capturing state.
+      if (event.type === 'mousedown') {
+        this.isMouseDragging = true;
+      } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
+        this.isMouseDragging = false;
+      }
+    },
   }
 }
 
@@ -344,7 +409,7 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
 
 
 function ThumbnailImage (shot, glImageID) {
-  this.id_image = glImageID; // GL texture ID.
+  this.glTextureID = glImageID; // GL texture ID.
   this.pos = [0, 0]; // Position in px where the image should be displayed in canvas coordinates.
   this.shot = shot;
   this.group_idx = -1;

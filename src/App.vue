@@ -3,7 +3,7 @@
     <h1>Edit Breakdown Web</h1>
     <div class="columns">
       <div class="column is-two-thirds">
-        <ThumbnailView :shots="shots" />
+        <ThumbnailView @set-current-frame="setCurrentFrame" :shots="shots" :current-frame="currentFrame"/>
       </div>
       <div class="column">
         <VideoPlayer @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :options="videoPlayerOptions" />
