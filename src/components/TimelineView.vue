@@ -83,9 +83,10 @@ export default {
       // Vertex shader.
       const vs_source = `
         attribute vec2 v_pos;
+        uniform mat4 mvp;
 
         void main() {
-          gl_Position = vec4(v_pos, 0.0, 1.0);
+          gl_Position = mvp * vec4(v_pos, 0.0, 1.0);
         }
       `;
 
@@ -108,6 +109,7 @@ export default {
           vertexPos: bind_attr(gl, shaderProgram, 'v_pos'),
         },
         uniforms: {
+          modelViewProj: gl.getUniformLocation(shaderProgram, 'mvp'),
           fillColor: gl.getUniformLocation(shaderProgram, 'fill_color'),
         }
       };
@@ -145,12 +147,14 @@ export default {
         x: 2.0 * dpi / rect.width, // Shader clip space is [-1,1], therefore divide 2.
         y: 2.0 * dpi / rect.height
       }
+      const mvp = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
       // Clear the color buffer with specified clear color
       gl.clear(gl.COLOR_BUFFER_BIT);
 
       gl.useProgram(this.shaderProgramInfo.program);
+      gl.uniformMatrix4fv(this.shaderProgramInfo.uniforms.modelViewProj, false, mvp);
 
       // Bind the data for the shader to use and specify how to interpret it.
       const shaderPadH = pixel.x * this.uiElements.timeline.pad.x;
