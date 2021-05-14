@@ -228,14 +228,19 @@ export default {
     },
 
     onMouseEvent: function (event) {
+      // Set a new playhead position when LMB clicking or dragging.
+      console.log(this.isPlayheadDraggable, (event.type === 'mousemove' || event.type === 'mouseup'))
+      if (this.isPlayheadDraggable
+        && (event.type === 'mousemove' || event.type === 'mouseup')) {
+        const mouse = this.clientToCanvasCoords(event);
+        this.setCurrentFrame(mouse.x);
+      }
+
+      // Update mouse capturing state.
       if (event.type === 'mousedown') {
         this.isPlayheadDraggable = true;
       } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
         this.isPlayheadDraggable = false;
-      }
-      if ((event.type === 'mousemove' && this.isPlayheadDraggable)) {
-        const mouse = this.clientToCanvasCoords(event);
-        this.setCurrentFrame(mouse.x);
       }
     },
   }
