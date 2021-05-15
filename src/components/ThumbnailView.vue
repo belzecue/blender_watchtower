@@ -46,8 +46,8 @@ export default {
         this.uiElements.originalImageSize = [1920, 1080]; // 249. 140 // WIP
 
         for (const shot of this.shots) {
-          //const glTextureID = loadTexture(this.gl, shot.thumbnailUrl, this.draw);
-          const glTextureID = this.frog;
+          const glTextureID = loadTexture(this.gl, shot.thumbnailUrl, this.draw);
+          // const glTextureID = this.frog;
           this.uiElements.thumbnails.push(new ThumbnailImage(shot, glTextureID));
         }
       }
