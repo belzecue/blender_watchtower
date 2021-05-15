@@ -12,7 +12,7 @@
 
 <script>
 
-import { UIRenderer } from './../shading.js';
+import { UIRenderer } from '../shading';
 
 export default {
   name: "TimelineView",
@@ -54,7 +54,7 @@ export default {
     },
 
     clientToCanvasCoords: function (event) {
-      var rect = this.getCanvasRect();
+      let rect = this.getCanvasRect();
       return {
          x: event.clientX - rect.left,
          y: event.clientY - rect.top
