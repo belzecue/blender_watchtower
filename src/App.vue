@@ -1,7 +1,7 @@
 <template>
-  <div class="container is-fluid">
-    <h1>Edit Breakdown Web</h1>
-    <div class="columns">
+  <div class="container is-fluid p-0">
+    <Toolbar />
+    <div class="columns is-gapless">
       <div class="column is-two-thirds">
         <ThumbnailView @set-current-frame="setCurrentFrame" :shots="shots" :current-frame="currentFrame"/>
       </div>
@@ -24,6 +24,7 @@
 import VideoPlayer from "./components/VideoPlayer.vue";
 import ThumbnailView from "./components/ThumbnailView.vue";
 import TimelineView from "./components/TimelineView.vue";
+import Toolbar from  "./components/Toolbar.vue";
 
 export default {
   name: 'App',
@@ -31,6 +32,7 @@ export default {
     VideoPlayer,
     ThumbnailView,
     TimelineView,
+    Toolbar,
   },
   data () {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <div id="canvas-timeline-container" class="column">
+  <div id="canvas-timeline-container">
     <canvas id="canvas-timeline"
       @mousedown="onMouseEvent($event)"
       @mouseup="onMouseEvent($event)"

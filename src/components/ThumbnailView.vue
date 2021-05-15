@@ -1,5 +1,5 @@
 <template>
-  <div id="canvas-thumb-grid-container" class="column">
+  <div id="canvas-thumb-grid-container">
     <canvas id="canvas-thumb-grid"
       @mousedown="onMouseEvent($event)"
       @mouseup="onMouseEvent($event)"
