@@ -1,6 +1,6 @@
 <template>
     <div id="canvas-thumb-grid-container">
-      <select v-model="displayMode">
+      <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological</option>
         <option value="groupByScene">By Scene</option>
       </select>
