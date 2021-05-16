@@ -6,7 +6,12 @@
         <ThumbnailView @set-current-frame="setCurrentFrame" :shots="shots" :current-frame="currentFrame"/>
       </div>
       <div class="column">
-        <VideoPlayer @set-current-frame="setCurrentFrame" :current-frame="currentFrame" :options="videoPlayerOptions" />
+        <VideoPlayer
+            @set-current-frame="setCurrentFrame"
+            @playback-status-updated="setIsPlaying"
+            :is-playing="isPlaying"
+            :current-frame="currentFrame"
+            :options="videoPlayerOptions" />
         <div> Frame {{ currentFrame }}</div>
         <div>Properties editor</div>
       </div>
@@ -36,6 +41,7 @@ export default {
   },
   data () {
     return {
+      isPlaying: false,
       shots: [],
       currentFrame: 0,
       videoPlayerOptions: null,
@@ -45,9 +51,25 @@ export default {
   methods: {
     setCurrentFrame: function (frame) {
       this.currentFrame = frame
+    },
+    setIsPlaying: function (value) {
+      this.isPlaying = value;
+    },
+    togglePlayback: function () {
+      this.isPlaying = !this.isPlaying;
+    },
+    handleHotkey: function (ev) {
+      if (ev.isComposing || ev.keyCode === 32) {
+        this.togglePlayback();
+      }
     }
   },
   mounted() {
+
+    // Global listener for any key pressed while the document is in focus
+    document.addEventListener('keydown', this.handleHotkey);
+
+    // Load edit data (to be fetched from a web API later)
     fetch('edit.json')
       .then(response => response.json())
       .then(data => {

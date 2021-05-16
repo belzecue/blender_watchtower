@@ -12,6 +12,7 @@ export default {
   name: "VideoPlayer",
   props: {
     currentFrame: Number,
+    isPlaying: Boolean,
     options: {
       type: Object,
       default() {
@@ -26,6 +27,13 @@ export default {
     }
   },
   watch: {
+    isPlaying: function () {
+      if (this.isPlaying) {
+        this.player.play();
+      } else {
+        this.player.pause();
+      }
+    },
     currentFrame: function () {
       // this.player.currentTime(this.currentFrame / 24000)
       if (! this.player.paused()) {return}
@@ -38,7 +46,11 @@ export default {
         console.log('Player is ready');
       })
       this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
+      // Update global isPlaying status
+      this.player.on('play', () => {this.$emit('playback-status-updated', true)});
       this.player.on('pause', this.cancelSetCurrentFrame);
+      // Update global isPlaying status
+      this.player.on('pause', () => {this.$emit('playback-status-updated', false)});
       this.player.on('seeking', this.setCurrentFrame);
     },
   },
