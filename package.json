@@ -11,7 +11,8 @@
     "buefy": "^0.9.7",
     "core-js": "^3.6.5",
     "video.js": "^7.11.8",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "webpack-glsl-loader": "^1.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
