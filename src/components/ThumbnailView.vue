@@ -1,12 +1,16 @@
 <template>
-  <div id="canvas-thumb-grid-container">
-    <canvas id="canvas-thumb-grid"
-      @mousedown="onMouseEvent($event)"
-      @mouseup="onMouseEvent($event)"
-      @mousemove="onMouseEvent($event)"
-      @mouseleave="onMouseEvent($event)"
-    >
-    </canvas>
+    <div id="canvas-thumb-grid-container">
+      <select v-model="displayMode">
+        <option value="chronological">Chronological</option>
+        <option value="groupByScene">By Scene</option>
+      </select>
+      <canvas id="canvas-thumb-grid"
+        @mousedown="onMouseEvent($event)"
+        @mouseup="onMouseEvent($event)"
+        @mousemove="onMouseEvent($event)"
+        @mouseleave="onMouseEvent($event)"
+      >
+      </canvas>
   </div>
 </template>
 
@@ -22,6 +26,7 @@ export default {
   },
   data () {
     return {
+      displayMode: 'chronological',
       canvas: null,
       gl: null,
       shaderProgramInfo: null,
@@ -420,4 +425,5 @@ function ThumbnailImage (shot, glImageID) {
 
 <style scoped>
   canvas { display:block; }
+  #canvas-thumb-grid-container {background-color: rgb(46, 46, 46)}
 </style>
