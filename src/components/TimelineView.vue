@@ -12,11 +12,12 @@
 
 <script>
 
-import { UIRenderer, Rect } from '../shading';
+import {UIRenderer, Rect, loadTexture} from '../shading';
 
 export default {
   name: "TimelineView",
   props: {
+    shots: Array,
     currentFrame: Number,
     totalFrames: Number,
   },
@@ -40,6 +41,9 @@ export default {
     }
   },
   watch: {
+    shots: function () {
+      this.draw();
+    },
     currentFrame: function () {
       this.draw();
     },
@@ -91,6 +95,16 @@ export default {
       const timelineW = rect.width - timeline.pad.x * 2.0;
       const timelineH = rect.height - timeline.pad.y * 2.0;
       ui.addRect(timelineX, timelineY, timelineW, timelineH, timeline.color);
+
+      // Draw shots
+      const shotTop = timelineY + 1;
+      const shotHeight = timelineH - 2;
+      for (const shot of this.shots) {
+        const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
+        const endFrame = shot.startFrame + shot.durationSeconds * 24;
+        const endPos = timelineX + endFrame * timelineW / this.totalFrames;
+        ui.addFrame(startPos, shotTop, endPos - startPos, shotHeight, 1,[0.2, 0.3, 0.3, 1.0], 3);
+      }
 
       // Playhead
       // Update the playhead position according to the current frame.
