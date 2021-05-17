@@ -27,7 +27,6 @@ export default {
       uiRenderer: null,
       uiElements: {
         playhead: {
-          posX: 0,
           padY: 8,
           triangle: {width: 16.0, height: 8.0},
           lineWidth: 2.0,
@@ -95,18 +94,18 @@ export default {
 
       // Playhead
       // Update the playhead position according to the current frame.
-      this.uiElements.playhead.posX = timelineX + this.currentFrame * timelineW / this.totalFrames;
+      const playheadPos = timelineX + this.currentFrame * timelineW / this.totalFrames;
       const playhead = this.uiElements.playhead;
       const triangle = this.uiElements.playhead.triangle;
       ui.addLine(
-        [playhead.posX, playhead.padY + triangle.height], // Triangle tip. (Up)
-        [playhead.posX, rect.height - playhead.padY], // (Down)
+        [playheadPos, playhead.padY + triangle.height], // Triangle tip. (Up)
+        [playheadPos, rect.height - playhead.padY], // (Down)
         playhead.lineWidth, playhead.color
       );
       ui.addTriangle(
-        [playhead.posX                       , playhead.padY + triangle.height], // Center, down.
-        [playhead.posX - triangle.width * 0.5, playhead.padY], // Top, left.
-        [playhead.posX + triangle.width * 0.5, playhead.padY], // Top, right.
+        [playheadPos                       , playhead.padY + triangle.height], // Center, down.
+        [playheadPos - triangle.width * 0.5, playhead.padY], // Top, left.
+        [playheadPos + triangle.width * 0.5, playhead.padY], // Top, right.
         playhead.color
       );
 

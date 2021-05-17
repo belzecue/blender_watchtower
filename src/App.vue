@@ -44,8 +44,8 @@ export default {
       isPlaying: false,
       shots: [],
       currentFrame: 0,
+      totalFrames: 1,
       videoPlayerOptions: null,
-      totalFrames: null,
     }
   },
   methods: {
