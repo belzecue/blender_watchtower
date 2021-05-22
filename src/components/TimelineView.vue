@@ -50,6 +50,11 @@ export default {
   },
   mounted: function () {
     this.initCanvas();
+
+    // Note: Image loading, if any, should go here.
+
+    // Initial draw of this component.
+    this.draw();
   },
   methods: {
     getCanvasRect: function () {
@@ -64,23 +69,27 @@ export default {
       };
     },
 
-    resizeCanvas: function () {
+    resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-timeline-container');
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = 100;
-      this.draw();
+
+      if (shouldDraw) {
+        this.draw();
+      }
     },
 
     initCanvas: function () {
       // Create the rendering setup.
       this.canvas = document.getElementById('canvas-timeline');
-      this.uiRenderer = new UIRenderer(this.canvas);
+      this.uiRenderer = new UIRenderer(this.canvas, this.draw);
 
       // Resize the canvas to fill browser window dynamically
       window.addEventListener('resize', this.resizeCanvas, false);
 
-      // Call the re-size once to trigger the sizing and initial draw of this component.
-      this.resizeCanvas();
+      // Call the re-size once to trigger the sizing, but avoid drawing because
+      // images (if any) haven't been created yet.
+      this.resizeCanvas(false);
     },
 
     draw: function () {
