@@ -16,7 +16,7 @@
 
 <script>
 
-import { init_shader_program, bind_attr, loadTexture } from './../shading.js';
+import {UIRenderer} from '../shading';
 
 export default {
   name: "ThumbnailView",
@@ -28,18 +28,16 @@ export default {
     return {
       displayMode: 'chronological',
       canvas: null,
-      gl: null,
-      shaderProgramInfo: null,
-      buffers: null,
       uiElements: {
         originalImageSize: [0,0],
         thumbnailSize: [0,0],
         thumbnails: [],
+        thumbTexBundleID: null,
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
       },
       isMouseDragging: false,
-      thumbforCurrentFrame: null,
+      thumbForCurrentFrame: null,
       frog: null,
     }
   },
@@ -48,13 +46,15 @@ export default {
       console.log("Thumbnail View: Loading " + this.shots.length + " shots")
 
       if (this.shots.length) {
-        this.uiElements.originalImageSize = [1920, 1080]; // 249. 140 // WIP
+        const thumb_size = [249, 140] ; // [1920, 1080];// WIP
+        this.uiElements.originalImageSize = thumb_size;
 
+        let thumb_urls = []
         for (const shot of this.shots) {
-          const glTextureID = loadTexture(this.gl, shot.thumbnailUrl, this.draw);
-          // const glTextureID = this.frog;
-          this.uiElements.thumbnails.push(new ThumbnailImage(shot, glTextureID));
+          thumb_urls.push(shot.thumbnailUrl);
+          this.uiElements.thumbnails.push(new ThumbnailImage(shot));
         }
+        this.uiElements.thumbTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
       }
 
       this.layout();
@@ -62,13 +62,13 @@ export default {
     },
     currentFrame: function () {
       // Find the thumbnail shot that should be highlighted.
-      var thumbforCurrentFrame = null;
+      let thumbForCurrentFrame = null;
       for (const thumb of this.uiElements.thumbnails) {
         if(thumb.shot.startFrame > this.currentFrame)
           break;
-        thumbforCurrentFrame = thumb;
+        thumbForCurrentFrame = thumb;
       }
-      this.thumbforCurrentFrame = thumbforCurrentFrame;
+      this.thumbForCurrentFrame = thumbForCurrentFrame;
 
       this.draw();
     },
@@ -76,7 +76,12 @@ export default {
   mounted: function () {
     console.log("Thumbnail View: Initializing...");
     this.initCanvas();
-    this.frog = loadTexture(this.gl, "toad.png", this.draw);
+
+    // Note: Image loading, if any, should go here.
+
+    // Initial draw of this component.
+    this.layout();
+    this.draw();
   },
   methods: {
     getCanvasRect: function () {
@@ -84,180 +89,59 @@ export default {
     },
 
     clientToCanvasCoords: function (event) {
-      var rect = this.getCanvasRect();
+      let rect = this.getCanvasRect();
       return {
          x: event.clientX - rect.left,
          y: event.clientY - rect.top
       };
     },
 
-    resizeCanvas: function () {
+    resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-thumb-grid-container');
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = window.innerHeight - 400;
 
-      this.layout();
-      this.draw();
+      if (shouldDraw) {
+        this.layout();
+        this.draw();
+      }
     },
 
     initCanvas: function () {
       this.canvas = document.getElementById('canvas-thumb-grid');
-
-      // Initialize the GL context.
-      const gl = this.canvas.getContext('webgl');
-      if (!gl) {
-        // Only continue if WebGL is available and working.
-        alert('Unable to initialize WebGL. Your browser or machine may not support it.');
-        return;
-      }
-      this.gl = gl;
-
-      // Vertex shader.
-      const vs_source = `
-        attribute vec2 v_pos;
-        attribute vec2 v_tex_coord;
-        uniform mat4 mvp;
-
-        varying highp vec2 tex_coord;
-
-        void main() {
-          gl_Position = mvp * vec4(v_pos, 0.0, 1.0);
-          tex_coord = v_tex_coord;
-        }
-      `;
-
-      // Fragment shader.
-      const fs_source = `
-        uniform sampler2D sampler;
-        varying highp vec2 tex_coord;
-
-        void main() {
-          gl_FragColor = texture2D(sampler, tex_coord);
-        }
-      `;
-
-      // Load and compile shaders
-      const shaderProgram = init_shader_program(gl, vs_source, fs_source);
-
-      // Collect the shader's attribute locations.
-      this.shaderProgramInfo = {
-        program: shaderProgram,
-        attrs: {
-          vertexPos: bind_attr(gl, shaderProgram, 'v_pos'),
-          texCoord: bind_attr(gl, shaderProgram, 'v_tex_coord'),
-        },
-        uniforms: {
-          modelViewProj: gl.getUniformLocation(shaderProgram, 'mvp'),
-          sampler: gl.getUniformLocation(shaderProgram, 'sampler'),
-        }
-      };
-
-      // Generate GPU buffer IDs that will be filled with data later for the shader to use
-      const posBuffer = gl.createBuffer();
-      const texCoordBuffer = gl.createBuffer();
-
-      this.buffers = {
-        pos: posBuffer,
-        texCoords: texCoordBuffer
-      };
-
-      // Upload the texture coordinate data to the GPU
-      const texCoords = new Float32Array([
-        1.0, 1.0,
-        0.0, 1.0,
-        1.0, 0.0,
-        0.0, 0.0,
-      ]);
-      gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
-
-      gl.clearColor(0.18, 0.18, 0.18, 1.0);
+      this.uiRenderer = new UIRenderer(this.canvas, this.draw);
 
       // Resize the canvas to fill browser window dynamically
       window.addEventListener('resize', this.resizeCanvas, false);
 
-      // Call the re-size once to trigger the sizing and initial draw of this component.
-      this.resizeCanvas();
+      // Call the re-size once to trigger the sizing, but avoid drawing because
+      // images (if any) haven't been created yet.
+      this.resizeCanvas(false);
     },
 
     draw: function () {
+      const ui = this.uiRenderer;
 
-      const gl = this.gl;
-
-      // UI items layout. Everything in px.
-      const rect = this.getCanvasRect();
-
-      const pixel = {
-        x: 2.0 / rect.width, // Shader clip space is [-1,1], therefore divide 2.
-        y: 2.0 / rect.height
-      }
-      const mvp = [1,0,0,0, 0,-1,0,0, 0,0,1,0, 0,0,0,1];
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-      // Clear the color buffer with specified clear color
-      gl.clear(gl.COLOR_BUFFER_BIT);
-
-      if (this.shots.length)
-      {
-        gl.useProgram(this.shaderProgramInfo.program);
-        gl.uniformMatrix4fv(this.shaderProgramInfo.uniforms.modelViewProj, false, mvp);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.texCoords);
-        gl.enableVertexAttribArray(this.shaderProgramInfo.attrs.texCoord);
-        gl.vertexAttribPointer(
-          this.shaderProgramInfo.attrs.texCoord, // Shader attribute index
-          2,         // Number of elements per vertex
-          gl.FLOAT,  // Data type of each element
-          false,     // Normalized?
-          0,         // Stride if data is interleaved
-          0          // Pointer offset to start of data
-        );
-
+      if (this.shots.length) {
+        let i = 0;
         for (const thumb of this.uiElements.thumbnails) {
-
           // Draw the thumbnail for the current frame bigger than the others.
-          var growSize = 0;
-          if (thumb === this.thumbforCurrentFrame)
-              growSize = 5;
+          let growSize = 0;
+          if (thumb === this.thumbForCurrentFrame)
+            growSize = 5;
 
-          // Bind the data for the shader to use and specify how to interpret it.
-          const shaderPadH = pixel.x * (thumb.pos[0] - growSize);
-          const shaderPadV = pixel.y * (thumb.pos[1] - growSize);
-          const shaderThumbH = pixel.x * (this.uiElements.thumbnailSize[0] + growSize * 2);
-          const shaderThumbV = pixel.y * (this.uiElements.thumbnailSize[1] + growSize * 2);
-          const positions = new Float32Array([
-            -1.0 + shaderPadH + shaderThumbH, -1.0 + shaderPadV + shaderThumbV,
-            -1.0 + shaderPadH,                -1.0 + shaderPadV + shaderThumbV,
-            -1.0 + shaderPadH + shaderThumbH, -1.0 + shaderPadV,
-            -1.0 + shaderPadH,                -1.0 + shaderPadV,
-          ]);
-          gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.pos);
-          gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW); // Transfer data to GPU
-          gl.enableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
-          gl.vertexAttribPointer(
-            this.shaderProgramInfo.attrs.vertexPos, // Shader attribute index
-            2,         // Number of elements per vertex
-            gl.FLOAT,  // Data type of each element
-            false,     // Normalized?
-            0,         // Stride if data is interleaved
-            0          // Pointer offset to start of data
-          );
-
-          // Bind the texture
-          gl.activeTexture(gl.TEXTURE0); // Set context to use TextureUnit 0
-          gl.bindTexture(gl.TEXTURE_2D, thumb.glTextureID); // Bind the texture to TextureUnit 0
-          gl.uniform1i(this.shaderProgramInfo.uniforms.sampler, 0); // Set shader sampler to use TextureUnit 0
-
-          gl.drawArrays(gl.TRIANGLE_STRIP,
-            0, // Offset.
-            4  // Vertex count.
+          ui.addImageFromBundle(
+            thumb.pos[0] - growSize,
+            thumb.pos[1] - growSize,
+            this.uiElements.thumbnailSize[0] + growSize * 2,
+            this.uiElements.thumbnailSize[1] + growSize * 2,
+            this.uiElements.thumbTexBundleID, i++
           );
         }
-
-        gl.disableVertexAttribArray(this.shaderProgramInfo.attrs.vertexPos);
-        gl.disableVertexAttribArray(this.shaderProgramInfo.attrs.texCoord);
-        gl.useProgram(null);
       }
+
+      // Draw the frame.
+      ui.draw();
     },
 
     layout: function () {
@@ -302,10 +186,10 @@ export default {
         this.uiElements.thumbnailSize = [0,0];
         return
       }
-      var scaleFactor = Math.sqrt(thumbnailArea / (originalImageW * originalImageH));
+      let scaleFactor = Math.sqrt(thumbnailArea / (originalImageW * originalImageH));
       //console.log("Scale factor:", scaleFactor);
 
-      var thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
+      let thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
 
       const numImagesPerRow = Math.ceil(availableW / thumbnailSize[0]);
       const numImagesPerCol = Math.ceil(numImages / numImagesPerRow);
@@ -334,13 +218,13 @@ export default {
       const spacing = [spaceW[1], spaceH[1]];
 
       // Set the position of each thumbnail.
-      var startPosX = margins[0];
-      var startPosY = margins[1];
+      let startPosX = margins[0];
+      let startPosY = margins[1];
       const lastStartPosX = Math.ceil(
         margins[0] + (numImagesPerRow - 1) * (thumbnailSize[0] + spacing[0])
       );
 
-      for (var img of this.uiElements.thumbnails) {
+      for (let img of this.uiElements.thumbnails) {
         img.pos = [startPosX, startPosY];
         startPosX += thumbnailSize[0] + spacing[0];
         // Next row
@@ -366,8 +250,8 @@ export default {
         for (const thumb of this.uiElements.thumbnails) {
 
           // Draw the thumbnail for the current frame bigger than the others.
-          var growSize = 0;
-          if (thumb === this.thumbforCurrentFrame)
+          let growSize = 0;
+          if (thumb === this.thumbForCurrentFrame)
               growSize = 5;
 
           if ( thumb.pos[0] - growSize <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0] + growSize * 2
@@ -397,7 +281,7 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
   const availableSpace = totalAvailable - thumbSize * numThumbs;
   //console.log("remaining space", availableSpace, "px");
 
-  var spacing = 0;
+  let spacing = 0;
   if (numThumbs > 1) {
     spacing = (availableSpace - minMargin) / (numThumbs - 1);
     //console.log("spacing", spacing);
@@ -405,7 +289,7 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
     spacing = Math.min(Math.ceil(spacing), minMargin);
   }
 
-  var margin = (availableSpace - spacing * (numThumbs - 1)) / 2;
+  let margin = (availableSpace - spacing * (numThumbs - 1)) / 2;
   //console.log("margins", margin);
   margin = Math.floor(margin);
 
@@ -413,8 +297,7 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
 }
 
 
-function ThumbnailImage (shot, glImageID) {
-  this.glTextureID = glImageID; // GL texture ID.
+function ThumbnailImage (shot) {
   this.pos = [0, 0]; // Position in px where the image should be displayed in canvas coordinates.
   this.shot = shot;
   this.group_idx = -1;

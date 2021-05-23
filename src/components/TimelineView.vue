@@ -12,7 +12,7 @@
 
 <script>
 
-import {UIRenderer, Rect, loadTexture} from '../shading';
+import {UIRenderer, Rect} from '../shading';
 
 export default {
   name: "TimelineView",
