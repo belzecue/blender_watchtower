@@ -11,7 +11,8 @@
         @mouseleave="onMouseEvent($event)"
       >
       </canvas>
-  </div>
+      <canvas id="canvas-thumb-grid-text"></canvas>
+    </div>
 </template>
 
 <script>
@@ -28,6 +29,9 @@ export default {
     return {
       displayMode: 'chronological',
       canvas: null,
+      canvasText: null,
+      uiRenderer: null,
+      ui2D: null,
       uiElements: {
         originalImageSize: [0,0],
         thumbnailSize: [0,0],
@@ -101,6 +105,9 @@ export default {
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = window.innerHeight - 400;
 
+      this.canvasText.width = this.canvas.width;
+      this.canvasText.height = this.canvas.height;
+
       if (shouldDraw) {
         this.layout();
         this.draw();
@@ -110,6 +117,9 @@ export default {
     initCanvas: function () {
       this.canvas = document.getElementById('canvas-thumb-grid');
       this.uiRenderer = new UIRenderer(this.canvas, this.draw);
+
+      this.canvasText = document.getElementById('canvas-thumb-grid-text');
+      this.ui2D = this.canvasText.getContext("2d");
 
       // Resize the canvas to fill browser window dynamically
       window.addEventListener('resize', this.resizeCanvas, false);
@@ -139,6 +149,17 @@ export default {
           );
         }
       }
+
+      // Setup style for the text rendering in the overlaid canvas for text.
+      this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
+      this.ui2D.fillStyle = "rgb(220, 220, 220)";
+      this.ui2D.font = "13px sans-serif";
+      this.ui2D.textBaseline = "top";
+      this.ui2D.shadowOffsetX = 2;
+      this.ui2D.shadowOffsetY = 2;
+      this.ui2D.shadowBlur = 2;
+      this.ui2D.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      //this.ui2D.fillText("Hello Canvas!", 140, 40);
 
       // Draw the frame.
       ui.draw();
@@ -308,5 +329,16 @@ function ThumbnailImage (shot) {
 
 <style scoped>
   canvas { display:block; }
-  #canvas-thumb-grid-container {background-color: rgb(46, 46, 46)}
+
+  #canvas-thumb-grid-container {
+    position: relative;
+    background-color: rgb(46, 46, 46);
+  }
+  #canvas-thumb-grid {
+    position: absolute;
+  }
+  #canvas-thumb-grid-text {
+    position: absolute;
+    z-index: 10;
+  }
 </style>
