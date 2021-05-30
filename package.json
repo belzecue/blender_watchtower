@@ -10,8 +10,10 @@
   "dependencies": {
     "buefy": "^0.9.7",
     "core-js": "^3.6.5",
+    "superagent": "^6.1.0",
     "video.js": "^7.11.8",
     "vue": "^2.6.11",
+    "vue-cookies": "^1.7.4",
     "webpack-glsl-loader": "^1.0.1"
   },
   "devDependencies": {
