@@ -68,14 +68,13 @@ export default {
 
     // Global listener for any key pressed while the document is in focus
     document.addEventListener('keydown', this.handleHotkey);
-
     // Load edit data (to be fetched from a web API later)
     fetch('edit.json')
       .then(response => response.json())
       .then(data => {
         for (let i = 0; i < data.shots.length; i++) {
           let parsedShot = data.shots[i];
-          parsedShot.thumbnailUrl = data.sourceBase + 'thumbnails/' + parsedShot.thumbnailFile;
+          parsedShot.thumbnailUrl = data.sourceBase + parsedShot.thumbnailFile;
           this.shots.push(parsedShot)
         }
 

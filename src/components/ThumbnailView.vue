@@ -50,7 +50,7 @@ export default {
       console.log("Thumbnail View: Loading " + this.shots.length + " shots")
 
       if (this.shots.length) {
-        const thumb_size = [249, 140] ; // [1920, 1080];// WIP
+        const thumb_size = [150, 100] ; // [1920, 1080];// WIP
         this.uiElements.originalImageSize = thumb_size;
 
         let thumb_urls = []
