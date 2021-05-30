@@ -24,3 +24,4 @@ pnpm-debug.log*
 *.paw
 /public/preview-files/
 /public/*.mkv
+/public/*.mp4
