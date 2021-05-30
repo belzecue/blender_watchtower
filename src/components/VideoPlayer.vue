@@ -12,6 +12,8 @@ export default {
   name: "VideoPlayer",
   props: {
     currentFrame: Number,
+    frameOffset: Number,
+    fps: Number,
     isPlaying: Boolean,
     options: {
       type: Object,
@@ -35,9 +37,9 @@ export default {
       }
     },
     currentFrame: function () {
-      // this.player.currentTime(this.currentFrame / 24000)
       if (! this.player.paused()) {return}
-      let currentTime = this.currentFrame / 24;
+      // Limit frame value to 0 or greater
+      let currentTime = Math.max(0, (this.currentFrame - this.frameOffset) / this.fps);
       this.player.currentTime(currentTime);
     },
     options: function () {
@@ -57,7 +59,7 @@ export default {
   methods: {
     setCurrentFrame: function () {
       if (!this.player) {return}
-      let currentFrame = this.player.currentTime() * 24;
+      let currentFrame = this.player.currentTime() * this.fps + this.frameOffset;
       this.$emit('set-current-frame', Math.round(currentFrame));
     },
     setCurrentFrameAndRequestAnimationFrame: function () {

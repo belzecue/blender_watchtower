@@ -3,6 +3,7 @@
   "sourceType": "video/webm",
   "totalFrames": 14741,
   "frameOffset": 101,
+  "fps": 24,
   "shots": [
     {
       "durationSeconds": 10.333333333333334,

@@ -11,6 +11,8 @@
             @playback-status-updated="setIsPlaying"
             :is-playing="isPlaying"
             :current-frame="currentFrame"
+            :frame-offset="frameOffset"
+            :fps="fps"
             :options="videoPlayerOptions" />
         <div> Frame {{ currentFrame }}</div>
         <div>Properties editor</div>
@@ -45,6 +47,8 @@ export default {
       shots: [],
       currentFrame: 0,
       totalFrames: 1,
+      frameOffset: 0,
+      fps: 24,
       videoPlayerOptions: null,
     }
   },
@@ -80,6 +84,8 @@ export default {
 
         this.shots = data.shots;
         this.totalFrames = data.totalFrames;
+        this.frameOffset = data.frameOffset;
+        this.fps = data.fps;
         this.videoPlayerOptions = {
           autoplay: false,
           controls: true,
