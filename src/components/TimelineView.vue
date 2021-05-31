@@ -17,6 +17,7 @@ import {UIRenderer, Rect} from '../shading';
 export default {
   name: "TimelineView",
   props: {
+    scenes: Array,
     shots: Array,
     currentFrame: Number,
     totalFrames: Number,
@@ -36,11 +37,18 @@ export default {
         timeline: {
           pad: {x: 20, y: 25},
           color: [0.0, 0.4, 0.4, 1.0],
-        }
-      }
+        },
+        scenes: {
+          height: 12,
+          corner: 2,
+        },
+      },
     }
   },
   watch: {
+    scenes: function () {
+      this.draw();
+    },
     shots: function () {
       this.draw();
     },
@@ -110,9 +118,46 @@ export default {
       const shotHeight = timelineH - 2;
       for (const shot of this.shots) {
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
-        const endFrame = shot.startFrame + shot.durationSeconds * 24;
+        const endFrame = shot.startFrame + 1 + shot.durationSeconds * 24;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
-        ui.addFrame(startPos, shotTop, endPos - startPos, shotHeight, 1,[0.2, 0.3, 0.3, 1.0], 3);
+        ui.addFrame(startPos, shotTop, endPos - startPos, shotHeight, 1, [0.2, 0.3, 0.3, 1.0], 1);
+      }
+
+      // Draw scenes
+      const sceneTop = timelineY + 1;
+      const sceneHeight = this.uiElements.scenes.height;
+      const sceneCorner = this.uiElements.scenes.corner;
+      for (const scene of this.scenes) {
+        // Find continuous ranges of shots that belong to this scene.
+        // In theory, a scene has a single contiguous range, but in practice,
+        // there might shots mistakenly assigned to scenes or shots missing.
+        let currRange = -1;
+        let startFrames = [];
+        let endFrames = [];
+        for (const shot of this.shots) {
+          if (scene.uuid === shot.scene) {
+            if (currRange === -1) {
+              startFrames.push(shot.startFrame);
+              currRange = shot.startFrame + shot.durationSeconds * 24;
+            } else if (currRange === shot.startFrame) {
+              currRange += shot.durationSeconds * 24;
+            } else {
+              endFrames.push(currRange);
+              startFrames.push(shot.startFrame);
+              currRange = shot.startFrame + shot.durationSeconds * 24;
+            }
+          } else if (currRange !== -1) {
+            endFrames.push(currRange);
+            currRange = -1;
+          }
+        }
+        endFrames.push(currRange);
+        // Draw a rect for each range of shots belonging to this scene.
+        for (let i = 0; i < startFrames.length; i++) {
+          const startPos = timelineX + startFrames[i] * timelineW / this.totalFrames;
+          const endPos = timelineX + endFrames[i] * timelineW / this.totalFrames;
+          ui.addRect(startPos, sceneTop, endPos - startPos, sceneHeight, scene.color, sceneCorner);
+        }
       }
 
       // Playhead
