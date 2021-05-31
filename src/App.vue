@@ -3,7 +3,11 @@
     <Toolbar />
     <div class="columns is-gapless">
       <div class="column is-two-thirds">
-        <ThumbnailView @set-current-frame="setCurrentFrame" :shots="shots" :current-frame="currentFrame"/>
+        <ThumbnailView
+            @set-current-frame="setCurrentFrame"
+            :scenes="scenes"
+            :shots="shots"
+            :current-frame="currentFrame" />
       </div>
       <div class="column">
         <VideoPlayer
@@ -20,7 +24,12 @@
     </div>
     <div class="columns is-gapless">
       <div class="column is-full">
-        <TimelineView @set-current-frame="setCurrentFrame" :shots="shots" :current-frame="currentFrame" :total-frames="totalFrames"/>
+        <TimelineView
+            @set-current-frame="setCurrentFrame"
+            :scenes="scenes"
+            :shots="shots"
+            :current-frame="currentFrame"
+            :total-frames="totalFrames"/>
       </div>
     </div>
 
@@ -44,6 +53,7 @@ export default {
   data () {
     return {
       isPlaying: false,
+      scenes: [],
       shots: [],
       currentFrame: 0,
       totalFrames: 1,
@@ -82,6 +92,7 @@ export default {
           this.shots.push(parsedShot)
         }
 
+        this.scenes = data.scenes;
         this.shots = data.shots;
         this.totalFrames = data.totalFrames;
         this.frameOffset = data.frameOffset;
