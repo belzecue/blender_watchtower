@@ -22,6 +22,7 @@ export default {
     shots: Array,
     currentFrame: Number,
     totalFrames: Number,
+    fps: Number,
   },
   data () {
     return {
@@ -127,7 +128,7 @@ export default {
       const shotHeight = timelineH - 2;
       for (const shot of this.shots) {
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
-        const endFrame = shot.startFrame + 1 + shot.durationSeconds * 24;
+        const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
         ui.addFrame(startPos, shotTop, endPos - startPos, shotHeight, 1, [0.2, 0.3, 0.3, 1.0], 1);
       }
@@ -147,13 +148,13 @@ export default {
           if (scene.uuid === shot.scene) {
             if (currRange === -1) {
               startFrames.push(shot.startFrame);
-              currRange = shot.startFrame + shot.durationSeconds * 24;
+              currRange = shot.startFrame + shot.durationSeconds * this.fps;
             } else if (currRange === shot.startFrame) {
-              currRange += shot.durationSeconds * 24;
+              currRange += shot.durationSeconds * this.fps;
             } else {
               endFrames.push(currRange);
               startFrames.push(shot.startFrame);
-              currRange = shot.startFrame + shot.durationSeconds * 24;
+              currRange = shot.startFrame + shot.durationSeconds * this.fps;
             }
           } else if (currRange !== -1) {
             endFrames.push(currRange);

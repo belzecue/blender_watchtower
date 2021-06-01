@@ -29,7 +29,9 @@
             :scenes="scenes"
             :shots="shots"
             :current-frame="currentFrame"
-            :total-frames="totalFrames"/>
+            :total-frames="totalFrames"
+            :fps="fps"
+        />
       </div>
     </div>
 
