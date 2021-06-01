@@ -1,6 +1,7 @@
 <template>
   <div id="canvas-timeline-container">
-    <canvas id="canvas-timeline"
+    <canvas id="canvas-timeline"></canvas>
+    <canvas id="canvas-timeline-text"
       @mousedown="onMouseEvent($event)"
       @mouseup="onMouseEvent($event)"
       @mousemove="onMouseEvent($event)"
@@ -25,8 +26,10 @@ export default {
   data () {
     return {
       canvas: null,
+      canvasText: null,
       isPlayheadDraggable: false,
       uiRenderer: null,
+      ui2D: null,
       uiElements: {
         playhead: {
           padY: 8,
@@ -82,6 +85,9 @@ export default {
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = 100;
 
+      this.canvasText.width = this.canvas.width;
+      this.canvasText.height = this.canvas.height;
+
       if (shouldDraw) {
         this.draw();
       }
@@ -91,6 +97,9 @@ export default {
       // Create the rendering setup.
       this.canvas = document.getElementById('canvas-timeline');
       this.uiRenderer = new UIRenderer(this.canvas, this.draw);
+
+      this.canvasText = document.getElementById('canvas-timeline-text');
+      this.ui2D = this.canvasText.getContext("2d");
 
       // Resize the canvas to fill browser window dynamically
       window.addEventListener('resize', this.resizeCanvas, false);
@@ -212,4 +221,15 @@ export default {
 
 <style scoped>
   canvas { display:block; }
+
+  #canvas-timeline-container {
+    position: relative;
+  }
+  #canvas-timeline {
+    position: absolute;
+  }
+  #canvas-timeline-text {
+    position: absolute;
+    z-index: 10;
+  }
 </style>
