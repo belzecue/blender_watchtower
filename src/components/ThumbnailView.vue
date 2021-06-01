@@ -54,6 +54,10 @@ export default {
     }
   },
   watch: {
+    displayMode: function () {
+      this.layout();
+      this.draw();
+    },
     scenes: function () {
       this.layout();
       this.draw();
