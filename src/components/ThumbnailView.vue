@@ -39,13 +39,14 @@ export default {
         thumbnails: [],
         thumbTexBundleID: null,
         // View.
-        minMargin: 40, // Minimum padding, in pixels, around the thumbnail area.
+        minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
         // Grouped view.
         thumbGroups: [],
         groupedView: {
           title: { fontSize: 12, spaceBefore: 4, spaceAfter: 2, },
           colorRect: { width: 6, xOffset: 12, },
+          minSpacingBetweenThumbs: 2,
         },
       },
       isMouseDragging: false,
@@ -269,9 +270,9 @@ export default {
       this.uiElements.thumbnailSize = thumbnailSize
 
       //console.log("X");
-      const spaceW = calculateSpacing(totalAvailableW, thumbnailSize[0], numImagesPerRow, minMargin);
+      const spaceW = calculateSpacingCentered(totalAvailableW, thumbnailSize[0], numImagesPerRow, minMargin);
       //console.log("Y");
-      const spaceH = calculateSpacing(totalAvailableH, thumbnailSize[1], numImagesPerCol, minMargin);
+      const spaceH = calculateSpacingCentered(totalAvailableH, thumbnailSize[1], numImagesPerCol, minMargin);
 
       const margins = [spaceW[0], spaceH[0]];
       const spacing = [spaceW[1], spaceH[1]];
@@ -348,13 +349,16 @@ export default {
       //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
-      const totalSpacing = [150, 40]; //this.uiElements.totalSpacing;
       const titleHeight = this.uiElements.groupedView.title.fontSize
                         + this.uiElements.groupedView.title.spaceBefore
                         + this.uiElements.groupedView.title.spaceAfter;
-      const minMargin = this.uiElements.minMargin;
-      const availableW = totalAvailableW - totalSpacing[0];
-      const availableH = totalAvailableH - totalSpacing[1] - titleHeight * numGroups;
+      const colorRectOffset = this.uiElements.groupedView.colorRect.xOffset;
+      const colorRectWidth = this.uiElements.groupedView.colorRect.width;
+      const minSpacing = this.uiElements.groupedView.minSpacingBetweenThumbs;
+      const bothMargins = this.uiElements.minMargin;
+      const minSideMargin = bothMargins * 0.5;
+      const availableW = totalAvailableW - bothMargins - colorRectOffset;
+      const availableH = totalAvailableH - bothMargins - titleHeight * numGroups;
 
       // Get the original size and aspect ratio of the images.
       // Assume all images in the edit have the same aspect ratio.
@@ -365,36 +369,80 @@ export default {
 
       // Thumbnail images are at their biggest possible size when each group has a single row.
       // Find maximum height and corresponding scale.
-      const maxResY = availableH / numGroups;
-      const heightFitFactor = maxResY / originalImageH;
-      // Find width that is guaranteed to fit with the thumbnails in one row.
-      const minResX = availableW / shotsPerGroup[0];
-      const rowFitFactor = minResX / originalImageW;
-      //console.log(minResX, rowFitFactor, maxResY, heightFitFactor);
-
-      let scaleFactor = heightFitFactor;
       let numImagesPerRow = shotsPerGroup[0];
       let numImagesPerCol = numGroups;
-      //console.log("Scale factor:", scaleFactor);
+      const maxResY = Math.round((availableH - numImagesPerCol * minSpacing) / numImagesPerCol);
+      const heightFitFactor = maxResY / originalImageH;
+      // Find a thumbnail width that is guaranteed to fit with all the group's thumbnails in one row.
+      const minResX = Math.round((availableW - numImagesPerRow * minSpacing) / numImagesPerRow);
+      const rowFitFactor = minResX / originalImageW;
 
-      let thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
-      this.uiElements.thumbnailSize = thumbnailSize
+      let scaleFactor = heightFitFactor;
+
+      // If the thumbnails do fit in one row, we're done!
+      if (rowFitFactor < heightFitFactor) {
+        // Otherwise, do a binary search for the number of columns that maximizes
+        // the thumb size (therefore, minimizes scale factor).
+        scaleFactor = rowFitFactor;
+        let maxCols = shotsPerGroup[0];
+        let minCols = 0;
+        let checkCols = 1;
+        while (maxCols !== checkCols || checkCols !== minCols) {
+          checkCols = minCols + Math.ceil((maxCols - minCols) / 2);
+          //console.log("check", checkCols, "[", minCols, maxCols, "]");
+
+          // Calculate resulting number of rows, if there are checkCols number of columns.
+          let numRows = 0;
+          for (const n of shotsPerGroup) {
+            numRows += Math.ceil(n / checkCols);
+          }
+          // Get the scale factor necessary to fit the thumbnails in width and in height.
+          // The thumbnails would need to be scaled by the smallest factor to fit in both directions.
+          const checkFitFactorW = Math.round((availableW - numImagesPerRow * minSpacing) / checkCols) / originalImageW;
+          const checkFitFactorH = Math.round((availableH - numImagesPerCol * minSpacing) / numRows) / originalImageH;
+          const checkFitFactor = Math.min(checkFitFactorW, checkFitFactorH);
+          //console.log("Checking (", checkCols, "cols,", numRows, "rows). Scale factors:", checkFitFactorW, checkFitFactorH);
+
+          // If the current number of columns gives bigger thumbnails, keep increasing the columns.
+          //console.log("check factor:", checkFitFactor, ">= best factor:", scaleFactor);
+          if (checkFitFactor >= scaleFactor) {
+            scaleFactor = checkFitFactor;
+            numImagesPerRow = checkCols;
+            numImagesPerCol = numRows;
+
+            if (minCols === checkCols) {
+              break;
+            } else {
+              minCols = checkCols;
+            }
+          } else {
+            // If it is not a better scale factor, search the other direction.
+            if (maxCols === checkCols) {
+              break;
+            } else {
+              maxCols = checkCols - 1;
+            }
+          }
+        }
+      }
+      //console.log("[", numImagesPerRow, "cols x", numImagesPerCol, "rows]. Scale factor:", scaleFactor);
+
+      const thumbSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
+      this.uiElements.thumbnailSize = thumbSize;
 
       //console.log("X");
-      const spaceW = calculateSpacing(totalAvailableW, thumbnailSize[0], numImagesPerRow, minMargin);
+      const usableW = totalAvailableW  - colorRectOffset;
+      const spaceW = calculateSpacingTopLeftFlow(usableW, thumbSize[0], numImagesPerRow, minSideMargin);
       //console.log("Y");
       const usableH = totalAvailableH  - titleHeight * numGroups;
-      const spaceH = calculateSpacing(usableH, thumbnailSize[1], numImagesPerCol, minMargin);
-
-      const margins = [spaceW[0], spaceH[0]];
-      const spacing = [spaceW[1], spaceH[1]];
+      const spaceH = calculateSpacingTopLeftFlow(usableH, thumbSize[1], numImagesPerCol, minSideMargin);
 
       // Set the position of each thumbnail.
-      let startPosX = margins[0] + this.uiElements.groupedView.colorRect.xOffset;
-      let titlePosY = margins[1];
+      let startPosX = minSideMargin + colorRectOffset;
+      let titlePosY = minSideMargin;
       const titleSize = this.uiElements.groupedView.title.fontSize + this.uiElements.groupedView.title.spaceAfter;
-      const thumbnailStepX = thumbnailSize[0] + spacing[0];
-      const thumbnailStepY = thumbnailSize[1] + spacing[1];
+      const thumbnailStepX = thumbSize[0] + spaceW;
+      const thumbnailStepY = thumbSize[1] + spaceH;
 
       // Set the position of each group title and colored rectangle.
       for (const group of this.uiElements.thumbGroups) {
@@ -415,8 +463,8 @@ export default {
         const rectHeight = titleSize + thumbnailStepY * numShotRows;
         const titleTop = group.namePos[1];
         group.colorRect = [
-          startPosX - this.uiElements.groupedView.colorRect.xOffset, titleTop,
-          this.uiElements.groupedView.colorRect.width, rectHeight];
+          startPosX - colorRectOffset, titleTop,
+          colorRectWidth, rectHeight];
       }
 
       // Set the position of each thumbnail.
@@ -472,7 +520,7 @@ export default {
 
 // Get the remaining space not occupied by thumbnails and split it into margins
 // and spacing between the thumbnails.
-function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
+function calculateSpacingCentered(totalAvailable, thumbSize, numThumbs, minMargin) {
 
   const availableSpace = totalAvailable - thumbSize * numThumbs;
   //console.log("remaining space", availableSpace, "px");
@@ -483,8 +531,6 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
     //console.log("spacing", spacing);
     // Spacing between images should never be bigger than the margins.
     spacing = Math.min(Math.ceil(spacing), minMargin);
-    // Or disproportionate to the thumbnail size.
-    spacing = Math.min(spacing, Math.floor(thumbSize / 5));
   }
 
   let margin = (availableSpace - spacing * (numThumbs - 1)) / 2;
@@ -493,6 +539,28 @@ function calculateSpacing(totalAvailable, thumbSize, numThumbs, minMargin) {
 
   return [margin, spacing];
 }
+
+// Get the remaining space not occupied by thumbnails and split it into spacing
+// between the thumbnails. Margins are fixed on the top-left.
+function calculateSpacingTopLeftFlow(usableSpace, thumbSize, numThumbs, minSideMargin) {
+
+  const remainingSpace = usableSpace - thumbSize * numThumbs - minSideMargin * 2;
+  //console.log("remaining space", remainingSpace, "px");
+
+  let spacing = 0;
+  if (numThumbs > 1) {
+    spacing = Math.round(remainingSpace / (numThumbs - 1));
+    //console.log("spacing", spacing);
+    // Spacing between images should never be bigger than the margins.
+    spacing = Math.min(spacing, minSideMargin);
+    // Or disproportionate to the thumbnail size.
+    spacing = Math.min(spacing, Math.floor(thumbSize / 5));
+    //console.log("spacing clamped", spacing);
+  }
+
+  return spacing;
+}
+
 
 // UI element specifying how a thumbnail should be drawn.
 function ThumbnailImage (shot) {
