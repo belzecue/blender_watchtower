@@ -38,6 +38,7 @@ export default {
         thumbnailSize: [0,0],
         thumbnails: [],
         thumbTexBundleID: null,
+        selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
@@ -160,18 +161,16 @@ export default {
       if (this.shots.length) {
         let i = 0;
         for (const thumb of this.uiElements.thumbnails) {
-          // Draw the thumbnail for the current frame bigger than the others.
-          let growSize = 0;
-          if (thumb === this.thumbForCurrentFrame)
-            growSize = 5;
-
           ui.addImageFromBundle(
-            thumb.pos[0] - growSize,
-            thumb.pos[1] - growSize,
-            thumbSize[0] + growSize * 2,
-            thumbSize[1] + growSize * 2,
+            thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
             this.uiElements.thumbTexBundleID, i++
           );
+
+          // Draw a border around the thumbnail corresponding to the current frame.
+          if (thumb === this.thumbForCurrentFrame) {
+            const sel = this.uiElements.selectedHighlight;
+            ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+          }
         }
       }
 
@@ -300,8 +299,6 @@ export default {
     },
 
     fitThumbsInGroup: function () {
-
-      const numImages = this.shots.length;
 
       this.uiElements.thumbGroups = [];
 
@@ -496,14 +493,8 @@ export default {
         const mouse = this.clientToCanvasCoords(event);
         const thumbSize = this.uiElements.thumbnailSize;
         for (const thumb of this.uiElements.thumbnails) {
-
-          // Draw the thumbnail for the current frame bigger than the others.
-          let growSize = 0;
-          if (thumb === this.thumbForCurrentFrame)
-              growSize = 5;
-
-          if ( thumb.pos[0] - growSize <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0] + growSize * 2
-            && thumb.pos[1] - growSize <= mouse.y && mouse.y <= thumb.pos[1] + thumbSize[1] + growSize * 2) {
+          if ( thumb.pos[0] <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0]
+            && thumb.pos[1] <= mouse.y && mouse.y <= thumb.pos[1] + thumbSize[1]) {
 
             this.setCurrentFrame(thumb);
             break;
