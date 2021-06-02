@@ -18,6 +18,7 @@ import {UIRenderer, Rect} from '../shading';
 export default {
   name: "TimelineView",
   props: {
+    taskTypes: Array,
     scenes: Array,
     shots: Array,
     currentFrame: Number,
@@ -32,21 +33,30 @@ export default {
       uiRenderer: null,
       ui2D: null,
       uiElements: {
+        margin: {x: 20, y: 30}, // Spacing around the contents of the timeline canvas. One side, in px.
         playhead: {
           padY: 8,
-          triangle: {width: 16.0, height: 8.0},
+          triangle: {width: 12.0, height: 8.0, flatHeight: 4.0},
           lineWidth: 2.0,
-          color: [0.4, 0.4, 0.4, 1.0],
+          color: [0.85, 0.8, 0.7, 1.0],
+          shadow: { radius: 1.5, color: [0, 0, 0, 0.5] },
         },
         timeline: {
-          pad: {x: 20, y: 25},
-          color: [0.0, 0.4, 0.4, 1.0],
+          pad: {x: 20, y: 22},
+          height: 50,
+          color: [0.15, 0.15, 0.15, 1.0],
         },
         scenes: {
           height: 12,
           corner: 2,
         },
+        shots: {
+          lineWidth: 1,
+          corner: 1,
+          color: [0.3, 0.3, 0.3, 1.0],
+        },
       },
+      timelineRange: { x: 0 , w: 100},
     }
   },
   watch: {
@@ -84,7 +94,7 @@ export default {
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-timeline-container');
       this.canvas.width = canvasContainer.offsetWidth;
-      this.canvas.height = 100;
+      this.canvas.height = 160;
 
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
@@ -114,27 +124,74 @@ export default {
 
       const ui = this.uiRenderer;
       const rect = this.getCanvasRect();
+      // Setup style for the text rendering in the overlaid canvas for text.
+      this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
+      this.ui2D.fillStyle = "rgb(220, 220, 220)";
+      this.ui2D.font = "12px sans-serif";
+      this.ui2D.textAlign = "left";
+      this.ui2D.textBaseline = "top";
+      this.ui2D.shadowOffsetX = 2;
+      this.ui2D.shadowOffsetY = 2;
+      this.ui2D.shadowBlur = 2;
+      this.ui2D.shadowColor = 'rgba(0, 0, 0, 0.5)';
+
+      // Channel names area
+      const margin = this.uiElements.margin;
+      let channelNamesWidth = this.ui2D.measureText("Scenes").width;
+      for (const task of this.taskTypes) {
+        channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
+      }
 
       // Timeline area
       const timeline = this.uiElements.timeline;
-      const timelineX = timeline.pad.x;
+      const timelineX = margin.x + channelNamesWidth + timeline.pad.x;
       const timelineY = timeline.pad.y;
-      const timelineW = rect.width - timeline.pad.x * 2.0;
-      const timelineH = rect.height - timeline.pad.y * 2.0;
+      const timelineW = rect.width - timelineX - margin.x;
+      const timelineH = timeline.height;
+      this.timelineRange.x = timelineX;
+      this.timelineRange.w = timelineW;
       ui.addRect(timelineX, timelineY, timelineW, timelineH, timeline.color);
 
-      // Draw shots
-      const shotTop = timelineY + 1;
-      const shotHeight = timelineH - 2;
+      // Channel strips
+      let channelY = 98;
+      for (let i=1; i < this.taskTypes.length; i++) {
+        ui.addLine([timelineX, channelY], [timelineX + timelineW, channelY], 1, timeline.color);
+        channelY += 25;
+      }
+
+      // Draw shots and their tasks' status
+      const shotsStyle = this.uiElements.shots;
+      const shotTop = timelineY + 19;
+      const shotHeight = timelineH - 23;
       for (const shot of this.shots) {
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
         const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
-        ui.addFrame(startPos, shotTop, endPos - startPos, shotHeight, 1, [0.2, 0.3, 0.3, 1.0], 1);
+        const shotWidth = endPos - startPos;
+        ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
+
+        // Draw task statuses
+        channelY = 77;
+        for (const task of this.taskTypes) {
+          let color = timeline.color;
+          for (const taskStatus of shot.tasks) {
+            if (taskStatus.name === task.name) {
+              for (const status of task.statuses) {
+                if (taskStatus.status === status.name) {
+                  color = status.color;
+                  break;
+                }
+              }
+              break;
+            }
+          }
+          ui.addRect(startPos, channelY, shotWidth, 17, color);
+          channelY += 25;
+        }
       }
 
       // Draw scenes
-      const sceneTop = timelineY + 1;
+      const sceneTop = timelineY + 5;
       const sceneHeight = this.uiElements.scenes.height;
       const sceneCorner = this.uiElements.scenes.corner;
       for (const scene of this.scenes) {
@@ -175,27 +232,57 @@ export default {
       const playheadPos = timelineX + this.currentFrame * timelineW / this.totalFrames;
       const playhead = this.uiElements.playhead;
       const triangle = this.uiElements.playhead.triangle;
+      const triangleTop = playhead.padY + playhead.triangle.flatHeight;
+      const triangleHalfWidth = (triangle.width - 0.5) * 0.5;
+      // Shadow.
+      const shadowRadius = playhead.shadow.radius;
+      const shadowColor = playhead.shadow.color;
+      ui.addLine(
+          [playheadPos + shadowRadius, playhead.padY + triangle.height + shadowRadius], // Triangle tip. (Up)
+          [playheadPos + shadowRadius, rect.height - playhead.padY + shadowRadius], // (Down)
+          playhead.lineWidth, shadowColor
+      );
+      ui.addLine(
+          [playheadPos                    , triangleTop + triangle.height], // Center, down.
+          [playheadPos + triangleHalfWidth, triangleTop], // Top, right.
+          3, shadowColor
+      );
+      ui.addLine(
+          [playheadPos + triangleHalfWidth + shadowRadius * 0.8, triangleTop], // Top, right.
+          [playheadPos + triangleHalfWidth + shadowRadius * 0.8, playhead.padY + shadowRadius], // Toppest, right.
+          2, shadowColor
+      );
+      // Playhead.
       ui.addLine(
         [playheadPos, playhead.padY + triangle.height], // Triangle tip. (Up)
         [playheadPos, rect.height - playhead.padY], // (Down)
         playhead.lineWidth, playhead.color
       );
       ui.addTriangle(
-        [playheadPos                       , playhead.padY + triangle.height], // Center, down.
-        [playheadPos - triangle.width * 0.5, playhead.padY], // Top, left.
-        [playheadPos + triangle.width * 0.5, playhead.padY], // Top, right.
+        [playheadPos                    , triangleTop + triangle.height], // Center, down.
+        [playheadPos - triangleHalfWidth, triangleTop], // Top, left.
+        [playheadPos + triangleHalfWidth, triangleTop], // Top, right.
         playhead.color
       );
+      ui.addRect(
+        playheadPos - triangle.width * 0.5, playhead.padY,
+        triangle.width + 1, playhead.triangle.flatHeight + 1, playhead.color, 1
+      );
+
+      let textY = margin.y;
+      this.ui2D.fillText("Scenes", margin.x, textY); textY += 22;
+      this.ui2D.fillText("Shots", margin.x, textY); textY += 29;
+      for (const task of this.taskTypes) {
+        this.ui2D.fillText(task.name, margin.x, textY);
+        textY += 25;
+      }
 
       // Draw the frame.
       ui.draw();
     },
 
     setCurrentFrame: function (canvasX) {
-      const rect = this.getCanvasRect();
-      const pad = this.uiElements.timeline.pad;
-      const timelineRect = new Rect(pad.x, pad.y, rect.width - pad.x * 2.0, rect.height - pad.y * 2.0);
-      let newCurrentFrame = (canvasX - timelineRect.left) / timelineRect.width * this.totalFrames;
+      let newCurrentFrame = (canvasX - this.timelineRange.x) / this.timelineRange.w * this.totalFrames;
       newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
       this.$emit('set-current-frame', Math.round(newCurrentFrame));
     },

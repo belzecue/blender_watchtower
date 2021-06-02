@@ -26,6 +26,7 @@
       <div class="column is-full">
         <TimelineView
             @set-current-frame="setCurrentFrame"
+            :taskTypes="taskTypes"
             :scenes="scenes"
             :shots="shots"
             :current-frame="currentFrame"
@@ -55,6 +56,7 @@ export default {
   data () {
     return {
       isPlaying: false,
+      taskTypes: [],
       scenes: [],
       shots: [],
       currentFrame: 0,
@@ -91,9 +93,11 @@ export default {
         for (let i = 0; i < data.shots.length; i++) {
           let parsedShot = data.shots[i];
           parsedShot.thumbnailUrl = data.sourceBase + parsedShot.thumbnailFile;
+
           this.shots.push(parsedShot)
         }
 
+        this.taskTypes = data.taskTypes;
         this.scenes = data.scenes;
         this.shots = data.shots;
         this.totalFrames = data.totalFrames;
