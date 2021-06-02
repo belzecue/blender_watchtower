@@ -41,7 +41,8 @@ def fetch_shots_and_previews(force=False):
             'thumbnailFile': save_path.replace('public/', ''),
             'startFrame': shot['data']['frame_in'],
             'durationSeconds': (shot['data']['frame_out'] - shot['data']['frame_in']) / shot['data']['fps'],
-            'scene': shot['sequence_name']
+            'scene': shot['sequence_name'],
+            'tasks': [],
         })
 
     with open('public/shots.json', 'w') as outfile:
