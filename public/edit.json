@@ -1007,14 +1007,6 @@
       "tasks": []
     },
     {
-      "durationSeconds": 1.2916666666666667,
-      "name": "100_0060_A",
-      "scene": "100_haircut",
-      "startFrame": 8652,
-      "thumbnailFile": "preview-files/e7d2f1b5-aa33-41f0-a109-12ef40d2a665.png",
-      "tasks": []
-    },
-    {
       "durationSeconds": 2.7083333333333335,
       "name": "100_0070_A",
       "scene": "100_haircut",
@@ -1492,6 +1484,22 @@
       "scene": "130_snacks",
       "startFrame": 11206,
       "thumbnailFile": "preview-files/ad1756c6-7601-4ce1-84ad-2cecc4f9ebc9.png",
+      "tasks": []
+    },
+    {
+      "durationSeconds": 0.7916666666666666,
+      "name": "130_0243_A",
+      "scene": "130_snacks",
+      "startFrame": 11238,
+      "thumbnailFile": "preview-files/f8a3290d-4a28-4611-bc70-98a72dd63207.png",
+      "tasks": []
+    },
+    {
+      "durationSeconds": 0.875,
+      "name": "130_0246_A",
+      "scene": "130_snacks",
+      "startFrame": 11257,
+      "thumbnailFile": "preview-files/aa3bfe6a-7cc9-46a1-b45c-7e7358ce4dee.png",
       "tasks": []
     },
     {
