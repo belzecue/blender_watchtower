@@ -119,6 +119,7 @@ export default {
 
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-thumb-grid-container');
+      canvasContainer.style.height = window.innerHeight - 400 + "px";
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = window.innerHeight - 400;
 
