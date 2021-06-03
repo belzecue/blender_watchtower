@@ -60,6 +60,9 @@ export default {
     }
   },
   watch: {
+    taskTypes: function () {
+      this.resizeCanvas();
+    },
     sequences: function () {
       this.draw();
     },
@@ -94,7 +97,7 @@ export default {
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-timeline-container');
       this.canvas.width = canvasContainer.offsetWidth;
-      this.canvas.height = 160;
+      this.canvas.height = 85 + 25 * this.taskTypes.length;
 
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
@@ -153,11 +156,11 @@ export default {
       ui.addRect(timelineX, timelineY, timelineW, timelineH, timeline.color);
 
       // Channel strips
-    /*  let channelY = 98;
+      let channelY = 98;
       for (let i=1; i < this.taskTypes.length; i++) {
         ui.addLine([timelineX, channelY], [timelineX + timelineW, channelY], 1, timeline.color);
         channelY += 25;
-      }*/
+      }
 
       // Draw shots and their tasks' status
       const shotsStyle = this.uiElements.shots;
