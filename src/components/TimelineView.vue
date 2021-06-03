@@ -19,7 +19,7 @@ export default {
   name: "TimelineView",
   props: {
     taskTypes: Array,
-    scenes: Array,
+    sequences: Array,
     shots: Array,
     currentFrame: Number,
     totalFrames: Number,
@@ -46,7 +46,7 @@ export default {
           height: 50,
           color: [0.15, 0.15, 0.15, 1.0],
         },
-        scenes: {
+        sequences: {
           height: 12,
           corner: 2,
         },
@@ -60,7 +60,7 @@ export default {
     }
   },
   watch: {
-    scenes: function () {
+    sequences: function () {
       this.draw();
     },
     shots: function () {
@@ -137,7 +137,7 @@ export default {
 
       // Channel names area
       const margin = this.uiElements.margin;
-      let channelNamesWidth = this.ui2D.measureText("Scenes").width;
+      let channelNamesWidth = this.ui2D.measureText("Sequences").width;
       for (const task of this.taskTypes) {
         channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
       }
@@ -153,11 +153,11 @@ export default {
       ui.addRect(timelineX, timelineY, timelineW, timelineH, timeline.color);
 
       // Channel strips
-      let channelY = 98;
+    /*  let channelY = 98;
       for (let i=1; i < this.taskTypes.length; i++) {
         ui.addLine([timelineX, channelY], [timelineX + timelineW, channelY], 1, timeline.color);
         channelY += 25;
-      }
+      }*/
 
       // Draw shots and their tasks' status
       const shotsStyle = this.uiElements.shots;
@@ -171,7 +171,7 @@ export default {
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
 
         // Draw task statuses
-        channelY = 77;
+        /*channelY = 77;
         for (const task of this.taskTypes) {
           let color = timeline.color;
           for (const taskStatus of shot.tasks) {
@@ -187,22 +187,22 @@ export default {
           }
           ui.addRect(startPos, channelY, shotWidth, 17, color);
           channelY += 25;
-        }
+        }*/
       }
 
-      // Draw scenes
-      const sceneTop = timelineY + 5;
-      const sceneHeight = this.uiElements.scenes.height;
-      const sceneCorner = this.uiElements.scenes.corner;
-      for (const scene of this.scenes) {
-        // Find continuous ranges of shots that belong to this scene.
-        // In theory, a scene has a single contiguous range, but in practice,
-        // there might shots mistakenly assigned to scenes or shots missing.
+      // Draw sequences
+      const seqTop = timelineY + 5;
+      const seqHeight = this.uiElements.sequences.height;
+      const seqCorner = this.uiElements.sequences.corner;
+      for (const sequence of this.sequences) {
+        // Find continuous ranges of shots that belong to this sequence.
+        // In theory, a sequence has a single contiguous range, but in practice,
+        // there might shots mistakenly assigned to sequences or shots missing.
         let currRange = -1;
         let startFrames = [];
         let endFrames = [];
         for (const shot of this.shots) {
-          if (scene.uuid === shot.scene) {
+          if (sequence.id === shot.sequence_id) {
             if (currRange === -1) {
               startFrames.push(shot.startFrame);
               currRange = shot.startFrame + shot.durationSeconds * this.fps;
@@ -219,11 +219,11 @@ export default {
           }
         }
         endFrames.push(currRange);
-        // Draw a rect for each range of shots belonging to this scene.
+        // Draw a rect for each range of shots belonging to this sequence.
         for (let i = 0; i < startFrames.length; i++) {
           const startPos = timelineX + startFrames[i] * timelineW / this.totalFrames;
           const endPos = timelineX + endFrames[i] * timelineW / this.totalFrames;
-          ui.addRect(startPos, sceneTop, endPos - startPos, sceneHeight, scene.color, sceneCorner);
+          ui.addRect(startPos, seqTop, endPos - startPos, seqHeight, sequence.color, seqCorner);
         }
       }
 
@@ -270,7 +270,7 @@ export default {
       );
 
       let textY = margin.y;
-      this.ui2D.fillText("Scenes", margin.x, textY); textY += 22;
+      this.ui2D.fillText("Sequences", margin.x, textY); textY += 22;
       this.ui2D.fillText("Shots", margin.x, textY); textY += 29;
       for (const task of this.taskTypes) {
         this.ui2D.fillText(task.name, margin.x, textY);

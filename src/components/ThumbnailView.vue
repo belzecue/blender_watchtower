@@ -2,7 +2,7 @@
     <div id="canvas-thumb-grid-container">
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological</option>
-        <option value="groupByScene">By Scene</option>
+        <option value="groupBySequence">By Sequence</option>
       </select>
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
@@ -22,7 +22,7 @@ import {UIRenderer} from '../shading';
 export default {
   name: "ThumbnailView",
   props: {
-    scenes: Array,
+    sequences: Array,
     shots: Array,
     currentFrame: Number,
   },
@@ -59,7 +59,7 @@ export default {
       this.layout();
       this.draw();
     },
-    scenes: function () {
+    sequences: function () {
       this.layout();
       this.draw();
     },
@@ -304,11 +304,11 @@ export default {
       this.uiElements.thumbGroups = [];
 
       // Create the thumbnail groups.
-      for (const scene of this.scenes) {
+      for (const sequence of this.sequences) {
         let group = new ThumbnailGroup();
-        group.name = scene.name;
-        group.uuid = scene.uuid;
-        group.color = scene.color;
+        group.name = sequence.name;
+        group.uuid = sequence.id;
+        group.color = sequence.color;
         this.uiElements.thumbGroups.push(group);
       }
       const unassignedGroup = new ThumbnailGroup("Unassigned");
@@ -316,8 +316,8 @@ export default {
       // Assign shots to groups.
       for (let i = 0; i < this.shots.length; i++) {
         let g = -1;
-        for (let j = 0; j < this.scenes.length; j++) {
-          if (this.scenes[j].uuid === this.shots[i].scene) {
+        for (let j = 0; j < this.sequences.length; j++) {
+          if (this.sequences[j].id === this.shots[i].sequence_id) {
             g = j;
             break;
           }
