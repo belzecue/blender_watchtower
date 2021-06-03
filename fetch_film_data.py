@@ -79,7 +79,6 @@ def fetch_shots_and_previews(force=False):
             'thumbnailFile': save_path.replace('public/', ''),
             'startFrame': shot['data']['frame_in'],
             'durationSeconds': (shot['data']['frame_out'] - shot['data']['frame_in']) / shot['data']['fps'],
-            'scene': shot['sequence_name'],
             'tasks': tasks,
             'sequence_id': shot['sequence_id'],
         })

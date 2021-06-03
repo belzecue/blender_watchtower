@@ -165,7 +165,6 @@
       "thumbnailFile": "preview-files/935cd0e7-c12b-4896-b445-2434e7b900da.png",
       "startFrame": 3963,
       "durationSeconds": 3.25,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -183,14 +182,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "110_0050_A",
       "thumbnailFile": "preview-files/870ae429-4b40-48d3-b20d-2e7770ee564c.png",
       "startFrame": 9054,
       "durationSeconds": 1.375,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -216,14 +215,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0020_A",
       "thumbnailFile": "preview-files/9173dbdc-0961-4a6c-b58b-1180c70034d5.png",
       "startFrame": 8904,
       "durationSeconds": 3.0,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -253,14 +252,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "020_0150_A",
       "thumbnailFile": "preview-files/65c5a86c-869a-4949-9593-5ced88425eb2.png",
       "startFrame": 2923,
       "durationSeconds": 4.083333333333333,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -278,14 +277,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "040_0040_A",
       "thumbnailFile": "preview-files/199558ef-bf21-4911-9f64-4abbb89b95b6.png",
       "startFrame": 6281,
       "durationSeconds": 5.291666666666667,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -303,14 +302,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "110_0100_A",
       "thumbnailFile": "preview-files/d19ff58d-b649-4a52-b828-d5e4582c1d45.png",
       "startFrame": 9352,
       "durationSeconds": 4.083333333333333,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -336,14 +335,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "060_0010_A",
       "thumbnailFile": "preview-files/4c2a8756-88f7-4b55-9901-f2318e197d4b.png",
       "startFrame": 7806,
       "durationSeconds": 0.8333333333333334,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -365,14 +364,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "110_0130_A",
       "thumbnailFile": "preview-files/2adab587-d522-4541-8025-fd5a191c5992.png",
       "startFrame": 9519,
       "durationSeconds": 0.8333333333333334,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -402,14 +401,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0140_A",
       "thumbnailFile": "preview-files/e0022d7d-7aa5-44ee-9385-29868217d8d5.png",
       "startFrame": 9539,
       "durationSeconds": 2.4166666666666665,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -435,14 +434,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0040_A",
       "thumbnailFile": "preview-files/a36fbf0d-9a24-4c83-b7a1-7f3f4dd16ce3.png",
       "startFrame": 9038,
       "durationSeconds": 0.6666666666666666,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -468,14 +467,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "100_0030_A",
       "thumbnailFile": "preview-files/cdc11246-b588-406b-9817-a8dea2ded698.png",
       "startFrame": 8574,
       "durationSeconds": 1.0833333333333333,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -493,14 +492,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "060_0100_A",
       "thumbnailFile": "preview-files/f105769b-9bc7-43cc-88a6-1a569a45ee80.png",
       "startFrame": 7984,
       "durationSeconds": 2.0833333333333335,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -522,14 +521,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "110_0170_A",
       "thumbnailFile": "preview-files/7c6dc440-9568-4271-9d8e-69308cffb66a.png",
       "startFrame": 9661,
       "durationSeconds": 1.625,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -559,14 +558,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "8613a908-2f4f-45dc-870b-603205726a9b"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0160_A",
       "thumbnailFile": "preview-files/1c0cd083-5627-499b-a70b-db0ef5e712d5.png",
       "startFrame": 9623,
       "durationSeconds": 1.5833333333333333,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -596,14 +595,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "508c021f-2974-4b8b-893f-550e36f3e259"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0090_A",
       "thumbnailFile": "preview-files/244aef1f-9367-4ab2-816c-664c3e5c34d5.png",
       "startFrame": 9310,
       "durationSeconds": 1.75,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -629,14 +628,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "020_0160_A",
       "thumbnailFile": "preview-files/2129810b-8c6f-460f-892c-fde2a9246302.png",
       "startFrame": 3021,
       "durationSeconds": 2.3333333333333335,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -658,14 +657,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "110_0180_A",
       "thumbnailFile": "preview-files/ca1d575a-b370-4f0c-a34f-0d30a31d6d0f.png",
       "startFrame": 9700,
       "durationSeconds": 1.6666666666666667,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -695,14 +694,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "508c021f-2974-4b8b-893f-550e36f3e259"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "040_0020_A",
       "thumbnailFile": "preview-files/0097f36b-e6ea-49ff-af85-f3d782bf2b56.png",
       "startFrame": 6191,
       "durationSeconds": 1.75,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -720,14 +719,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "050_0040_A",
       "thumbnailFile": "preview-files/bb70b9a0-1eba-4d7d-b61e-50afb36ccb3d.png",
       "startFrame": 7072,
       "durationSeconds": 1.5,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -741,14 +740,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "110_0150_A",
       "thumbnailFile": "preview-files/56356757-4cfe-4a8d-8aeb-b579c23b3fc1.png",
       "startFrame": 9597,
       "durationSeconds": 1.0833333333333333,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -778,14 +777,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "508c021f-2974-4b8b-893f-550e36f3e259"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "020_0170_A",
       "thumbnailFile": "preview-files/7fb3f9bf-2d3d-48af-89e4-32c24e36c74c.png",
       "startFrame": 3077,
       "durationSeconds": 6.208333333333333,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -803,14 +802,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "110_0060_A",
       "thumbnailFile": "preview-files/73eef762-a47e-404e-ad3e-6f0670f88d54.png",
       "startFrame": 9087,
       "durationSeconds": 1.1666666666666667,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -836,14 +835,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "ddf121a8-67b4-47bd-ba37-50fc85c0ff3b"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "150_0010_A",
       "thumbnailFile": "preview-files/936ab236-ba35-4138-b568-243f9b607d8e.png",
       "startFrame": 11871,
       "durationSeconds": 1.5,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -857,14 +856,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "110_0080_A",
       "thumbnailFile": "preview-files/fef595f7-6666-4ae4-8cee-7f8c40e87d70.png",
       "startFrame": 9192,
       "durationSeconds": 4.916666666666667,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -890,14 +889,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "060_0030_A",
       "thumbnailFile": "preview-files/f2b0f627-3445-4934-91d5-355d5fa1f263.png",
       "startFrame": 7826,
       "durationSeconds": 1.4583333333333333,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -919,14 +918,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "150_0070_A",
       "thumbnailFile": "preview-files/73cf3d69-4cbd-4210-afec-4f9194f21ee4.png",
       "startFrame": 12194,
       "durationSeconds": 3.0833333333333335,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -940,14 +939,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "110_0070_A",
       "thumbnailFile": "preview-files/79efea2c-e302-479c-a360-4961b8ec131a.png",
       "startFrame": 9115,
       "durationSeconds": 3.2083333333333335,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -977,14 +976,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0110_A",
       "thumbnailFile": "preview-files/cbc5f4ae-6039-42e1-bc79-405ac08fdda8.png",
       "startFrame": 9450,
       "durationSeconds": 1.9166666666666667,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1014,14 +1013,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0120_A",
       "thumbnailFile": "preview-files/1a10daad-04b2-46d4-b444-01cf93096570.png",
       "startFrame": 9496,
       "durationSeconds": 0.9583333333333334,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1047,14 +1046,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "130_0010_A",
       "thumbnailFile": "preview-files/29e8c765-efc4-4c7e-bf85-30733161c65d.png",
       "startFrame": 10272,
       "durationSeconds": 2.3333333333333335,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1072,14 +1071,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "140_0020_A",
       "thumbnailFile": "preview-files/e1781e8e-3df3-41ea-bbdb-614e0e9f97a5.png",
       "startFrame": 11623,
       "durationSeconds": 1.1666666666666667,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1093,14 +1092,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "010_0010_A",
       "thumbnailFile": "preview-files/1c00f606-deff-4962-9acf-d4ecc6ea5625.png",
       "startFrame": 101,
       "durationSeconds": 10.333333333333334,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1126,14 +1125,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "110_0010_A",
       "thumbnailFile": "preview-files/b76c06ea-52e6-4306-9653-048890b258a3.png",
       "startFrame": 8876,
       "durationSeconds": 1.1666666666666667,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1163,14 +1162,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d2b7cdc5-3068-47c9-a227-b4c9f5d784a1"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "110_0030_A",
       "thumbnailFile": "preview-files/56b1bbd0-f951-41e4-b1ed-f80ca1aea975.png",
       "startFrame": 8976,
       "durationSeconds": 1.3333333333333333,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1196,14 +1195,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "060_0040_A",
       "thumbnailFile": "preview-files/eb938a6b-3fac-49f0-b619-c31a76966f77.png",
       "startFrame": 7861,
       "durationSeconds": 1.2916666666666667,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1225,14 +1224,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "060_0080_A",
       "thumbnailFile": "preview-files/7dfe669b-2945-4e10-a3a9-2b1d25fbbbec.png",
       "startFrame": 7943,
       "durationSeconds": 0.7083333333333334,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1258,14 +1257,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "020_0010_A",
       "thumbnailFile": "preview-files/fa55eebd-4bdb-4495-ac31-9cd09e97f586.png",
       "startFrame": 1906,
       "durationSeconds": 2.7916666666666665,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1291,14 +1290,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "ddf121a8-67b4-47bd-ba37-50fc85c0ff3b"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0020_A",
       "thumbnailFile": "preview-files/dc59cc6b-586b-4897-90d5-477d19a42d69.png",
       "startFrame": 1973,
       "durationSeconds": 2.375,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1324,14 +1323,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "100_0110_A",
       "thumbnailFile": "preview-files/c4acfc82-033d-4d6e-8027-1ec507dbb520.png",
       "startFrame": 8819,
       "durationSeconds": 2.375,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1349,14 +1348,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "100_0070_A",
       "thumbnailFile": "preview-files/55739eec-1672-419c-a5f8-d303536ed359.png",
       "startFrame": 8652,
       "durationSeconds": 2.7083333333333335,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1374,14 +1373,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "060_0050_A",
       "thumbnailFile": "preview-files/fa0fc3f1-b928-4a8c-be3e-683f65db4c51.png",
       "startFrame": 7892,
       "durationSeconds": 0.5,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1403,14 +1402,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "150_0120_A",
       "thumbnailFile": "preview-files/cef8cd15-c861-47bc-a4ee-df919d77ed8c.png",
       "startFrame": 12470,
       "durationSeconds": 1.875,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1424,14 +1423,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "160_0060_A",
       "thumbnailFile": "preview-files/ad16d67a-cb82-451f-84c4-32d4321aabff.png",
       "startFrame": 12808,
       "durationSeconds": 1.3333333333333333,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1445,14 +1444,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "140_0050_A",
       "thumbnailFile": "preview-files/d4cf0e45-f032-460b-aaee-64d0b67bb617.png",
       "startFrame": 11750,
       "durationSeconds": 1.0833333333333333,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1466,14 +1465,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "150_0050_A",
       "thumbnailFile": "preview-files/25ea7c30-624f-4b63-9f37-5264a4e667bb.png",
       "startFrame": 12062,
       "durationSeconds": 3.75,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1487,14 +1486,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "160_0080_A",
       "thumbnailFile": "preview-files/f236aff1-b59f-491b-b7b5-00fc42ed4510.png",
       "startFrame": 12907,
       "durationSeconds": 4.333333333333333,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1508,14 +1507,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "060_0060_A",
       "thumbnailFile": "preview-files/fe643aaf-e399-45fe-ae5f-0b5cc036b480.png",
       "startFrame": 7904,
       "durationSeconds": 0.5833333333333334,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1537,14 +1536,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "060_0090_A",
       "thumbnailFile": "preview-files/6c1ae3c3-a7bf-4268-a48c-8505e6f14c46.png",
       "startFrame": 7960,
       "durationSeconds": 1.0,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1566,14 +1565,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "050_0120_A",
       "thumbnailFile": "preview-files/768678af-fd5b-48fc-ba48-30a64657534b.png",
       "startFrame": 7421,
       "durationSeconds": 2.9166666666666665,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1591,14 +1590,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "140_0040_A",
       "thumbnailFile": "preview-files/0ec5bcb3-3fd4-4433-9aa0-12eddb10a203.png",
       "startFrame": 11688,
       "durationSeconds": 2.5833333333333335,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1612,14 +1611,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "130_0020_A",
       "thumbnailFile": "preview-files/3c7b754e-2d65-48dd-9461-cf323ed09262.png",
       "startFrame": 10328,
       "durationSeconds": 1.3333333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1637,14 +1636,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "010_0020_A",
       "thumbnailFile": "preview-files/e645c0f2-e867-4ab9-bfbc-453abd76ccd1.png",
       "startFrame": 349,
       "durationSeconds": 20.541666666666668,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1670,14 +1669,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "160_0020_A",
       "thumbnailFile": "preview-files/85c0eea3-0fcd-4f2a-9951-ee6c5c69fef3.png",
       "startFrame": 12648,
       "durationSeconds": 2.5833333333333335,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1691,14 +1690,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "010_0040_A",
       "thumbnailFile": "preview-files/158b039d-0b07-4838-b7ba-27957009f5c5.png",
       "startFrame": 1235,
       "durationSeconds": 2.5833333333333335,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1724,14 +1723,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "140_0060_A",
       "thumbnailFile": "preview-files/c28680d9-48b0-4ea0-9df1-d082b546dd89.png",
       "startFrame": 11776,
       "durationSeconds": 1.25,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1745,14 +1744,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "090_0020_A",
       "thumbnailFile": "preview-files/465d94c7-6ebb-4cd0-a33c-39cbf7a098e0.png",
       "startFrame": 8458,
       "durationSeconds": 2.25,
-      "scene": "090_yew",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1766,14 +1765,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "f44fd8dc-790f-4d01-a87d-5798cb76d356"
     },
     {
       "name": "150_0100_A",
       "thumbnailFile": "preview-files/865b6092-165b-41d5-8289-a51270c548c5.png",
       "startFrame": 12321,
       "durationSeconds": 4.166666666666667,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -1787,14 +1786,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "110_0190_A",
       "thumbnailFile": "preview-files/39e5bf63-9633-4067-a880-e078182688b0.png",
       "startFrame": 9740,
       "durationSeconds": 1.5833333333333333,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1824,14 +1823,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "508c021f-2974-4b8b-893f-550e36f3e259"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "010_0030_A",
       "thumbnailFile": "preview-files/10bd3007-f3ed-46b7-8934-207f8c7b19be.png",
       "startFrame": 842,
       "durationSeconds": 16.375,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1861,14 +1860,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "508c021f-2974-4b8b-893f-550e36f3e259"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "010_0060_A",
       "thumbnailFile": "preview-files/5dd9dbd5-e771-4a47-9741-fc638c08c9c9.png",
       "startFrame": 1621,
       "durationSeconds": 5.833333333333333,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1894,14 +1893,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "100_0010_A",
       "thumbnailFile": "preview-files/9690086b-e41f-41fc-b665-a37a3c419534.png",
       "startFrame": 8512,
       "durationSeconds": 1.25,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -1919,14 +1918,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "020_0100_A",
       "thumbnailFile": "preview-files/5402f8d9-5e4b-4e0d-9409-99747f3ae5c3.png",
       "startFrame": 2475,
       "durationSeconds": 1.25,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1944,14 +1943,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0180_A",
       "thumbnailFile": "preview-files/c8d77e4f-0f68-4e86-bb82-7e672096801e.png",
       "startFrame": 3226,
       "durationSeconds": 4.333333333333333,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1969,14 +1968,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0210_A",
       "thumbnailFile": "preview-files/a69b96da-49d3-4269-a3d5-afcd12a9d6f1.png",
       "startFrame": 3438,
       "durationSeconds": 2.4583333333333335,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -1994,14 +1993,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0050_A",
       "thumbnailFile": "preview-files/fdfc33b1-d020-4310-a004-d1abfc4d5983.png",
       "startFrame": 4428,
       "durationSeconds": 4.583333333333333,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2019,14 +2018,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "040_0060_A",
       "thumbnailFile": "preview-files/91382a2f-7c42-4811-ae14-ad544043590a.png",
       "startFrame": 6490,
       "durationSeconds": 3.5833333333333335,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2044,14 +2043,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "040_0090_A",
       "thumbnailFile": "preview-files/8fef0a9e-45da-4cdb-9b8d-29ff50ae4934.png",
       "startFrame": 6731,
       "durationSeconds": 2.5833333333333335,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2069,14 +2068,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "050_0080_A",
       "thumbnailFile": "preview-files/916e8e0a-19b9-4b91-bc0c-0fd79cca7719.png",
       "startFrame": 7258,
       "durationSeconds": 1.3333333333333333,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2090,14 +2089,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "130_0030_A",
       "thumbnailFile": "preview-files/7fd8f3db-2000-41f0-a720-ef3557180876.png",
       "startFrame": 10360,
       "durationSeconds": 1.25,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2115,14 +2114,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "120_0110_A",
       "thumbnailFile": "preview-files/a9b29a20-02c9-4b37-a1be-e1fe62967480.png",
       "startFrame": 10240,
       "durationSeconds": 1.3333333333333333,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2140,14 +2139,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "040_0010_A",
       "thumbnailFile": "preview-files/7b5cbde0-fe60-45a2-8787-7b7cb5e8ee74.png",
       "startFrame": 6100,
       "durationSeconds": 3.7916666666666665,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2169,14 +2168,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "020_0040_A",
       "thumbnailFile": "preview-files/893fad98-1e22-4986-9667-ef7e2ba3daba.png",
       "startFrame": 2129,
       "durationSeconds": 1.7916666666666667,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2194,14 +2193,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0250_A",
       "thumbnailFile": "preview-files/f0e2ec01-bc66-4c5e-86a5-2ff5593047e7.png",
       "startFrame": 3901,
       "durationSeconds": 2.5833333333333335,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2219,14 +2218,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0040_A",
       "thumbnailFile": "preview-files/200ee74c-404b-4794-937e-66a05ac1447b.png",
       "startFrame": 4339,
       "durationSeconds": 3.7083333333333335,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2244,14 +2243,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0060_A",
       "thumbnailFile": "preview-files/7281a9b2-da53-4a9f-a23d-64e3e3b55343.png",
       "startFrame": 4538,
       "durationSeconds": 5.25,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2269,14 +2268,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0200_A",
       "thumbnailFile": "preview-files/87285c0e-e4f7-443b-bc4a-fbccafb05072.png",
       "startFrame": 5973,
       "durationSeconds": 5.291666666666667,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2294,14 +2293,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "060_0070_A",
       "thumbnailFile": "preview-files/6f4eb4ea-2d73-4cdf-b517-2289a831d74b.png",
       "startFrame": 7918,
       "durationSeconds": 1.0416666666666667,
-      "scene": "060_scratch",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2323,14 +2322,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "76414d3c-24c5-4d25-9ba7-59d0fb06575d"
     },
     {
       "name": "010_0070_A",
       "thumbnailFile": "preview-files/073804a3-e905-42f7-b801-9ba5f961893a.png",
       "startFrame": 1761,
       "durationSeconds": 2.0,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -2356,14 +2355,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "100_0080_A",
       "thumbnailFile": "preview-files/2bee94aa-0aac-4a4a-8b91-6688ed679873.png",
       "startFrame": 8717,
       "durationSeconds": 0.6666666666666666,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -2385,14 +2384,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "010_0080_A",
       "thumbnailFile": "preview-files/1f1c595c-08c0-4b3b-a820-f8cb94016193.png",
       "startFrame": 1809,
       "durationSeconds": 4.041666666666667,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2418,14 +2417,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "ddf121a8-67b4-47bd-ba37-50fc85c0ff3b"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "020_0190_A",
       "thumbnailFile": "preview-files/125e593e-980e-4687-9861-e3c283301c06.png",
       "startFrame": 3330,
       "durationSeconds": 3.0833333333333335,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2447,14 +2446,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0220_A",
       "thumbnailFile": "preview-files/e72fe6ef-e956-4463-8ec6-39e78b2a72db.png",
       "startFrame": 3497,
       "durationSeconds": 2.25,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2472,14 +2471,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0050_A",
       "thumbnailFile": "preview-files/d7d7b1ef-9994-468e-b994-eb4b63e26669.png",
       "startFrame": 2172,
       "durationSeconds": 3.4583333333333335,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2497,14 +2496,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "050_0170_A",
       "thumbnailFile": "preview-files/6fbd47b3-5261-4f37-8dd9-884eb81398b7.png",
       "startFrame": 7731,
       "durationSeconds": 1.0833333333333333,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2518,14 +2517,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "080_0030_A",
       "thumbnailFile": "preview-files/f661bddc-8304-49e7-bb14-5b4c7e4d8390.png",
       "startFrame": 8283,
       "durationSeconds": 2.0,
-      "scene": "080_spray",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2547,14 +2546,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "af71cc10-47ca-4538-abae-af9728f0434f"
     },
     {
       "name": "020_0130_A",
       "thumbnailFile": "preview-files/0c970a49-06d4-428b-9793-20ccd0ac9e8a.png",
       "startFrame": 2625,
       "durationSeconds": 5.5,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2572,14 +2571,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0200_A",
       "thumbnailFile": "preview-files/52d15b59-257d-4d10-9c65-6d991333d1e0.png",
       "startFrame": 3404,
       "durationSeconds": 1.4166666666666667,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2601,14 +2600,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "140_0070_A",
       "thumbnailFile": "preview-files/260f470f-94d5-4179-aafa-5ba6a124ea26.png",
       "startFrame": 11806,
       "durationSeconds": 2.7083333333333335,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2622,14 +2621,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "150_0030_A",
       "thumbnailFile": "preview-files/cf1277dc-59ad-4b59-a572-b663cb124e9a.png",
       "startFrame": 11988,
       "durationSeconds": 1.9583333333333333,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2643,14 +2642,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "150_0040_A",
       "thumbnailFile": "preview-files/0e4e0767-303d-4726-944c-f92157d30ad1.png",
       "startFrame": 12035,
       "durationSeconds": 1.125,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2664,14 +2663,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "130_0040_A",
       "thumbnailFile": "preview-files/8f32b8ff-f617-48c8-bf91-5bfbd49a05f9.png",
       "startFrame": 10390,
       "durationSeconds": 1.6666666666666667,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2689,14 +2688,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0050_A",
       "thumbnailFile": "preview-files/b4a1a5d5-c44f-4708-8679-f0d52c362a4c.png",
       "startFrame": 10430,
       "durationSeconds": 1.125,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2714,14 +2713,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "120_0100_A",
       "thumbnailFile": "preview-files/362ca8b8-5cfb-4cf7-988d-f429299c1920.png",
       "startFrame": 10188,
       "durationSeconds": 2.1666666666666665,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2739,14 +2738,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "130_0230_A",
       "thumbnailFile": "preview-files/fc68728e-a4fc-4f55-a166-e2cbbc88e696.png",
       "startFrame": 11164,
       "durationSeconds": 1.3333333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -2764,14 +2763,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "030_0030_A",
       "thumbnailFile": "preview-files/08cff920-f999-4e6b-b220-9aae11b4decf.png",
       "startFrame": 4180,
       "durationSeconds": 6.625,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2789,14 +2788,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0070_A",
       "thumbnailFile": "preview-files/88acb4c4-9cbe-444c-9105-060bcc669017.png",
       "startFrame": 4664,
       "durationSeconds": 12.416666666666666,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2814,14 +2813,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0100_A",
       "thumbnailFile": "preview-files/8fda7e88-7f36-433c-884b-f46a0766daaa.png",
       "startFrame": 5151,
       "durationSeconds": 4.666666666666667,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2839,14 +2838,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0130_A",
       "thumbnailFile": "preview-files/3ed03a24-aaec-4838-b9c7-f6eb879a557e.png",
       "startFrame": 5425,
       "durationSeconds": 2.1666666666666665,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2864,14 +2863,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0150_A",
       "thumbnailFile": "preview-files/4d4fedbd-e8f8-4128-bf96-8153966e0cee.png",
       "startFrame": 5576,
       "durationSeconds": 3.0,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2889,14 +2888,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0190_A",
       "thumbnailFile": "preview-files/d73e3fae-56c7-4742-9587-df44ece0a8f0.png",
       "startFrame": 5916,
       "durationSeconds": 2.375,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2914,14 +2913,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "040_0050_A",
       "thumbnailFile": "preview-files/99575c67-102d-4a02-a5c4-183869f4705e.png",
       "startFrame": 6408,
       "durationSeconds": 3.4166666666666665,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2939,14 +2938,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "040_0110_A",
       "thumbnailFile": "preview-files/dff0c0a6-b963-4e4b-a66a-201930d33ed5.png",
       "startFrame": 6834,
       "durationSeconds": 2.3333333333333335,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2964,14 +2963,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "130_0070_A",
       "thumbnailFile": "preview-files/cd0c27f3-adfb-4d5f-9970-6fef700b8f75.png",
       "startFrame": 10530,
       "durationSeconds": 2.0833333333333335,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -2989,14 +2988,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0100_A",
       "thumbnailFile": "preview-files/d9ff3c52-e688-4354-952e-af6950c4a06c.png",
       "startFrame": 10700,
       "durationSeconds": 2.0416666666666665,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3014,14 +3013,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0130_A",
       "thumbnailFile": "preview-files/9faede58-5df6-4458-b969-ae7a62d4dd73.png",
       "startFrame": 10807,
       "durationSeconds": 0.4583333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3039,14 +3038,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0260_A",
       "thumbnailFile": "preview-files/73e0b9be-f86e-4c71-8f71-5c78e06209fb.png",
       "startFrame": 11291,
       "durationSeconds": 1.125,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3064,14 +3063,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0270_A",
       "thumbnailFile": "preview-files/72ecc926-af1b-4e4a-beb5-050b39df8a7e.png",
       "startFrame": 11318,
       "durationSeconds": 1.9166666666666667,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3089,14 +3088,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0310_A",
       "thumbnailFile": "preview-files/978a9c3d-4142-440a-8836-65c475f318d9.png",
       "startFrame": 11472,
       "durationSeconds": 2.8333333333333335,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3114,14 +3113,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "100_0020_A",
       "thumbnailFile": "preview-files/3f974a0b-7abf-4dbf-946e-9463366cbc85.png",
       "startFrame": 8542,
       "durationSeconds": 1.3333333333333333,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3139,14 +3138,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "100_0040_A",
       "thumbnailFile": "preview-files/2a8b3366-983d-4ae3-98f3-af24afb2a2d1.png",
       "startFrame": 8600,
       "durationSeconds": 1.0833333333333333,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3164,14 +3163,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "020_0030_A",
       "thumbnailFile": "preview-files/d1e46865-3da9-451f-9017-40776c441e2a.png",
       "startFrame": 2030,
       "durationSeconds": 4.125,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3193,14 +3192,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0090_A",
       "thumbnailFile": "preview-files/55946dd9-52bc-4621-9311-249eb11014f7.png",
       "startFrame": 5036,
       "durationSeconds": 4.791666666666667,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3218,14 +3217,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "150_0020_A",
       "thumbnailFile": "preview-files/8cef525a-6960-42ff-aaed-dac374671cd2.png",
       "startFrame": 11907,
       "durationSeconds": 3.375,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3239,14 +3238,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "120_0030_A",
       "thumbnailFile": "preview-files/0cd70e98-06f5-4004-8c6a-11fd1bfe938d.png",
       "startFrame": 9918,
       "durationSeconds": 1.875,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3264,14 +3263,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "050_0110_A",
       "thumbnailFile": "preview-files/dae94c47-b8ce-4f52-899f-8264c0f59131.png",
       "startFrame": 7373,
       "durationSeconds": 2.0,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3285,14 +3284,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "090_0010_A",
       "thumbnailFile": "preview-files/66d1d195-daa1-4c25-add0-71fb79efc020.png",
       "startFrame": 8361,
       "durationSeconds": 4.041666666666667,
-      "scene": "090_yew",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3306,14 +3305,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "f44fd8dc-790f-4d01-a87d-5798cb76d356"
     },
     {
       "name": "120_0090_A",
       "thumbnailFile": "preview-files/f7ebb4de-4b0d-4074-98b1-8cd5e6e1ad42.png",
       "startFrame": 10156,
       "durationSeconds": 1.3333333333333333,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3327,14 +3326,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "130_0080_A",
       "thumbnailFile": "preview-files/d33eac50-6d80-4191-9fad-82a8d2922220.png",
       "startFrame": 10580,
       "durationSeconds": 3.1666666666666665,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3352,14 +3351,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "050_0060_A",
       "thumbnailFile": "preview-files/70738711-ce37-4393-ab02-0db58d16dc91.png",
       "startFrame": 7144,
       "durationSeconds": 2.4166666666666665,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3377,14 +3376,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "160_0070_A",
       "thumbnailFile": "preview-files/f68e090c-ade5-4836-9cab-e09a223dc13d.png",
       "startFrame": 12840,
       "durationSeconds": 2.7916666666666665,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3398,14 +3397,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "020_0060_A",
       "thumbnailFile": "preview-files/5fc64706-e952-4db1-b4bf-1d63d4ce573c.png",
       "startFrame": 2255,
       "durationSeconds": 2.0,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3423,14 +3422,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0080_A",
       "thumbnailFile": "preview-files/d0445c9c-3864-41c4-9dda-921190c2733f.png",
       "startFrame": 2360,
       "durationSeconds": 2.75,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3448,14 +3447,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0010_A",
       "thumbnailFile": "preview-files/c298ff29-19bc-4d75-8bd6-c44c1919d2a3.png",
       "startFrame": 4041,
       "durationSeconds": 2.875,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3473,14 +3472,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0160_A",
       "thumbnailFile": "preview-files/97e5279d-742a-4397-9857-9771ad03efbc.png",
       "startFrame": 5648,
       "durationSeconds": 2.5,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3498,14 +3497,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "030_0180_A",
       "thumbnailFile": "preview-files/eafb94a2-f636-449c-abc2-78ef832de65d.png",
       "startFrame": 5795,
       "durationSeconds": 5.041666666666667,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3523,14 +3522,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "040_0030_A",
       "thumbnailFile": "preview-files/e22f5a56-c099-4a69-b3df-1195d9ee48ec.png",
       "startFrame": 6233,
       "durationSeconds": 2.0,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3548,14 +3547,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "040_0080_A",
       "thumbnailFile": "preview-files/d9249235-3935-4aa2-9b3e-a8f391a1b1ee.png",
       "startFrame": 6643,
       "durationSeconds": 3.6666666666666665,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3573,14 +3572,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "100_0050_A",
       "thumbnailFile": "preview-files/af652198-3548-4970-80d5-741ba71da24e.png",
       "startFrame": 8626,
       "durationSeconds": 1.0833333333333333,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3598,14 +3597,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "130_0140_A",
       "thumbnailFile": "preview-files/5f578caa-f23f-41a3-84cf-47e46debfa48.png",
       "startFrame": 10818,
       "durationSeconds": 0.75,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3623,14 +3622,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0180_A",
       "thumbnailFile": "preview-files/6bd4ded1-dba1-4a71-9ffb-4eae6050ca8b.png",
       "startFrame": 11018,
       "durationSeconds": 1.9166666666666667,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3648,14 +3647,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0320_A",
       "thumbnailFile": "preview-files/3ad0e366-676a-4b0f-bb41-10bc446fa132.png",
       "startFrame": 11540,
       "durationSeconds": 1.25,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3673,14 +3672,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0280_A",
       "thumbnailFile": "preview-files/adf9e639-f5ac-4235-84ab-4fd6358edf70.png",
       "startFrame": 11364,
       "durationSeconds": 1.0,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3698,14 +3697,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "010_0050_A",
       "thumbnailFile": "preview-files/cfca98ec-268a-47cd-a10e-c34d97312867.png",
       "startFrame": 1297,
       "durationSeconds": 13.5,
-      "scene": "010_intro",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3731,14 +3730,14 @@
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "d292ce2c-9ad2-482a-bab7-a493ddca5889"
     },
     {
       "name": "150_0130_A",
       "thumbnailFile": "preview-files/5b6a20d8-18ba-4b13-9c9a-a80c458f75d6.png",
       "startFrame": 12515,
       "durationSeconds": 3.1666666666666665,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3752,14 +3751,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "150_0060_A",
       "thumbnailFile": "preview-files/053d3f8c-3403-4a4b-9173-f1f20d9b941e.png",
       "startFrame": 12152,
       "durationSeconds": 1.75,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3773,14 +3772,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "020_0230_A",
       "thumbnailFile": "preview-files/29bf5e24-26c0-4a2c-9707-64753c6f8d21.png",
       "startFrame": 3551,
       "durationSeconds": 2.0,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3798,14 +3797,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0120_A",
       "thumbnailFile": "preview-files/e66de25f-d038-4d85-85d0-257397cc94dd.png",
       "startFrame": 5309,
       "durationSeconds": 4.833333333333333,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3823,14 +3822,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "130_0060_A",
       "thumbnailFile": "preview-files/422a6baa-dd80-4d9a-9803-6c051a15bb85.png",
       "startFrame": 10457,
       "durationSeconds": 3.0416666666666665,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -3848,14 +3847,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "020_0070_A",
       "thumbnailFile": "preview-files/42ab716e-ffce-4a7a-97fc-b0a67ae0b7a9.png",
       "startFrame": 2303,
       "durationSeconds": 2.375,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3873,14 +3872,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0140_A",
       "thumbnailFile": "preview-files/d90932bd-e4ff-4cb7-bc89-ff8bcdb39feb.png",
       "startFrame": 2757,
       "durationSeconds": 6.916666666666667,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3898,14 +3897,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "120_0050_A",
       "thumbnailFile": "preview-files/1ee995ea-3956-47c5-ac07-6bc8011dc68e.png",
       "startFrame": 10007,
       "durationSeconds": 1.5416666666666667,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3923,14 +3922,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "040_0100_A",
       "thumbnailFile": "preview-files/27abf2de-22e9-4f5a-9303-8469d6886143.png",
       "startFrame": 6793,
       "durationSeconds": 1.7083333333333333,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3948,14 +3947,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "130_0200_A",
       "thumbnailFile": "preview-files/4c466105-3aa0-43f3-9e0c-61ddcb98980c.png",
       "startFrame": 11088,
       "durationSeconds": 1.0833333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -3973,14 +3972,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "030_0170_A",
       "thumbnailFile": "preview-files/5f2961c9-53c3-491e-904f-fead1c2d7b22.png",
       "startFrame": 5708,
       "durationSeconds": 3.625,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -3998,14 +3997,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "020_0120_A",
       "thumbnailFile": "preview-files/c2691c68-03eb-439b-a226-c0297b50a050.png",
       "startFrame": 2574,
       "durationSeconds": 2.125,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4023,14 +4022,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "150_0080_A",
       "thumbnailFile": "preview-files/1cbdee34-5f04-47dc-a52a-701cc3098f08.png",
       "startFrame": 12268,
       "durationSeconds": 0.8333333333333334,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4044,14 +4043,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "150_0090_A",
       "thumbnailFile": "preview-files/f98b5ef5-314b-4e57-b1fd-11d3bc74a5e2.png",
       "startFrame": 12288,
       "durationSeconds": 1.375,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4065,14 +4064,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "050_0100_A",
       "thumbnailFile": "preview-files/76ef5517-9e29-4c58-a6af-69a5e463bd49.png",
       "startFrame": 7337,
       "durationSeconds": 1.5,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4086,14 +4085,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "110_0035_A",
       "thumbnailFile": "preview-files/8a059097-a6a3-439d-a3fe-04c9ccec2523.png",
       "startFrame": 9008,
       "durationSeconds": 1.25,
-      "scene": "110_rextoria",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4119,14 +4118,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "d48717f5-f537-4b62-b602-0ea428609c1c"
         }
-      ]
+      ],
+      "sequence_id": "a712cd0f-c7b6-4860-aafa-69f5b55190ac"
     },
     {
       "name": "130_0090_A",
       "thumbnailFile": "preview-files/f55957cc-4dc3-48f2-b8b7-59a14b6cc688.png",
       "startFrame": 10656,
       "durationSeconds": 1.8333333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4144,14 +4143,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0120_A",
       "thumbnailFile": "preview-files/7625d335-25c8-40d6-aaca-6c0f907b632a.png",
       "startFrame": 10790,
       "durationSeconds": 0.7083333333333334,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4169,14 +4168,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0160_A",
       "thumbnailFile": "preview-files/d4fddb55-c956-440f-9b40-b3f6775e4974.png",
       "startFrame": 10905,
       "durationSeconds": 2.1666666666666665,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4194,14 +4193,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0170_A",
       "thumbnailFile": "preview-files/52d875ba-b54a-49be-ae35-a5d1f42cbde5.png",
       "startFrame": 10957,
       "durationSeconds": 2.5416666666666665,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4219,14 +4218,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0290_A",
       "thumbnailFile": "preview-files/c0a8f424-dea2-4d4b-9367-c8beb6948cdd.png",
       "startFrame": 11388,
       "durationSeconds": 1.9166666666666667,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4244,14 +4243,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "100_0100_A",
       "thumbnailFile": "preview-files/6913dfbd-1508-4c82-b8a9-68ca8574ed09.png",
       "startFrame": 8793,
       "durationSeconds": 1.0833333333333333,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4269,14 +4268,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "100_0090_A",
       "thumbnailFile": "preview-files/046c538a-e282-4cd8-a878-9abf5189f6d4.png",
       "startFrame": 8733,
       "durationSeconds": 2.5,
-      "scene": "100_haircut",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -4294,14 +4293,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "d3bb699b-15e6-4341-b877-6b51dea3324e"
     },
     {
       "name": "020_0110_A",
       "thumbnailFile": "preview-files/456d2735-6fd8-4d80-8e57-94e6a8f7aed9.png",
       "startFrame": 2505,
       "durationSeconds": 2.875,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4323,14 +4322,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "050_0020_A",
       "thumbnailFile": "preview-files/1f4bb547-f877-4f1e-a6a9-d0e315c911f9.png",
       "startFrame": 6956,
       "durationSeconds": 3.4166666666666665,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4348,14 +4347,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "150_0110_A",
       "thumbnailFile": "preview-files/161bf9c5-cb98-4a4e-8cbf-1963a67c52ba.png",
       "startFrame": 12421,
       "durationSeconds": 2.0416666666666665,
-      "scene": "150_boss",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4369,14 +4368,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "95894f77-1a7c-4b54-acba-901dccc5aaf0"
     },
     {
       "name": "030_0020_A",
       "thumbnailFile": "preview-files/68d137d3-4433-4b38-82a7-43b5ae7b5067.png",
       "startFrame": 4110,
       "durationSeconds": 2.9166666666666665,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4394,14 +4393,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "120_0010_A",
       "thumbnailFile": "preview-files/096ec53f-b74e-4347-a73c-1cbfc0dcb9a1.png",
       "startFrame": 9778,
       "durationSeconds": 3.625,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4415,14 +4414,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "120_0020_A",
       "thumbnailFile": "preview-files/f4a080ad-6a32-4bcb-af2d-3b46f227c2e1.png",
       "startFrame": 9865,
       "durationSeconds": 2.2083333333333335,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4440,14 +4439,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "130_0150_A",
       "thumbnailFile": "preview-files/1b47aa94-4fb6-4a11-a6ba-24513ff136d3.png",
       "startFrame": 10836,
       "durationSeconds": 2.875,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4465,14 +4464,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "120_0060_A",
       "thumbnailFile": "preview-files/21071085-8d36-44f6-842f-a4f8ae3eee1b.png",
       "startFrame": 10044,
       "durationSeconds": 1.5,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -4490,14 +4489,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "120_0070_A",
       "thumbnailFile": "preview-files/b06c7a70-3657-44e0-8438-ca70a7eb9811.png",
       "startFrame": 10080,
       "durationSeconds": 1.6666666666666667,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -4515,14 +4514,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "020_0090_A",
       "thumbnailFile": "preview-files/d30a20c5-dda3-4a2e-b192-879bf5d8db2c.png",
       "startFrame": 2426,
       "durationSeconds": 2.0416666666666665,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4540,14 +4539,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "020_0240_A",
       "thumbnailFile": "preview-files/14097608-e2ef-46fd-8ffa-35225407169d.png",
       "startFrame": 3599,
       "durationSeconds": 12.583333333333334,
-      "scene": "020_grove",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4565,14 +4564,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "5c1c49e8-b6e0-4778-b51a-50fb4b6c8471"
     },
     {
       "name": "030_0140_A",
       "thumbnailFile": "preview-files/84cd711c-b155-4eb7-a2a6-1098c078f1dd.png",
       "startFrame": 5477,
       "durationSeconds": 4.125,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4590,14 +4589,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "130_0220_A",
       "thumbnailFile": "preview-files/8f3c13dd-d910-4b74-8694-606f1d207c6d.png",
       "startFrame": 11133,
       "durationSeconds": 1.2916666666666667,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4615,14 +4614,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "040_0070_A",
       "thumbnailFile": "preview-files/05cff365-d3ac-4b1c-8b6d-4e28d1b0aed3.png",
       "startFrame": 6576,
       "durationSeconds": 2.7916666666666665,
-      "scene": "040_nightfall",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4640,14 +4639,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "8735ceb5-b63e-4242-af62-b1fd704236bb"
     },
     {
       "name": "140_0030_A",
       "thumbnailFile": "preview-files/ca42a3b0-0686-4c68-ad92-c3b380729954.png",
       "startFrame": 11651,
       "durationSeconds": 1.5416666666666667,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4661,14 +4660,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "130_0110_A",
       "thumbnailFile": "preview-files/28458c36-217a-4937-9701-21bd1ffad229.png",
       "startFrame": 10749,
       "durationSeconds": 1.7083333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4686,14 +4685,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "130_0190_A",
       "thumbnailFile": "preview-files/13e52f7a-e582-409d-b31a-120d66562c8c.png",
       "startFrame": 11064,
       "durationSeconds": 1.0,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4711,14 +4710,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "030_0080_A",
       "thumbnailFile": "preview-files/cf798e6a-1b69-4a76-bcaa-f394fd818def.png",
       "startFrame": 4962,
       "durationSeconds": 3.0833333333333335,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4736,14 +4735,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "130_0300_A",
       "thumbnailFile": "preview-files/1b498f7e-cb73-4683-9cb9-3c9da1b9921e.png",
       "startFrame": 11434,
       "durationSeconds": 1.5833333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4761,14 +4760,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "050_0090_A",
       "thumbnailFile": "preview-files/cf3d01d1-efab-4108-868e-f9e2a8caa34b.png",
       "startFrame": 7290,
       "durationSeconds": 1.9583333333333333,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4782,14 +4781,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "050_0160_A",
       "thumbnailFile": "preview-files/8c2d7983-1b5d-4616-85e8-6f5044414810.png",
       "startFrame": 7713,
       "durationSeconds": 0.75,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4803,14 +4802,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "160_0010_A",
       "thumbnailFile": "preview-files/c90d27de-675d-4278-b033-1681a215065b.png",
       "startFrame": 12591,
       "durationSeconds": 2.375,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4824,14 +4823,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "120_0080_A",
       "thumbnailFile": "preview-files/039c87e5-9ef8-4b5a-811a-e19c742c43ec.png",
       "startFrame": 10120,
       "durationSeconds": 1.5,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -4849,14 +4848,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "050_0050_A",
       "thumbnailFile": "preview-files/8aabcbe6-bb02-4cb1-b0e6-6f69b33f9a53.png",
       "startFrame": 7108,
       "durationSeconds": 1.5,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -4874,14 +4873,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "030_0110_A",
       "thumbnailFile": "preview-files/28d6836f-f51b-49f3-8620-0e6a3aa2f9e9.png",
       "startFrame": 5263,
       "durationSeconds": 1.9166666666666667,
-      "scene": "030_village",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -4899,14 +4898,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "7bfb0d36-3efc-43e9-826e-ebb37ee50808"
     },
     {
       "name": "160_0030_A",
       "thumbnailFile": "preview-files/21fcbbf1-0caf-4177-b224-1ebbdc086ccd.png",
       "startFrame": 12710,
       "durationSeconds": 2.0,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4920,14 +4919,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "130_0210_A",
       "thumbnailFile": "preview-files/71d30619-e38f-40ec-a824-07636e46e30c.png",
       "startFrame": 11114,
       "durationSeconds": 0.7916666666666666,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4945,14 +4944,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "050_0150_A",
       "thumbnailFile": "preview-files/a1d6e451-39a8-43b7-b5e2-b25b805b60e4.png",
       "startFrame": 7601,
       "durationSeconds": 4.666666666666667,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4966,14 +4965,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "050_0180_A",
       "thumbnailFile": "preview-files/a00d83e7-e374-4cee-9cca-a90b31b75db3.png",
       "startFrame": 7757,
       "durationSeconds": 1.4583333333333333,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -4987,14 +4986,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "050_0190_A",
       "thumbnailFile": "preview-files/e35ea90b-fdf1-4888-a4c3-7dac4d8d467f.png",
       "startFrame": 7792,
       "durationSeconds": 0.5833333333333334,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5008,14 +5007,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "080_0010_A",
       "thumbnailFile": "preview-files/a5bbfa47-0fe2-4783-979b-cfafbb92212c.png",
       "startFrame": 8165,
       "durationSeconds": 3.5833333333333335,
-      "scene": "080_spray",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5037,14 +5036,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "af71cc10-47ca-4538-abae-af9728f0434f"
     },
     {
       "name": "050_0140_A",
       "thumbnailFile": "preview-files/4ca38715-2a06-4df9-a276-e29d6727b1be.png",
       "startFrame": 7531,
       "durationSeconds": 2.9166666666666665,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5058,14 +5057,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "120_0040_A",
       "thumbnailFile": "preview-files/075544e4-43a8-47f9-af49-a503094749f8.png",
       "startFrame": 9963,
       "durationSeconds": 1.8333333333333333,
-      "scene": "120_drown",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5083,14 +5082,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "3c5c9ecf-9f4b-4ddf-9681-08876698947e"
     },
     {
       "name": "070_0030_A",
       "thumbnailFile": "preview-files/4b311c9f-633c-404b-9074-22adf0611185.png",
       "startFrame": 8110,
       "durationSeconds": 0.7916666666666666,
-      "scene": "070_homerun",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5116,14 +5115,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "5c2a8abe-9170-413e-a984-a47953daafd4"
         }
-      ]
+      ],
+      "sequence_id": "df5e0aa7-ea49-4a09-a471-449461d33046"
     },
     {
       "name": "050_0070_A",
       "thumbnailFile": "preview-files/5996d7fa-1441-4e27-87f9-20bcc4bb1559.png",
       "startFrame": 7202,
       "durationSeconds": 2.3333333333333335,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5137,14 +5136,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "130_0250_A",
       "thumbnailFile": "preview-files/9557ba1a-531f-475f-9c5b-a50b3aa1ee3e.png",
       "startFrame": 11268,
       "durationSeconds": 0.9583333333333334,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -5162,14 +5161,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "160_0040_A",
       "thumbnailFile": "preview-files/a39a154e-16e9-45af-a7c3-9312f4f30245.png",
       "startFrame": 12758,
       "durationSeconds": 1.1666666666666667,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5183,14 +5182,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "080_0020_A",
       "thumbnailFile": "preview-files/ba64447e-04a6-433a-a0ae-e4b5be4d30f0.png",
       "startFrame": 8251,
       "durationSeconds": 1.3333333333333333,
-      "scene": "080_spray",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5212,14 +5211,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "af71cc10-47ca-4538-abae-af9728f0434f"
     },
     {
       "name": "130_0243_A",
       "thumbnailFile": "preview-files/f8a3290d-4a28-4611-bc70-98a72dd63207.png",
       "startFrame": 11228,
       "durationSeconds": 0.7916666666666666,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -5233,14 +5232,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "050_0030_A",
       "thumbnailFile": "preview-files/b0d93a57-c9f4-4d73-ac1b-5861a56a9ecf.png",
       "startFrame": 7038,
       "durationSeconds": 1.4166666666666667,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5254,14 +5253,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "140_0010_A",
       "thumbnailFile": "preview-files/99a21fde-96f6-4d55-bff2-b1e0b3330583.png",
       "startFrame": 11570,
       "durationSeconds": 2.2083333333333335,
-      "scene": "140_fannypack",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5275,14 +5274,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a60706fa-84e4-41b6-b6cb-6ee72262dcc8"
     },
     {
       "name": "130_0240_A",
       "thumbnailFile": "preview-files/ad1756c6-7601-4ce1-84ad-2cecc4f9ebc9.png",
       "startFrame": 11196,
       "durationSeconds": 1.3333333333333333,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -5300,14 +5299,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "160_0050_A",
       "thumbnailFile": "preview-files/bb3b4a3f-e79c-4b00-8719-26f8dcd397a6.png",
       "startFrame": 12786,
       "durationSeconds": 0.9166666666666666,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5321,14 +5320,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "050_0010_A",
       "thumbnailFile": "preview-files/8fd192d7-e6a0-45d0-aec2-6573d63ef360.png",
       "startFrame": 6890,
       "durationSeconds": 2.75,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5342,14 +5341,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "130_0246_A",
       "thumbnailFile": "preview-files/aa3bfe6a-7cc9-46a1-b45c-7e7358ce4dee.png",
       "startFrame": 11247,
       "durationSeconds": 0.875,
-      "scene": "130_snacks",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -5363,14 +5362,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "67c7dbf1-0992-4d40-bd04-c47d92ca0d75"
     },
     {
       "name": "160_0090_A",
       "thumbnailFile": "preview-files/8cdf9139-8980-4c60-9057-72b0ead9cabf.png",
       "startFrame": 13011,
       "durationSeconds": 16.541666666666668,
-      "scene": "160_escape",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5384,14 +5383,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "a74e0954-00c6-4613-93a8-eec27436e2c7"
     },
     {
       "name": "050_0130_A",
       "thumbnailFile": "preview-files/6f63440a-e068-4995-91dd-a320b144b3be.png",
       "startFrame": 7491,
       "durationSeconds": 1.6666666666666667,
-      "scene": "050_ritual",
       "tasks": [
         {
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
@@ -5405,14 +5404,14 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "62afe8d5-9d33-4518-86c3-8277940749ff"
     },
     {
       "name": "070_0010_A",
       "thumbnailFile": "preview-files/aea27121-eada-4451-b7a2-e1bfa41ff2ab.png",
       "startFrame": 8034,
       "durationSeconds": 2.4166666666666665,
-      "scene": "070_homerun",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5438,14 +5437,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "df5e0aa7-ea49-4a09-a471-449461d33046"
     },
     {
       "name": "070_0020_A",
       "thumbnailFile": "preview-files/1b0d05d6-4bf3-4dae-9b25-1b5a337a5d67.png",
       "startFrame": 8092,
       "durationSeconds": 0.75,
-      "scene": "070_homerun",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5471,14 +5470,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "df5e0aa7-ea49-4a09-a471-449461d33046"
     },
     {
       "name": "070_0040_A",
       "thumbnailFile": "preview-files/317b954e-6433-4c3b-9f9d-b3b585256661.png",
       "startFrame": 8129,
       "durationSeconds": 1.5,
-      "scene": "070_homerun",
       "tasks": [
         {
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
@@ -5504,14 +5503,14 @@
           "task_status_id": "d798f55e-fb5f-4925-93d8-20d0c8ecb4a0",
           "task_type_id": "92878462-74a0-4397-84d2-d02c82ff34d6"
         }
-      ]
+      ],
+      "sequence_id": "df5e0aa7-ea49-4a09-a471-449461d33046"
     },
     {
       "name": "080_0040_A",
       "thumbnailFile": "preview-files/e6996eab-4461-4a77-8cc3-720e41a93c62.png",
       "startFrame": 8331,
       "durationSeconds": 1.25,
-      "scene": "080_spray",
       "tasks": [
         {
           "task_status_id": "376c74ed-52f6-44a5-a4b4-a1426e0efffa",
@@ -5521,7 +5520,8 @@
           "task_status_id": "0ba4d420-cc56-4338-9b0f-a187a67d150b",
           "task_type_id": "c8b953f4-97be-4df0-a726-f7457a6fe8ad"
         }
-      ]
+      ],
+      "sequence_id": "af71cc10-47ca-4538-abae-af9728f0434f"
     }
   ],
   "sequences": [
