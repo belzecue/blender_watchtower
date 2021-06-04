@@ -27,6 +27,7 @@
         <TimelineView
             @set-current-frame="setCurrentFrame"
             :taskTypes="taskTypes"
+            :taskStatuses="taskStatuses"
             :sequences="sequences"
             :shots="shots"
             :current-frame="currentFrame"
@@ -57,6 +58,7 @@ export default {
     return {
       isPlaying: false,
       taskTypes: [],
+      taskStatuses: [],
       sequences: [],
       shots: [],
       currentFrame: 0,
@@ -128,6 +130,7 @@ export default {
         this.shots.sort((a, b) => (a.startFrame > b.startFrame) ? 1 : -1)
 
         this.taskTypes = data.taskTypes;
+        this.taskStatuses = data.taskStatuses;
         this.totalFrames = data.totalFrames;
         this.frameOffset = data.frameOffset;
         this.fps = data.fps;

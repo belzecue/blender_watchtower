@@ -19,6 +19,7 @@ export default {
   name: "TimelineView",
   props: {
     taskTypes: Array,
+    taskStatuses: Array,
     sequences: Array,
     shots: Array,
     currentFrame: Number,
@@ -62,6 +63,9 @@ export default {
   watch: {
     taskTypes: function () {
       this.resizeCanvas();
+    },
+    taskStatuses: function () {
+      this.draw();
     },
     sequences: function () {
       this.draw();
@@ -174,23 +178,23 @@ export default {
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
 
         // Draw task statuses
-        /*channelY = 77;
+        channelY = 77;
         for (const task of this.taskTypes) {
-          let color = timeline.color;
+          let color = timeline.color; // Fallback, as shots only optionally have each task.
           for (const taskStatus of shot.tasks) {
-            if (taskStatus.name === task.name) {
-              for (const status of task.statuses) {
-                if (taskStatus.status === status.name) {
+            if (taskStatus.task_type_id === task.id) {
+              for (const status of this.taskStatuses) {
+                if (taskStatus.task_status_id === status.id) {
                   color = status.color;
+                  ui.addRect(startPos, channelY, shotWidth, 17, color);
                   break;
                 }
               }
               break;
             }
           }
-          ui.addRect(startPos, channelY, shotWidth, 17, color);
           channelY += 25;
-        }*/
+        }
       }
 
       // Draw sequences
