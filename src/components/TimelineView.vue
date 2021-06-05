@@ -199,7 +199,7 @@ export default {
       const frame0LineColor = this.uiElements.timeline.frame0Color;
       ui.addLine([timelineX, timelineTop], [timelineX, timelineBottom], 1, frame0LineColor);
 
-      // Draw shots and their tasks' status
+      // Draw shots.
       const shotsStyle = this.uiElements.shots;
       const taskHeight = this.uiElements.channels.contentHeight;
       for (const shot of this.shots) {
@@ -208,23 +208,29 @@ export default {
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
         const shotWidth = endPos - startPos;
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
+      }
 
-        // Draw task statuses
-        channelY = channelStartY + channelContentPadY;
-        for (const task of this.taskTypes) {
-          for (const taskStatus of shot.tasks) {
-            if (taskStatus.task_type_id === task.id) {
-              for (const status of this.taskStatuses) {
-                if (taskStatus.task_status_id === status.id) {
-                  ui.addRect(startPos, channelY, shotWidth, taskHeight, status.color);
-                  break;
-                }
+      // Draw task statuses.
+      channelY = channelStartY + channelContentPadY;
+      for (const taskType of this.taskTypes) { // e.g. "Animation"
+        for (const status of this.taskStatuses) { // e.g. "Done"
+          // Get the contiguous frame ranges for this task status.
+          let {startPos, widths} = this.getRangesWhere((shot) => {
+            // Search if the shot has a status for the current task type.
+            for (const taskStatus of shot.tasks) {
+              if (taskStatus.task_type_id === taskType.id) {
+                // It does, check if the status for this task matches the requested one.
+                return (taskStatus.task_status_id === status.id);
               }
-              break;
             }
+            return false;
+          });
+          // Draw a rect for each range of shots.
+          for (let i = 0; i < startPos.length; i++) {
+            ui.addRect(startPos[i], channelY, widths[i], taskHeight, status.color);
           }
-          channelY += channelStep;
         }
+        channelY += channelStep;
       }
 
       // Draw sequences
@@ -233,32 +239,10 @@ export default {
         // Find continuous ranges of shots that belong to this sequence.
         // In theory, a sequence has a single contiguous range, but in practice,
         // there might shots mistakenly assigned to sequences or shots missing.
-        let currRange = -1;
-        let startFrames = [];
-        let endFrames = [];
-        for (const shot of this.shots) {
-          if (sequence.id === shot.sequence_id) {
-            if (currRange === -1) {
-              startFrames.push(shot.startFrame);
-              currRange = shot.startFrame + shot.durationSeconds * this.fps;
-            } else if (currRange === shot.startFrame) {
-              currRange += shot.durationSeconds * this.fps;
-            } else {
-              endFrames.push(currRange);
-              startFrames.push(shot.startFrame);
-              currRange = shot.startFrame + shot.durationSeconds * this.fps;
-            }
-          } else if (currRange !== -1) {
-            endFrames.push(currRange);
-            currRange = -1;
-          }
-        }
-        endFrames.push(currRange);
+        let {startPos, widths} = this.getRangesWhere((shot) => sequence.id === shot.sequence_id );
         // Draw a rect for each range of shots belonging to this sequence.
-        for (let i = 0; i < startFrames.length; i++) {
-          const startPos = timelineX + startFrames[i] * timelineW / this.totalFrames;
-          const endPos = timelineX + endFrames[i] * timelineW / this.totalFrames;
-          ui.addRect(startPos, seqTop, endPos - startPos, seqHeight, sequence.color, seqCorner);
+        for (let i = 0; i < startPos.length; i++) {
+          ui.addRect(startPos[i], seqTop, widths[i], seqHeight, sequence.color, seqCorner);
         }
       }
 
@@ -317,6 +301,43 @@ export default {
 
       // Draw the frame.
       ui.draw();
+    },
+
+    // Find continuous ranges of shots where the given condition is true.
+    getRangesWhere: function (hasProp) {
+      let currRange = -1;
+      let startFrames = [];
+      let endFrames = [];
+
+      for (const shot of this.shots) {
+        if (hasProp(shot)) {
+          if (currRange === -1) {
+            startFrames.push(shot.startFrame);
+            currRange = shot.startFrame + shot.durationSeconds * this.fps;
+          } else if (currRange === shot.startFrame) {
+            currRange += shot.durationSeconds * this.fps;
+          } else {
+            endFrames.push(currRange);
+            startFrames.push(shot.startFrame);
+            currRange = shot.startFrame + shot.durationSeconds * this.fps;
+          }
+        } else if (currRange !== -1) {
+          endFrames.push(currRange);
+          currRange = -1;
+        }
+      }
+      endFrames.push(currRange);
+
+      // Convert frame ranges to X positions on the timeline area
+      const timelineX = this.timelineRange.x;
+      const timelineFrameW = this.timelineRange.w / this.totalFrames;
+      let startPos = [];
+      let widths = [];
+      for (let i = 0; i < startFrames.length; i++) {
+        startPos.push(timelineX + startFrames[i] * timelineFrameW);
+        widths.push((endFrames[i] - startFrames[i]) * timelineFrameW);
+      }
+      return {startPos, widths};
     },
 
     setCurrentFrame: function (canvasX) {
