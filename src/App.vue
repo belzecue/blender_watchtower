@@ -117,23 +117,28 @@ export default {
           [0.5555555555555555, 0.5555555555555555, 0.5555555555555555, 1.0],
         ];
 
+        // Setup data for Sequences.
         for (let i = 0; i < data.sequences.length; i++) {
           let seq = data.sequences[i];
           seq.color = colorPalette[i];
         }
         this.sequences = data.sequences;
 
+        // Setup data for Shots.
         for (let shot of data.shots) {
           shot.thumbnailUrl = data.sourceBase + shot.thumbnailFile;
         }
         this.shots = data.shots;
         this.shots.sort((a, b) => (a.startFrame > b.startFrame) ? 1 : -1)
 
+        // Copy the rest of the data.
         this.taskTypes = data.taskTypes;
         this.taskStatuses = data.taskStatuses;
         this.totalFrames = data.totalFrames;
         this.frameOffset = data.frameOffset;
         this.fps = data.fps;
+
+        // Initialize the video player.
         this.videoPlayerOptions = {
           autoplay: false,
           controls: true,
@@ -145,6 +150,9 @@ export default {
             }
           ]
         };
+
+        // Set the playhead at the first available frame.
+        this.setCurrentFrame(data.frameOffset);
       })
   },
 

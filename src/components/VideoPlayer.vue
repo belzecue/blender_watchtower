@@ -37,7 +37,11 @@ export default {
       }
     },
     currentFrame: function () {
-      if (! this.player.paused()) {return}
+      // If the player is not ready, or it is currently playing, do nothing.
+      if (!this.player || !this.player.paused()) {
+        return;
+      }
+
       // Limit frame value to 0 or greater
       let currentTime = Math.max(0, (this.currentFrame - this.frameOffset) / this.fps);
       this.player.currentTime(currentTime);
