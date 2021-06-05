@@ -1,5 +1,10 @@
 <template>
     <div id="canvas-thumb-grid-container">
+      <select v-model="filterMode" class="ml-4 mt-2">
+        <option value="showAll">All</option>
+        <option value="showActiveSequence">Sequence</option>
+        <option value="showActiveTaskType">Task Type</option>
+      </select>
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological</option>
         <option value="groupBySequence">By Sequence</option>
@@ -28,6 +33,7 @@ export default {
   },
   data () {
     return {
+      filterMode: 'showAll',
       displayMode: 'chronological',
       canvas: null,
       canvasText: null,
@@ -52,9 +58,14 @@ export default {
       },
       isMouseDragging: false,
       thumbForCurrentFrame: null,
+      activeSequence: null,
     }
   },
   watch: {
+    filterMode: function () {
+      this.layout();
+      this.draw();
+    },
     displayMode: function () {
       this.layout();
       this.draw();
@@ -73,7 +84,6 @@ export default {
         let thumb_urls = []
         for (const shot of this.shots) {
           thumb_urls.push(shot.thumbnailUrl);
-          this.uiElements.thumbnails.push(new ThumbnailImage(shot));
         }
         this.uiElements.thumbTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
       }
@@ -82,14 +92,33 @@ export default {
       this.draw();
     },
     currentFrame: function () {
-      // Find the thumbnail shot that should be highlighted.
-      let thumbForCurrentFrame = null;
-      for (const thumb of this.uiElements.thumbnails) {
-        if(thumb.shot.startFrame > this.currentFrame)
+      // Find the thumbnail that should be highlighted.
+      this.findThumbnailForCurrentFrame();
+
+      // Find the shot for the current frame (not necessarily visible as a thumbnail).
+      let shotForCurrentFrame = this.shots.length ? this.shots[0] : null;
+      for (const shot of this.shots) {
+        if(shot.startFrame > this.currentFrame)
           break;
-        thumbForCurrentFrame = thumb;
+        shotForCurrentFrame = shot;
       }
-      this.thumbForCurrentFrame = thumbForCurrentFrame;
+      // Find the corresponding sequence, if any.
+      let currSequence = null;
+      if (shotForCurrentFrame) {
+        for (const seq of this.sequences) {
+          if (seq.id === shotForCurrentFrame.sequence_id) {
+            currSequence = seq;
+            break;
+          }
+        }
+      }
+      const previouslyCurrSequence = this.activeSequence;
+      this.activeSequence = currSequence;
+
+      // Re-layout if the change in current scene affects the filtering.
+      if (previouslyCurrSequence!== currSequence && this.filterMode === "showActiveSequence") {
+        this.layout();
+      }
 
       this.draw();
     },
@@ -149,32 +178,6 @@ export default {
 
     draw: function () {
       const ui = this.uiRenderer;
-
-      // If the resulting layout makes the images too small, skip rendering.
-      let hasProblemMsg = null;
-      const thumbSize = this.uiElements.thumbnailSize;
-      if (!this.shots.length) {
-        hasProblemMsg = "No shots loaded";
-      } else if (thumbSize[0] <= 5 || thumbSize[1] <= 5) {
-        hasProblemMsg = "Out of space";
-      }
-
-      if (this.shots.length) {
-        let i = 0;
-        for (const thumb of this.uiElements.thumbnails) {
-          ui.addImageFromBundle(
-            thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
-            this.uiElements.thumbTexBundleID, i++
-          );
-
-          // Draw a border around the thumbnail corresponding to the current frame.
-          if (thumb === this.thumbForCurrentFrame) {
-            const sel = this.uiElements.selectedHighlight;
-            ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
-          }
-        }
-      }
-
       // Setup style for the text rendering in the overlaid canvas for text.
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
       this.ui2D.fillStyle = "rgb(220, 220, 220)";
@@ -185,6 +188,33 @@ export default {
       this.ui2D.shadowOffsetY = 2;
       this.ui2D.shadowBlur = 2;
       this.ui2D.shadowColor = 'rgba(0, 0, 0, 0.5)';
+
+      // If the resulting layout makes the images too small, skip rendering.
+      let hasProblemMsg = null;
+      const thumbSize = this.uiElements.thumbnailSize;
+      if (!this.shots.length) {
+        hasProblemMsg = "No shots loaded";
+      } else if (thumbSize[0] <= 5 || thumbSize[1] <= 5) {
+        hasProblemMsg = "Out of space";
+      }
+
+      if (this.filterMode === "showActiveSequence") {
+        const seqName = this.activeSequence ? this.activeSequence.name : "No sequence selected";
+        this.ui2D.fillText(seqName, 50, 50);
+      }
+
+      for (const thumb of this.uiElements.thumbnails) {
+        ui.addImageFromBundle(
+          thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
+          this.uiElements.thumbTexBundleID, thumb.shotIdx
+        );
+
+        // Draw a border around the thumbnail corresponding to the current frame.
+        if (thumb === this.thumbForCurrentFrame) {
+          const sel = this.uiElements.selectedHighlight;
+          ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+        }
+      }
 
       if (hasProblemMsg) {
         // Show a user message indicating why the view is empty
@@ -205,8 +235,35 @@ export default {
       ui.draw();
     },
 
+    filterThumbnails: function () {
+
+      this.uiElements.thumbnails = [];
+
+      // Create a thumbnail for each shot to be shown.
+      if (this.filterMode === "showActiveSequence") {
+        if (this.activeSequence) {
+          // Show the shots associated with the active sequence.
+          for (let i = 0; i < this.shots.length; i++) {
+            const shot = this.shots[i];
+            if (shot.sequence_id === this.activeSequence.id) {
+              this.uiElements.thumbnails.push(new ThumbnailImage(shot, i));
+            }
+          }
+        }
+      } else {
+        // Show all the shots.
+        for (let i = 0; i < this.shots.length; i++) {
+          this.uiElements.thumbnails.push(new ThumbnailImage(this.shots[i], i));
+        }
+      }
+
+      // Update the thumbnail that should be highlighted.
+      this.findThumbnailForCurrentFrame();
+    },
+
     layout: function () {
-      console.log("Thumbnail View: Layout");
+
+      this.filterThumbnails();
 
       // If there are no images to fit, we're done!
       if (!this.shots.length)
@@ -220,7 +277,7 @@ export default {
 
     fitThumbsInGrid: function () {
 
-      const numImages = this.shots.length;
+      const numImages = this.uiElements.thumbnails.length;
 
       // Get size of the region containing the thumbnails.
       const rect = this.getCanvasRect();
@@ -234,13 +291,17 @@ export default {
       const minMargin = this.uiElements.minMargin;
       const availableW = totalAvailableW - totalSpacing[0];
       const availableH = totalAvailableH - totalSpacing[1];
-      const maxThumbSize = [totalAvailableW - minMargin, totalAvailableH - minMargin];
 
       // Get the original size and aspect ratio of the images.
       // Assume all images in the edit have the same aspect ratio.
       const originalImageW = this.uiElements.originalImageSize[0];
       const originalImageH = this.uiElements.originalImageSize[1];
       //console.log("Image a.ratio=", originalImageW / originalImageH, "(", originalImageW, "x", originalImageH,")");
+
+      // Calculate maximum limit for thumbnail size.
+      let maxThumbSize = numImages === 1 ?
+          [totalAvailableW - minMargin, totalAvailableH - minMargin]
+          : [availableW, availableH];
 
       // Calculate by how much images need to be scaled in order to fit. (won't be perfect)
       const availableArea = availableW * availableH;
@@ -481,6 +542,16 @@ export default {
       }
     },
 
+    findThumbnailForCurrentFrame: function () {
+      let thumbForCurrentFrame = null;
+      for (const thumb of this.uiElements.thumbnails) {
+        if(thumb.shot.startFrame > this.currentFrame)
+          break;
+        thumbForCurrentFrame = thumb;
+      }
+      this.thumbForCurrentFrame = thumbForCurrentFrame;
+    },
+
     setCurrentFrame: function (thumb) {
       const newCurrentFrame = thumb.shot.startFrame;
       this.$emit('set-current-frame', newCurrentFrame);
@@ -519,7 +590,7 @@ export default {
 function calculateSpacingCentered(totalAvailable, thumbSize, numThumbs, minMargin) {
 
   const availableSpace = totalAvailable - thumbSize * numThumbs;
-  //console.log("remaining space", availableSpace, "px");
+  //console.log("remaining space", availableSpace, "px =", totalAvailable, "-", thumbSize, "*", numThumbs);
 
   let spacing = 0;
   if (numThumbs > 1) {
@@ -527,6 +598,7 @@ function calculateSpacingCentered(totalAvailable, thumbSize, numThumbs, minMargi
     //console.log("spacing", spacing);
     // Spacing between images should never be bigger than the margins.
     spacing = Math.min(Math.ceil(spacing), minMargin);
+    //console.log("spacing clamped", spacing);
   }
 
   let margin = (availableSpace - spacing * (numThumbs - 1)) / 2;
@@ -559,9 +631,10 @@ function calculateSpacingTopLeftFlow(usableSpace, thumbSize, numThumbs, minSideM
 
 
 // UI element specifying how a thumbnail should be drawn.
-function ThumbnailImage (shot) {
+function ThumbnailImage (shot, shotIdx) {
   this.pos = [0, 0]; // Position in px where the image should be displayed in canvas coordinates.
   this.shot = shot;
+  this.shotIdx = shotIdx;
   this.groupIdx = -1;
   this.posInGroup = -1;
 }
