@@ -35,6 +35,8 @@ export default {
       ui2D: null,
       uiElements: {
         margin: {x: 15, top: 22, bottom: 7}, // Spacing around the contents of the timeline canvas. One side, in px.
+        fontSize: 12,
+        selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
         playhead: {
           padY: 8, // From the absolute top. Ignores 'margin'.
           triangle: {width: 12.0, height: 8.0, flatHeight: 4.0},
@@ -47,8 +49,10 @@ export default {
           frame0Color: [0.36, 0.36, 0.36, 1.0],
         },
         sequences: {
+          fontPad: {x: 2, top: 3, bottom: 1},
+          fontSize: 10,
           height: 6,
-          channelHeight: 16,
+          channelHeight: 3 + 10 + 1 + 6 + 4, // 24, matches channels.
           corner: 0,
         },
         shots: {
@@ -67,6 +71,7 @@ export default {
         }
       },
       timelineRange: { x: 0 , w: 100},
+      shotForCurrentFrame: null,
     }
   },
   watch: {
@@ -83,6 +88,9 @@ export default {
       this.draw();
     },
     currentFrame: function () {
+      // Find the shot that should be highlighted.
+      this.findShotForCurrentFrame();
+
       this.draw();
     },
   },
@@ -145,9 +153,10 @@ export default {
       const ui = this.uiRenderer;
       const rect = this.getCanvasRect();
       // Setup style for the text rendering in the overlaid canvas for text.
+      const fontSize = this.uiElements.fontSize;
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
       this.ui2D.fillStyle = "rgb(220, 220, 220)";
-      this.ui2D.font = "12px sans-serif";
+      this.ui2D.font = fontSize + "px sans-serif";
       this.ui2D.textAlign = "left";
       this.ui2D.textBaseline = "top";
       this.ui2D.shadowOffsetX = 1;
@@ -168,9 +177,12 @@ export default {
       const timelineW = rect.width - timelineX - margin.x;
       const timelineTop = margin.top;
       const timelineBottom = rect.height - this.uiElements.margin.bottom;
-      const seqHeight = this.uiElements.sequences.height;
       const seqChannelHeight = this.uiElements.sequences.channelHeight;
-      const seqTop = margin.top + Math.round((seqChannelHeight - seqHeight) / 2);
+      const seqHeight = this.uiElements.sequences.height;
+      const seqTextPad = this.uiElements.sequences.fontPad;
+      const seqFontSize = this.uiElements.sequences.fontSize;
+      const seqPaddedTextHeight = seqTextPad.top + seqTextPad.bottom + seqFontSize;
+      const seqTop = margin.top + seqPaddedTextHeight;
       const shotHeight = this.uiElements.shots.height;
       const shotChannelHeight = this.uiElements.shots.channelHeight;
       const shotChannelTop = margin.top + seqChannelHeight;
@@ -209,6 +221,16 @@ export default {
         const shotWidth = endPos - startPos;
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
       }
+      // Draw a border around the shot corresponding to the current frame.
+      if (this.shotForCurrentFrame) {
+        const shot = this.shotForCurrentFrame;
+        const sel = this.uiElements.selectedHighlight;
+        const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
+        const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
+        const endPos = timelineX + endFrame * timelineW / this.totalFrames;
+        const shotWidth = endPos - startPos;
+        ui.addFrame(startPos, shotTop, shotWidth, shotHeight, sel.width, sel.color, shotsStyle.corner);
+      }
 
       // Draw task statuses.
       channelY = channelStartY + channelContentPadY;
@@ -235,6 +257,7 @@ export default {
 
       // Draw sequences
       const seqCorner = this.uiElements.sequences.corner;
+      this.ui2D.font = seqFontSize + "px sans-serif";
       for (const sequence of this.sequences) {
         // Find continuous ranges of shots that belong to this sequence.
         // In theory, a sequence has a single contiguous range, but in practice,
@@ -244,7 +267,21 @@ export default {
         for (let i = 0; i < startPos.length; i++) {
           ui.addRect(startPos[i], seqTop, widths[i], seqHeight, sequence.color, seqCorner);
         }
+        if (startPos.length) {
+          let name = sequence.name;
+          const availableWidth = widths[0] - seqTextPad.x * 2 - this.ui2D.measureText("..").width;
+          if (availableWidth > 0) {
+            while (this.ui2D.measureText(name).width > availableWidth) {
+              name = name.slice(0, -1);
+            }
+            if (name !== sequence.name) {
+              name += "..";
+            }
+            this.ui2D.fillText(name, startPos[0] + seqTextPad.x, seqTop - (seqFontSize + seqTextPad.bottom));
+          }
+        }
       }
+      this.ui2D.font = fontSize + "px sans-serif";
 
       // Playhead
       // Update the playhead position according to the current frame.
@@ -288,12 +325,13 @@ export default {
         triangle.width + 1, playhead.triangle.flatHeight + 1, playhead.color, 1
       );
 
+      const halfFontSize = fontSize / 2;
       const textX = margin.x + this.uiElements.channels.namePadX;
-      let textY = margin.top + Math.round(seqChannelHeight / 2) - 6; // 6 = font size / 2
+      let textY = margin.top + Math.round(seqChannelHeight / 2) - halfFontSize;
       this.ui2D.fillText("Sequences", textX, textY);
-      textY = shotChannelTop + Math.round(shotChannelHeight / 2) - 6;
+      textY = shotChannelTop + Math.round(shotChannelHeight / 2) - halfFontSize;
       this.ui2D.fillText("Shots", textX, textY);
-      textY = channelStartY + Math.round(channelStep / 2) - 6;
+      textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
       for (const task of this.taskTypes) {
         this.ui2D.fillText(task.name, textX, textY);
         textY += channelStep;
@@ -338,6 +376,16 @@ export default {
         widths.push((endFrames[i] - startFrames[i]) * timelineFrameW);
       }
       return {startPos, widths};
+    },
+
+    findShotForCurrentFrame: function () {
+      let shotForCurrentFrame = null;
+      for (const shot of this.shots) {
+        if(shot.startFrame > this.currentFrame)
+          break;
+        shotForCurrentFrame = shot;
+      }
+      this.shotForCurrentFrame = shotForCurrentFrame;
     },
 
     setCurrentFrame: function (canvasX) {
