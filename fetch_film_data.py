@@ -89,8 +89,8 @@ def fetch_shots_and_previews(force=False):
 def build_edit_data():
     edit_data = {
         'sourceBase': 'http://eb.local:8080/',
-        'sourceName': 'sf-edit-v097.mp4',
-        'sourceType': 'video/webm',
+        'sourceName': 'sf-edit-v098.mp4',
+        'sourceType': 'video/mp4',
         'totalFrames': 14741,
         'frameOffset': 101,
         'fps': 24,
