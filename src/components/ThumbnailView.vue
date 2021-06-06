@@ -4,11 +4,12 @@
         <option value="showAll">All</option>
         <option value="showActiveSequence">Sequence</option>
       </select>
-      <select v-model="taskMode" class="ml-4 mt-2">
-        <option value="none">No Task Type</option>
-        <option value="Layout">Layout</option>
-        <option value="Animation">Animation</option>
-        <option value="FX">FX</option>
+      <select v-model="taskTypeFilter" class="ml-4 mt-2">
+        <option value="">No Task Type</option>
+        <option v-for="option in taskTypes" :key="option.id" :value="option.id">
+          {{ option.name }}
+        </option>
+
       </select>
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological</option>
@@ -41,7 +42,7 @@ export default {
   data () {
     return {
       seqFilterMode: 'showAll',
-      taskMode: 'none',
+      taskTypeFilter: '',
       displayMode: 'chronological',
       canvas: null,
       canvasText: null,
@@ -75,7 +76,7 @@ export default {
     seqFilterMode: function () {
       this.refreshAndDraw();
     },
-    taskMode: function () {
+    taskTypeFilter: function () {
       this.refreshAndDraw();
     },
     displayMode: function () {
@@ -125,6 +126,7 @@ export default {
   },
   mounted: function () {
     console.log("Thumbnail View: Initializing...");
+    // this.taskTypeFilter = this.taskTypes;
     this.initCanvas();
 
     // Note: Image loading, if any, should go here.
@@ -226,7 +228,7 @@ export default {
         );
       }
 
-      // Draw overlayed information for the shots.
+      // Draw overlaid information for the shots.
       // Check if there is enough space to show shot names
       const shotInfoSpacing = this.uiElements.overlayInfo.textPad;
       const textHeightOffset = thumbSize[1] - fontSize - shotInfoSpacing;
@@ -251,12 +253,12 @@ export default {
       }
 
       // Draw task statuses.
-      if (this.taskMode !== "none") {
+      if (this.taskTypeFilter !== "") {
 
         // Find task type
         let taskType = null;
         for (const type of this.taskTypes) { // e.g. "Animation"
-          if (this.taskMode === type.name) {
+          if (this.taskTypeFilter === type.id) {
             taskType = type;
             break;
           }
