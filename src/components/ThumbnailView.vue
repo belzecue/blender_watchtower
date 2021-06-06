@@ -45,13 +45,15 @@ export default {
         thumbnails: [],
         thumbTexBundleID: null,
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
+        fontSize: 12,
+        overlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
         // Grouped view.
         thumbGroups: [],
         groupedView: {
-          title: { fontSize: 12, spaceBefore: 4, spaceAfter: 2, },
+          title: { spaceBefore: 4, spaceAfter: 2, },
           colorRect: { width: 6, xOffset: 12, },
         },
       },
@@ -166,9 +168,10 @@ export default {
     draw: function () {
       const ui = this.uiRenderer;
       // Setup style for the text rendering in the overlaid canvas for text.
+      const fontSize = this.uiElements.fontSize;
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
       this.ui2D.fillStyle = "rgb(220, 220, 220)";
-      this.ui2D.font = "12px sans-serif";
+      this.ui2D.font = fontSize + "px sans-serif";
       this.ui2D.textAlign = "left";
       this.ui2D.textBaseline = "top";
       this.ui2D.shadowOffsetX = 2;
@@ -197,12 +200,38 @@ export default {
         return;
       }
 
+      // Draw the thumbnails.
       for (const thumb of this.uiElements.thumbnails) {
         ui.addImageFromBundle(
           thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
           this.uiElements.thumbTexBundleID, thumb.shotIdx
         );
       }
+
+      // Draw overlayed information for the shots.
+      // Check if there is enough space to show shot names
+      const shotInfoSpacing = this.uiElements.overlayInfo.textPad;
+      const textHeightOffset = thumbSize[1] - fontSize - shotInfoSpacing;
+      const widthForShotName = this.ui2D.measureText("010_0010_A").width + shotInfoSpacing * 2; // Sample shot name
+      const widthForExtras =  this.ui2D.measureText(" - 15.5s").width; // Example
+      let shotInfoMode = 0;
+      if (thumbSize[0] > widthForShotName * 1.1) { shotInfoMode = 1; }
+      if (thumbSize[0] > (widthForShotName + widthForExtras)) { shotInfoMode = 2; }
+      if (shotInfoMode > 0) {
+        for (const thumb of this.uiElements.thumbnails) {
+          const info = thumb.shot.name + (shotInfoMode === 1 ? "" :
+              " - " + thumb.shot.durationSeconds.toFixed(1) + "s");
+
+          ui.addRect(
+              thumb.pos[0], thumb.pos[1] + textHeightOffset - shotInfoSpacing,
+              thumbSize[0], fontSize + shotInfoSpacing * 2,
+              this.uiElements.overlayInfo.color
+          );
+
+          this.ui2D.fillText(info, thumb.pos[0] + shotInfoSpacing, thumb.pos[1] + textHeightOffset);
+        }
+      }
+
       // Draw a border around the thumbnail corresponding to the current frame.
       if (this.thumbForCurrentFrame) {
         const thumb = this.thumbForCurrentFrame;
@@ -394,7 +423,7 @@ export default {
     fitThumbsInGroup: function () {
 
       const numGroups = this.uiElements.thumbGroups.length;
-      //console.log("Assigned", numImages, "shots to", numGroups, "groups");
+      //console.log("Assigned", this.uiElements.thumbnails.length, "shots to", numGroups, "groups");
 
       // Find the maximum scale at which the thumbnails can be displayed.
 
@@ -413,7 +442,7 @@ export default {
       //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
-      const titleHeight = this.uiElements.groupedView.title.fontSize
+      const titleHeight = this.uiElements.fontSize
                         + this.uiElements.groupedView.title.spaceBefore
                         + this.uiElements.groupedView.title.spaceAfter;
       const colorRectOffset = this.uiElements.groupedView.colorRect.xOffset;
@@ -460,7 +489,7 @@ export default {
           const checkFitFactorH = getFitFactor(availableH, numRows, originalImageH);
           // The thumbnails would need to be scaled by the smallest factor to fit in both directions.
           const checkFitFactor = Math.min(upscaleLimit, checkFitFactorW, checkFitFactorH);
-          //console.log("Checking (", cols, "cols,", numRows, "rows). Scale factors:", checkFitFactorW, checkFitFactorH);
+          //console.log("Checking (", numCols, "cols,", numRows, "rows). Scale factors:", checkFitFactorW, checkFitFactorH);
 
           // If the current number of columns gives bigger thumbnails, save it as current best.
           if (checkFitFactor > scaleFactor) {
@@ -486,7 +515,7 @@ export default {
       // Set the position of each thumbnail.
       let startPosX = minSideMargin + colorRectOffset;
       let titlePosY = minSideMargin;
-      const titleSize = this.uiElements.groupedView.title.fontSize + this.uiElements.groupedView.title.spaceAfter;
+      const titleSize = this.uiElements.fontSize + this.uiElements.groupedView.title.spaceAfter;
       const thumbnailStepX = thumbSize[0] + spaceW;
       const thumbnailStepY = thumbSize[1] + spaceH;
 
