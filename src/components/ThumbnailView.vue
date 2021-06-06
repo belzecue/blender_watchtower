@@ -196,6 +196,16 @@ export default {
         hasProblemMsg = "No shots loaded";
       } else if (thumbSize[0] <= 5 || thumbSize[1] <= 5) {
         hasProblemMsg = "Out of space";
+      } else if (Number.isNaN(thumbSize[0]) || Number.isNaN(thumbSize[1])) {
+        hasProblemMsg = "Missing layout pass";
+      }
+
+      if (hasProblemMsg) {
+        // Show a user message indicating why the view is empty
+        this.ui2D.textAlign = "center";
+        this.ui2D.textBaseline = "middle";
+        this.ui2D.fillText(hasProblemMsg, this.canvasText.width * 0.5, this.canvasText.height * 0.5);
+        return;
       }
 
       if (this.filterMode === "showActiveSequence") {
@@ -208,20 +218,15 @@ export default {
           thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
           this.uiElements.thumbTexBundleID, thumb.shotIdx
         );
-
-        // Draw a border around the thumbnail corresponding to the current frame.
-        if (thumb === this.thumbForCurrentFrame) {
-          const sel = this.uiElements.selectedHighlight;
-          ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
-        }
+      }
+      // Draw a border around the thumbnail corresponding to the current frame.
+      if (this.thumbForCurrentFrame) {
+        const thumb = this.thumbForCurrentFrame;
+        const sel = this.uiElements.selectedHighlight;
+        ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
       }
 
-      if (hasProblemMsg) {
-        // Show a user message indicating why the view is empty
-        this.ui2D.textAlign = "center";
-        this.ui2D.textBaseline = "middle";
-        this.ui2D.fillText(hasProblemMsg, this.canvasText.width * 0.5, this.canvasText.height * 0.5);
-      } else if (this.displayMode !== "chronological") {
+      if (this.displayMode !== "chronological") {
         // Draw each group.
         for (const group of this.uiElements.thumbGroups) {
           // Draw color rect.
