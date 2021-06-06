@@ -63,16 +63,13 @@ export default {
   },
   watch: {
     filterMode: function () {
-      this.layout();
-      this.draw();
+      this.refreshAndDraw();
     },
     displayMode: function () {
-      this.layout();
-      this.draw();
+      this.refreshAndDraw();
     },
     sequences: function () {
-      this.layout();
-      this.draw();
+      this.refreshAndDraw();
     },
     shots: function () {
       console.log("Thumbnail View: Loading " + this.shots.length + " shots")
@@ -88,39 +85,23 @@ export default {
         this.uiElements.thumbTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
       }
 
-      this.layout();
-      this.draw();
+      this.refreshAndDraw();
     },
     currentFrame: function () {
       // Find the thumbnail that should be highlighted.
-      this.findThumbnailForCurrentFrame();
+      this.thumbForCurrentFrame = this.findThumbnailForCurrentFrame();
 
-      // Find the shot for the current frame (not necessarily visible as a thumbnail).
-      let shotForCurrentFrame = this.shots.length ? this.shots[0] : null;
-      for (const shot of this.shots) {
-        if(shot.startFrame > this.currentFrame)
-          break;
-        shotForCurrentFrame = shot;
-      }
-      // Find the corresponding sequence, if any.
-      let currSequence = null;
-      if (shotForCurrentFrame) {
-        for (const seq of this.sequences) {
-          if (seq.id === shotForCurrentFrame.sequence_id) {
-            currSequence = seq;
-            break;
-          }
-        }
-      }
+      // Find the sequence that is active for the current frame.
+      const currSequence = this.findSequenceForCurrentFrame();
       const previouslyCurrSequence = this.activeSequence;
       this.activeSequence = currSequence;
 
       // Re-layout if the change in current scene affects the filtering.
       if (previouslyCurrSequence!== currSequence && this.filterMode === "showActiveSequence") {
-        this.layout();
+        this.refreshAndDraw();
+      } else {
+        this.draw();
       }
-
-      this.draw();
     },
   },
   mounted: function () {
@@ -174,6 +155,13 @@ export default {
       // Call the re-size once to trigger the sizing, but avoid drawing because
       // images (if any) haven't been created yet.
       this.resizeCanvas(false);
+    },
+
+    refreshAndDraw: function () {
+      this.filterThumbnails();
+      this.refreshThumbnailGroups();
+      this.layout();
+      this.draw();
     },
 
     draw: function () {
@@ -260,7 +248,7 @@ export default {
       }
 
       // Update the thumbnail that should be highlighted.
-      this.findThumbnailForCurrentFrame();
+      this.thumbForCurrentFrame = this.findThumbnailForCurrentFrame();
     },
 
     refreshThumbnailGroups: function () {
@@ -295,13 +283,18 @@ export default {
       for (const group of thumbGroups) {
         if (group.thumbIdxs.length) {
           this.uiElements.thumbGroups.push(group);
+
+          // Add total duration and shot count to the group name.
+          let durationInSeconds = 0;
+          for (const thumbIdx of group.thumbIdxs) {
+            durationInSeconds += this.uiElements.thumbnails[thumbIdx].shot.durationSeconds;
+          }
+          group.name += " (shots: " + group.thumbIdxs.length + ",  " + durationInSeconds.toFixed(1) + "s)";
         }
       }
     },
 
     layout: function () {
-
-      this.filterThumbnails();
 
       // If there are no images to fit, we're done!
       if (!this.uiElements.thumbnails.length)
@@ -310,7 +303,6 @@ export default {
       if (this.displayMode === "chronological") {
         this.fitThumbsInGrid();
       } else {
-        this.refreshThumbnailGroups();
         this.fitThumbsInGroup();
       }
     },
@@ -525,13 +517,6 @@ export default {
         group.namePos = [startPosX, titlePosY];
         titlePosY += titleHeight + thumbnailStepY * numThumbRows;
 
-        // Add total duration and shot count to the group name.
-        let durationInSeconds = 0;
-        for (const thumbIdx of group.thumbIdxs) {
-          durationInSeconds += this.uiElements.thumbnails[thumbIdx].shot.durationSeconds;
-        }
-        group.name += " (shots: " + group.thumbIdxs.length + ",  " + durationInSeconds.toFixed(1) + "s)";
-
         // Set the position for the colored rectangle.
         const rectHeight = titleSize + thumbnailStepY * numThumbRows;
         const titleTop = group.namePos[1];
@@ -559,7 +544,29 @@ export default {
           break;
         thumbForCurrentFrame = thumb;
       }
-      this.thumbForCurrentFrame = thumbForCurrentFrame;
+      return thumbForCurrentFrame;
+    },
+
+    findSequenceForCurrentFrame: function () {
+      // Find the shot for the current frame (not necessarily visible as a thumbnail).
+      let shotForCurrentFrame = this.shots.length ? this.shots[0] : null;
+      for (const shot of this.shots) {
+        if(shot.startFrame > this.currentFrame)
+          break;
+        shotForCurrentFrame = shot;
+      }
+
+      // Find the corresponding sequence, if any.
+      let currSequence = null;
+      if (shotForCurrentFrame) {
+        for (const seq of this.sequences) {
+          if (seq.id === shotForCurrentFrame.sequence_id) {
+            currSequence = seq;
+            break;
+          }
+        }
+      }
+      return currSequence;
     },
 
     setCurrentFrame: function (thumb) {
