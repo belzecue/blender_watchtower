@@ -1,9 +1,14 @@
 <template>
     <div id="canvas-thumb-grid-container">
-      <select v-model="filterMode" class="ml-4 mt-2">
+      <select v-model="seqFilterMode" class="ml-4 mt-2">
         <option value="showAll">All</option>
         <option value="showActiveSequence">Sequence</option>
-        <option value="showActiveTaskType">Task Type</option>
+      </select>
+      <select v-model="taskMode" class="ml-4 mt-2">
+        <option value="none">No Task Type</option>
+        <option value="Layout">Layout</option>
+        <option value="Animation">Animation</option>
+        <option value="FX">FX</option>
       </select>
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological</option>
@@ -27,13 +32,16 @@ import {UIRenderer} from '../shading';
 export default {
   name: "ThumbnailView",
   props: {
+    taskTypes: Array,
+    taskStatuses: Array,
     sequences: Array,
     shots: Array,
     currentFrame: Number,
   },
   data () {
     return {
-      filterMode: 'showAll',
+      seqFilterMode: 'showAll',
+      taskMode: 'none',
       displayMode: 'chronological',
       canvas: null,
       canvasText: null,
@@ -47,6 +55,7 @@ export default {
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
         fontSize: 12,
         overlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
+        taskStatus: { radius: 6, offset: 3, disabledColor: [0.05, 0.05, 0.05, 0.8] },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
@@ -63,10 +72,19 @@ export default {
     }
   },
   watch: {
-    filterMode: function () {
+    seqFilterMode: function () {
+      this.refreshAndDraw();
+    },
+    taskMode: function () {
       this.refreshAndDraw();
     },
     displayMode: function () {
+      this.refreshAndDraw();
+    },
+    taskTypes: function () {
+      this.refreshAndDraw();
+    },
+    taskStatuses: function () {
       this.refreshAndDraw();
     },
     sequences: function () {
@@ -98,7 +116,7 @@ export default {
       this.activeSequence = currSequence;
 
       // Re-layout if the change in current scene affects the filtering.
-      if (previouslyCurrSequence!== currSequence && this.filterMode === "showActiveSequence") {
+      if (previouslyCurrSequence!== currSequence && this.seqFilterMode === "showActiveSequence") {
         this.refreshAndDraw();
       } else {
         this.draw();
@@ -188,7 +206,7 @@ export default {
         hasProblemMsg = "Out of space";
       } else if (Number.isNaN(thumbSize[0]) || Number.isNaN(thumbSize[1])) {
         hasProblemMsg = "Missing layout pass";
-      } else if (this.filterMode === "showActiveSequence" && !this.activeSequence) {
+      } else if (this.seqFilterMode === "showActiveSequence" && !this.activeSequence) {
         hasProblemMsg = "No sequence selected";
       }
 
@@ -232,6 +250,49 @@ export default {
         }
       }
 
+      // Draw task statuses.
+      if (this.taskMode !== "none") {
+
+        // Find task type
+        let taskType = null;
+        for (const type of this.taskTypes) { // e.g. "Animation"
+          if (this.taskMode === type.name) {
+            taskType = type;
+            break;
+          }
+        }
+        if (!taskType) { console.warn("Selected task type not found in data."); return; }
+
+        const statusRadius = this.uiElements.taskStatus.radius;
+        const statusOffset = this.uiElements.taskStatus.offset;
+        if (thumbSize[0] > statusRadius * 2 * 2) {
+          const offsetW = thumbSize[0] - statusRadius - statusOffset;
+          const offsetH = thumbSize[1] - statusRadius - statusOffset;
+          for (const thumb of this.uiElements.thumbnails) {
+            let hasStatusForTask = false;
+            // Search if the shot has a status for the current task type.
+            for (const taskStatus of thumb.shot.tasks) {
+              if (taskStatus.task_type_id === taskType.id) {
+                // It does, get the color for the status of this task.
+                for (const status of this.taskStatuses) { // e.g. "Done"
+                  if (taskStatus.task_status_id === status.id) {
+                    ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
+                    break;
+                  }
+                }
+                hasStatusForTask = true;
+                break;
+              }
+            }
+            if (!hasStatusForTask) {
+              ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
+                this.uiElements.taskStatus.disabledColor
+              );
+            }
+          }
+        }
+      }
+
       // Draw a border around the thumbnail corresponding to the current frame.
       if (this.thumbForCurrentFrame) {
         const thumb = this.thumbForCurrentFrame;
@@ -258,7 +319,7 @@ export default {
       this.uiElements.thumbnails = [];
 
       // Create a thumbnail for each shot to be shown.
-      if (this.filterMode === "showActiveSequence") {
+      if (this.seqFilterMode === "showActiveSequence") {
         if (this.activeSequence) {
           // Show the shots associated with the active sequence.
           for (let i = 0; i < this.shots.length; i++) {

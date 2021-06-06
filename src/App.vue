@@ -5,6 +5,8 @@
       <div class="column is-two-thirds">
         <ThumbnailView
             @set-current-frame="setCurrentFrame"
+            :taskTypes="taskTypes"
+            :taskStatuses="taskStatuses"
             :sequences="sequences"
             :shots="shots"
             :current-frame="currentFrame" />
