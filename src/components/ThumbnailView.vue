@@ -55,7 +55,7 @@ export default {
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
         fontSize: 12,
         overlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
-        taskStatus: { radius: 6, offset: 3, disabledColor: [0.05, 0.05, 0.05, 0.8] },
+        taskStatus: { radius: 5, offsetX: 5, offsetY: 6, disabledColor: [0.05, 0.05, 0.05, 0.8] },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
@@ -264,10 +264,11 @@ export default {
         if (!taskType) { console.warn("Selected task type not found in data."); return; }
 
         const statusRadius = this.uiElements.taskStatus.radius;
-        const statusOffset = this.uiElements.taskStatus.offset;
+        const statusOffsetX = this.uiElements.taskStatus.offsetX;
+        const statusOffsetY = this.uiElements.taskStatus.offsetY;
         if (thumbSize[0] > statusRadius * 2 * 2) {
-          const offsetW = thumbSize[0] - statusRadius - statusOffset;
-          const offsetH = thumbSize[1] - statusRadius - statusOffset;
+          const offsetW = thumbSize[0] - statusRadius - statusOffsetX;
+          const offsetH = thumbSize[1] - statusRadius - statusOffsetY;
           for (const thumb of this.uiElements.thumbnails) {
             let hasStatusForTask = false;
             // Search if the shot has a status for the current task type.
