@@ -53,7 +53,6 @@ export default {
         groupedView: {
           title: { fontSize: 12, spaceBefore: 4, spaceAfter: 2, },
           colorRect: { width: 6, xOffset: 12, },
-          minSpacingBetweenThumbs: 2,
         },
       },
       isMouseDragging: false,
@@ -419,7 +418,6 @@ export default {
                         + this.uiElements.groupedView.title.spaceAfter;
       const colorRectOffset = this.uiElements.groupedView.colorRect.xOffset;
       const colorRectWidth = this.uiElements.groupedView.colorRect.width;
-      const minSpacing = this.uiElements.groupedView.minSpacingBetweenThumbs;
       const bothMargins = this.uiElements.minMargin;
       const minSideMargin = bothMargins * 0.5;
       const availableW = totalAvailableW - bothMargins - colorRectOffset;
@@ -436,64 +434,47 @@ export default {
       // Find maximum height and corresponding scale.
       let numImagesPerRow = thumbsPerGroup[0];
       let numImagesPerCol = numGroups;
-      const maxResY = Math.round((availableH - numImagesPerCol * minSpacing) / numImagesPerCol);
-      const heightFitFactor = maxResY / originalImageH;
+      const heightFitFactor = getFitFactor(availableH, numImagesPerCol, originalImageH);
       // Find a thumbnail width that is guaranteed to fit with all the group's thumbnails in one row.
-      const minResX = Math.round((availableW - numImagesPerRow * minSpacing) / numImagesPerRow);
-      const rowFitFactor = minResX / originalImageW;
+      const rowFitFactor = getFitFactor(availableW, numImagesPerRow, originalImageW);
 
-      let scaleFactor = heightFitFactor;
+      // Limit upscaling of the thumbnails to 1.5x.
+      const upscaleLimit = 1.4;
+      let scaleFactor = Math.min(upscaleLimit, heightFitFactor);
 
       // If the thumbnails do fit in one row, we're done!
       if (rowFitFactor < heightFitFactor) {
-        // Otherwise, do a binary search for the number of columns that maximizes
-        // the thumb size (therefore, minimizes scale factor).
-        scaleFactor = rowFitFactor;
-        let maxCols = thumbsPerGroup[0];
-        let minCols = 0;
-        let checkCols = 1;
-        while (maxCols !== checkCols || checkCols !== minCols) {
-          checkCols = minCols + Math.ceil((maxCols - minCols) / 2);
-          //console.log("check", checkCols, "[", minCols, maxCols, "]");
-
-          // Calculate resulting number of rows, if there are checkCols number of columns.
+        // Otherwise, do a linear search for the number of columns that maximizes the thumb size.
+        // A binary search may fall into a local maximum.
+        scaleFactor = Math.min(upscaleLimit, rowFitFactor);
+        for (let numCols = thumbsPerGroup[0]; numCols > 0; numCols--) {
+          // Calculate resulting number of rows, if there are "cols" number of columns.
           let numRows = 0;
           for (const n of thumbsPerGroup) {
-            numRows += Math.ceil(n / checkCols);
+            numRows += Math.ceil(n / numCols);
           }
+
           // Get the scale factor necessary to fit the thumbnails in width and in height.
+
+          const checkFitFactorW = getFitFactor(availableW, numCols, originalImageW);
+          const checkFitFactorH = getFitFactor(availableH, numRows, originalImageH);
           // The thumbnails would need to be scaled by the smallest factor to fit in both directions.
-          const checkFitFactorW = Math.round((availableW - numImagesPerRow * minSpacing) / checkCols) / originalImageW;
-          const checkFitFactorH = Math.round((availableH - numImagesPerCol * minSpacing) / numRows) / originalImageH;
-          const checkFitFactor = Math.min(checkFitFactorW, checkFitFactorH);
-          //console.log("Checking (", checkCols, "cols,", numRows, "rows). Scale factors:", checkFitFactorW, checkFitFactorH);
+          const checkFitFactor = Math.min(upscaleLimit, checkFitFactorW, checkFitFactorH);
+          //console.log("Checking (", cols, "cols,", numRows, "rows). Scale factors:", checkFitFactorW, checkFitFactorH);
 
-          // If the current number of columns gives bigger thumbnails, keep increasing the columns.
-          //console.log("check factor:", checkFitFactor, ">= best factor:", scaleFactor);
-          if (checkFitFactor >= scaleFactor) {
+          // If the current number of columns gives bigger thumbnails, save it as current best.
+          if (checkFitFactor > scaleFactor) {
             scaleFactor = checkFitFactor;
-            numImagesPerRow = checkCols;
+            numImagesPerRow = numCols;
             numImagesPerCol = numRows;
-
-            if (minCols === checkCols) {
-              break;
-            } else {
-              minCols = checkCols;
-            }
-          } else {
-            // If it is not a better scale factor, search the other direction.
-            if (maxCols === checkCols) {
-              break;
-            } else {
-              maxCols = checkCols - 1;
-            }
           }
         }
       }
-      //console.log("[", numImagesPerRow, "cols x", numImagesPerCol, "rows]. Scale factor:", scaleFactor);
 
       const thumbSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
       this.uiElements.thumbnailSize = thumbSize;
+      //console.log("[", numImagesPerRow, "cols x", numImagesPerCol, "rows]. Scale factor:",
+      // scaleFactor, "Thumb size:", thumbSize);
 
       //console.log("X");
       const usableW = totalAvailableW  - colorRectOffset;
@@ -605,6 +586,12 @@ export default {
   }
 }
 
+function getFitFactor(availableSpace, numThumbs, originalImageSize) {
+  const res = Math.round(availableSpace / numThumbs);
+  // Spacing must be at least 1/10th of the thumbnail size.
+  const minSpacing = Math.round(res * 0.1);
+  return (res - minSpacing) / originalImageSize;
+}
 
 // Get the remaining space not occupied by thumbnails and split it into margins
 // and spacing between the thumbnails.
