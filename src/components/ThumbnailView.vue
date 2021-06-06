@@ -198,6 +198,8 @@ export default {
         hasProblemMsg = "Out of space";
       } else if (Number.isNaN(thumbSize[0]) || Number.isNaN(thumbSize[1])) {
         hasProblemMsg = "Missing layout pass";
+      } else if (this.filterMode === "showActiveSequence" && !this.activeSequence) {
+        hasProblemMsg = "No sequence selected";
       }
 
       if (hasProblemMsg) {
@@ -206,11 +208,6 @@ export default {
         this.ui2D.textBaseline = "middle";
         this.ui2D.fillText(hasProblemMsg, this.canvasText.width * 0.5, this.canvasText.height * 0.5);
         return;
-      }
-
-      if (this.filterMode === "showActiveSequence") {
-        const seqName = this.activeSequence ? this.activeSequence.name : "No sequence selected";
-        this.ui2D.fillText(seqName, 50, 50);
       }
 
       for (const thumb of this.uiElements.thumbnails) {
@@ -266,18 +263,56 @@ export default {
       this.findThumbnailForCurrentFrame();
     },
 
+    refreshThumbnailGroups: function () {
+
+      let thumbGroups = [];
+
+      // Create the thumbnail groups.
+      for (const sequence of this.sequences) {
+        thumbGroups.push(new ThumbnailGroup(sequence.name, sequence.color));
+      }
+      const unassignedGroup = new ThumbnailGroup("Unassigned");
+      thumbGroups.push(unassignedGroup);
+
+      // Assign thumbnails to groups.
+      for (let i = 0; i < this.uiElements.thumbnails.length; i++) {
+        let g = -1;
+        for (let j = 0; j < this.sequences.length; j++) {
+          if (this.sequences[j].id === this.uiElements.thumbnails[i].shot.sequence_id) {
+            g = j;
+            break;
+          }
+        }
+        const group = g === -1 ? unassignedGroup : thumbGroups[g];
+
+        group.thumbIdxs.push(i);
+        this.uiElements.thumbnails[i].group = group;
+        this.uiElements.thumbnails[i].posInGroup = group.thumbIdxs.length - 1;
+      }
+
+      // Filter out empty groups.
+      this.uiElements.thumbGroups = [];
+      for (const group of thumbGroups) {
+        if (group.thumbIdxs.length) {
+          this.uiElements.thumbGroups.push(group);
+        }
+      }
+    },
+
     layout: function () {
 
       this.filterThumbnails();
 
       // If there are no images to fit, we're done!
-      if (!this.shots.length)
+      if (!this.uiElements.thumbnails.length)
         return;
 
-      if (this.displayMode === "chronological")
+      if (this.displayMode === "chronological") {
         this.fitThumbsInGrid();
-      else
+      } else {
+        this.refreshThumbnailGroups();
         this.fitThumbsInGroup();
+      }
     },
 
     fitThumbsInGrid: function () {
@@ -367,48 +402,18 @@ export default {
 
     fitThumbsInGroup: function () {
 
-      this.uiElements.thumbGroups = [];
-
-      // Create the thumbnail groups.
-      for (const sequence of this.sequences) {
-        let group = new ThumbnailGroup();
-        group.name = sequence.name;
-        group.uuid = sequence.id;
-        group.color = sequence.color;
-        this.uiElements.thumbGroups.push(group);
-      }
-      const unassignedGroup = new ThumbnailGroup("Unassigned");
-
-      // Assign shots to groups.
-      for (let i = 0; i < this.shots.length; i++) {
-        let g = -1;
-        for (let j = 0; j < this.sequences.length; j++) {
-          if (this.sequences[j].id === this.shots[i].sequence_id) {
-            g = j;
-            break;
-          }
-        }
-        const group = g === -1 ? unassignedGroup : this.uiElements.thumbGroups[g];
-
-        group.shotIDs.push(i);
-        this.uiElements.thumbnails[i].groupIdx = g;
-        this.uiElements.thumbnails[i].posInGroup = group.shotIDs.length - 1;
-      }
-      if (unassignedGroup.shotIDs.length) {
-        this.uiElements.thumbGroups.push(unassignedGroup);
-      }
       const numGroups = this.uiElements.thumbGroups.length;
       //console.log("Assigned", numImages, "shots to", numGroups, "groups");
 
       // Find the maximum scale at which the thumbnails can be displayed.
 
-      // Get the distribution of shots per group, sorted, with highest first.
-      let shotsPerGroup = [];
+      // Get the distribution of thumbnails per group, sorted, with highest first.
+      let thumbsPerGroup = [];
       for (const group of this.uiElements.thumbGroups) {
-        shotsPerGroup.push(group.shotIDs.length);
+        thumbsPerGroup.push(group.thumbIdxs.length);
       }
-      shotsPerGroup.sort((a, b) => b - a);
-      //console.log(shotsPerGroup);
+      thumbsPerGroup.sort((a, b) => b - a);
+      //console.log(thumbsPerGroup);
 
       // Get size of the region containing the thumbnails.
       const rect = this.getCanvasRect();
@@ -437,7 +442,7 @@ export default {
 
       // Thumbnail images are at their biggest possible size when each group has a single row.
       // Find maximum height and corresponding scale.
-      let numImagesPerRow = shotsPerGroup[0];
+      let numImagesPerRow = thumbsPerGroup[0];
       let numImagesPerCol = numGroups;
       const maxResY = Math.round((availableH - numImagesPerCol * minSpacing) / numImagesPerCol);
       const heightFitFactor = maxResY / originalImageH;
@@ -452,7 +457,7 @@ export default {
         // Otherwise, do a binary search for the number of columns that maximizes
         // the thumb size (therefore, minimizes scale factor).
         scaleFactor = rowFitFactor;
-        let maxCols = shotsPerGroup[0];
+        let maxCols = thumbsPerGroup[0];
         let minCols = 0;
         let checkCols = 1;
         while (maxCols !== checkCols || checkCols !== minCols) {
@@ -461,7 +466,7 @@ export default {
 
           // Calculate resulting number of rows, if there are checkCols number of columns.
           let numRows = 0;
-          for (const n of shotsPerGroup) {
+          for (const n of thumbsPerGroup) {
             numRows += Math.ceil(n / checkCols);
           }
           // Get the scale factor necessary to fit the thumbnails in width and in height.
@@ -514,21 +519,21 @@ export default {
 
       // Set the position of each group title and colored rectangle.
       for (const group of this.uiElements.thumbGroups) {
-        const numShotRows = Math.ceil(group.shotIDs.length / numImagesPerRow);
+        const numThumbRows = Math.ceil(group.thumbIdxs.length / numImagesPerRow);
 
         // Set the title position and step.
         group.namePos = [startPosX, titlePosY];
-        titlePosY += titleHeight + thumbnailStepY * numShotRows;
+        titlePosY += titleHeight + thumbnailStepY * numThumbRows;
 
         // Add total duration and shot count to the group name.
         let durationInSeconds = 0;
-        for (const shotID of group.shotIDs) {
-          durationInSeconds += this.shots[shotID].durationSeconds;
+        for (const thumbIdx of group.thumbIdxs) {
+          durationInSeconds += this.uiElements.thumbnails[thumbIdx].shot.durationSeconds;
         }
-        group.name += " (shots: " + group.shotIDs.length + ",  " + durationInSeconds.toFixed(1) + "s)";
+        group.name += " (shots: " + group.thumbIdxs.length + ",  " + durationInSeconds.toFixed(1) + "s)";
 
         // Set the position for the colored rectangle.
-        const rectHeight = titleSize + thumbnailStepY * numShotRows;
+        const rectHeight = titleSize + thumbnailStepY * numThumbRows;
         const titleTop = group.namePos[1];
         group.colorRect = [
           startPosX - colorRectOffset, titleTop,
@@ -539,7 +544,7 @@ export default {
       for (let thumb of this.uiElements.thumbnails) {
         const row = Math.floor(thumb.posInGroup / numImagesPerRow);
         const col = thumb.posInGroup % numImagesPerRow;
-        const groupY = this.uiElements.thumbGroups[thumb.groupIdx].namePos[1];
+        const groupY = thumb.group.namePos[1];
         thumb.pos = [
           startPosX + thumbnailStepX * col,
           groupY + titleSize + thumbnailStepY * row,
@@ -585,6 +590,10 @@ export default {
       } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
         this.isMouseDragging = false;
       }
+    },
+
+    onVueReload: function () {
+
     },
   }
 }
@@ -637,21 +646,26 @@ function calculateSpacingTopLeftFlow(usableSpace, thumbSize, numThumbs, minSideM
 
 // UI element specifying how a thumbnail should be drawn.
 function ThumbnailImage (shot, shotIdx) {
+  // Image display
   this.pos = [0, 0]; // Position in px where the image should be displayed in canvas coordinates.
-  this.shot = shot;
-  this.shotIdx = shotIdx;
-  this.groupIdx = -1;
-  this.posInGroup = -1;
+  // Represented shot
+  this.shot = shot; // Shot object that this thumbnail represents.
+  this.shotIdx = shotIdx; // Index in the shots array.
+  // Grouped view
+  this.group = null; // Group that this thumbnail belongs to.
+  this.posInGroup = -1; // Relative position in the thumbnails of this group.
 }
 
 // UI element representing a container of shots, with its own drawable name and a colorful rectangle.
-function ThumbnailGroup (displayStr = "") {
+function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0]) {
+  // Group title
   this.name = displayStr;
   this.namePos = [0, 0]; // Position in px where the group name should be displayed in canvas coordinates.
-  this.shotIDs = [];
-  this.uuid = "";
-  this.color = [0, 0, 0, 1];
+  // Group color
+  this.color = displayColor;
   this.colorRect = [0, 0, 0, 0];
+  // Contained thumbnails
+  this.thumbIdxs = []; // Index in the thumbnails array.
 }
 
 </script>
