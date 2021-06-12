@@ -60,6 +60,7 @@ export default {
       thumbnails: [], // Display info for the thumbs that should be rendered. List of ThumbnailImage.
       // Grouped view.
       thumbGroups: [], // Display info for groups. List of ThumbnailGroup.
+      summaryText: { str: "", pos: [], }, // Heading with aggregated information of the displayed groups.
       // Interaction.
       isMouseDragging: false,
       // "Current" elements for the playhead position.
@@ -80,6 +81,7 @@ export default {
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
         // Grouped view.
         groupedView: {
+          summaryText: { spaceBefore: -10, spaceAfter: 12, },
           groupTitle: { spaceBefore: 4, spaceAfter: 2, },
           colorRect: { width: 6, xOffset: 12, },
         },
@@ -317,7 +319,14 @@ export default {
         ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
       }
 
+      // Draw grouping.
       if (this.displayMode !== "chronological") {
+
+        // Draw the aggregated group information.
+        if (this.summaryText.str) {
+          this.ui2D.fillText(this.summaryText.str, this.summaryText.pos[0], this.summaryText.pos[1]);
+        }
+
         // Draw each group.
         for (const group of this.thumbGroups) {
           // Draw color rect.
@@ -362,7 +371,13 @@ export default {
 
     refreshThumbnailGroups: function () {
 
+      // Clear previous data.
       let thumbGroups = [];
+      this.summaryText.str = "";
+
+      if (this.displayMode === "chronological") {
+        return;
+      }
 
       // Create the thumbnail groups.
       for (const sequence of this.sequences) {
@@ -392,15 +407,29 @@ export default {
       for (const group of thumbGroups) {
         if (group.thumbIdxs.length) {
           this.thumbGroups.push(group);
-
-          // Add total duration and shot count to the group name.
-          let durationInSeconds = 0;
-          for (const thumbIdx of group.thumbIdxs) {
-            durationInSeconds += this.thumbnails[thumbIdx].shot.durationSeconds;
-          }
-          group.name += " (shots: " + group.thumbIdxs.length + ",  "
-                        + durationInSeconds.toFixed(1) + "s)";
         }
+      }
+
+      let totalDuration = 0.0;
+      let totalShots = 0;
+      for (const group of this.thumbGroups) {
+        // Add total duration and shot count to the group name.
+        let durationInSeconds = 0;
+        for (const thumbIdx of group.thumbIdxs) {
+          durationInSeconds += this.thumbnails[thumbIdx].shot.durationSeconds;
+        }
+        group.name += " (shots: " + group.thumbIdxs.length + ",  "
+                      + secToStr(durationInSeconds) + ")";
+
+        // Calculate the aggregated stats of the shots in view.
+        totalDuration += durationInSeconds;
+        totalShots += group.thumbIdxs.length;
+      }
+
+      // Set the aggregated display information if there are multiple groups.
+      if (this.thumbGroups.length > 1) {
+        this.summaryText.str = "Total shots in view: " + totalShots
+                             + ", duration: " + secToStr(totalDuration);
       }
     },
 
@@ -524,6 +553,10 @@ export default {
       //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
+      const summaryHeight = numGroups <= 1 ? 0.0 :
+                            this.uiConfig.fontSize
+                          + this.uiConfig.groupedView.summaryText.spaceBefore
+                          + this.uiConfig.groupedView.summaryText.spaceAfter;
       const titleHeight = this.uiConfig.fontSize
                         + this.uiConfig.groupedView.groupTitle.spaceBefore
                         + this.uiConfig.groupedView.groupTitle.spaceAfter;
@@ -532,7 +565,7 @@ export default {
       const bothMargins = this.uiConfig.minMargin;
       const minSideMargin = bothMargins * 0.5;
       const availableW = totalAvailableW - bothMargins - colorRectOffset;
-      const availableH = totalAvailableH - bothMargins - titleHeight * numGroups;
+      const availableH = totalAvailableH - bothMargins - summaryHeight - titleHeight * numGroups;
 
       // Get the original size and aspect ratio of the images.
       // Assume all images in the edit have the same aspect ratio.
@@ -594,12 +627,19 @@ export default {
       const usableH = totalAvailableH  - titleHeight * numGroups;
       const spaceH = calculateSpacingTopLeftFlow(usableH, thumbSize[1], numImagesPerCol, minSideMargin);
 
-      // Set the position of each thumbnail.
+      // Set the positions of the elements to be displayed.
+
       let startPosX = minSideMargin + colorRectOffset;
-      let titlePosY = minSideMargin;
+      let titlePosY = minSideMargin + summaryHeight;
       const titleSize = this.uiConfig.fontSize + this.uiConfig.groupedView.groupTitle.spaceAfter;
       const thumbnailStepX = thumbSize[0] + spaceW;
       const thumbnailStepY = thumbSize[1] + spaceH;
+
+      // Set the position of the aggregated group information
+      if (this.summaryText.str) {
+        const posY = minSideMargin + this.uiConfig.groupedView.summaryText.spaceBefore;
+        this.summaryText.pos = [minSideMargin, posY];
+      }
 
       // Set the position of each group title and colored rectangle.
       for (const group of this.thumbGroups) {
@@ -691,6 +731,16 @@ export default {
       }
     },
   }
+}
+
+function secToStr(timeInSeconds) {
+  const h = timeInSeconds / 3600;
+  const m = (timeInSeconds / 60) % 60;
+  const s = Math.round(timeInSeconds % 60);
+  let str = "";
+  if (h>1) str += h.toFixed(0) + ":";
+  str += m.toFixed(0) + ":";
+  return str + s.toFixed(0).padStart(2, '0');
 }
 
 function getFitFactor(availableSpace, numThumbs, originalImageSize) {
@@ -789,6 +839,6 @@ function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0]) {
   label {
     color: #dadada;
     font-size: 0.9em;
-    margin-left: 1rem;
+    margin-left: 20px;
   }
 </style>
