@@ -10,12 +10,12 @@
         <option v-for="option in taskTypes" :key="option.id" :value="option.id">
           {{ option.name }}
         </option>
-
       </select>
       <label for="displayMode">Group by</label>
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological (ungrouped)</option>
         <option value="groupBySequence">Sequence</option>
+        <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
       </select>
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
@@ -66,6 +66,8 @@ export default {
       // "Current" elements for the playhead position.
       thumbForCurrentFrame: null,
       activeSequence: null,
+      // Task & statuses cache.
+      currTaskType: null,
     }
   },
   computed: {
@@ -93,6 +95,21 @@ export default {
       this.refreshAndDraw();
     },
     taskTypeFilter: function () {
+      // Find task type object and cache it.
+      let taskType = null;
+      for (const type of this.taskTypes) { // e.g. "Animation"
+        if (this.taskTypeFilter === type.id) {
+          taskType = type;
+          break;
+        }
+      }
+      this.currTaskType = taskType;
+
+      // If there is no selected TaskType, ensure there is no grouping by task status.
+      if (!taskType && this.displayMode === 'groupByTaskStatus') {
+        this.displayMode = (this.seqFilterMode === 'showAll') ? 'chronological' : 'groupBySequence';
+      }
+
       this.refreshAndDraw();
     },
     displayMode: function () {
@@ -142,7 +159,6 @@ export default {
   },
   mounted: function () {
     console.log("Thumbnail View: Initializing...");
-    // this.taskTypeFilter = this.taskTypes;
     this.initCanvas();
 
     // Note: Image loading, if any, should go here.
@@ -271,20 +287,20 @@ export default {
       // Draw task statuses.
       if (this.taskTypeFilter !== "") {
 
-        // Find task type
-        let taskType = null;
-        for (const type of this.taskTypes) { // e.g. "Animation"
-          if (this.taskTypeFilter === type.id) {
-            taskType = type;
-            break;
-          }
-        }
-        if (!taskType) { console.warn("Selected task type not found in data."); return; }
+        // Get the task type. e.g. "Animation".
+        const taskType = this.currTaskType;
+        if (!taskType) { console.error("Selected task type not found in data."); return; }
 
         const statusRadius = this.uiConfig.taskStatus.radius;
         const statusOffsetX = this.uiConfig.taskStatus.offsetX;
         const statusOffsetY = this.uiConfig.taskStatus.offsetY;
-        if (thumbSize[0] > statusRadius * 2 * 2) {
+
+        const shouldDrawStatuses =
+          // Draw if the dots are not too big relative to the thumb size.
+          (thumbSize[0] > (statusRadius * 2) * 2)
+          // Don't draw if the view is grouped by status, since it would be duplicated information.
+          && this.displayMode !== "groupByTaskStatus";
+        if (shouldDrawStatuses) {
           const offsetW = thumbSize[0] - statusRadius - statusOffsetX;
           const offsetH = thumbSize[1] - statusRadius - statusOffsetY;
           for (const thumb of this.thumbnails) {
@@ -372,25 +388,46 @@ export default {
     refreshThumbnailGroups: function () {
 
       // Clear previous data.
-      let thumbGroups = [];
+      this.thumbGroups = [];
       this.summaryText.str = "";
 
       if (this.displayMode === "chronological") {
         return;
       }
+      const groupBySequence = (this.displayMode === "groupBySequence");
+      if (!groupBySequence && !this.currTaskType) {
+        console.error("Thumbnail View: can't group by task status when no task is set.");
+        return;
+      }
 
       // Create the thumbnail groups.
-      for (const sequence of this.sequences) {
-        thumbGroups.push(new ThumbnailGroup(sequence.name, sequence.color));
+      let thumbGroups = [];
+      const groupObjs = groupBySequence ? this.sequences : this.taskStatuses;
+      for (const obj of groupObjs) {
+        thumbGroups.push(new ThumbnailGroup(obj.name, obj.color, obj));
       }
-      const unassignedGroup = new ThumbnailGroup("Unassigned");
-      thumbGroups.push(unassignedGroup);
+      const unassignedGroup = groupBySequence ?
+        new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
+        new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]);
 
       // Assign thumbnails to groups.
+      const shotBelongsToGroup = groupBySequence ?
+        ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
+        ((objToGroupBy, shot) => {
+          // Search if the shot has a status for the current task type.
+          for (const taskStatus of shot.tasks) {
+            if (taskStatus.task_type_id === this.currTaskType.id) {
+              // It does. Does the status match the given thumbnail group?
+              return (taskStatus.task_status_id === objToGroupBy.id);
+            }
+          }
+          // Shot doesn't have a task status for the given task type.
+          return false;
+        });
       for (let i = 0; i < this.thumbnails.length; i++) {
         let g = -1;
-        for (let j = 0; j < this.sequences.length; j++) {
-          if (this.sequences[j].id === this.thumbnails[i].shot.sequence_id) {
+        for (let j = 0; j < thumbGroups.length; j++) {
+          if (shotBelongsToGroup(thumbGroups[j].criteriaObj, this.thumbnails[i].shot)) {
             g = j;
             break;
           }
@@ -403,7 +440,7 @@ export default {
       }
 
       // Filter out empty groups.
-      this.thumbGroups = [];
+      thumbGroups.push(unassignedGroup);
       for (const group of thumbGroups) {
         if (group.thumbIdxs.length) {
           this.thumbGroups.push(group);
@@ -535,6 +572,7 @@ export default {
 
       const numGroups = this.thumbGroups.length;
       //console.log("Assigned", this.thumbnails.length, "shots to", numGroups, "groups");
+      if (numGroups === 0) { return; }
 
       // Find the maximum scale at which the thumbnails can be displayed.
 
@@ -808,7 +846,7 @@ function ThumbnailImage (shot, shotIdx) {
 }
 
 // UI element representing a container of shots, with its own drawable name and a colorful rectangle.
-function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0]) {
+function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0], criteriaObj = null) {
   // Group title
   this.name = displayStr;
   this.namePos = [0, 0]; // Position in px where the group name should be displayed in canvas coordinates.
@@ -817,6 +855,8 @@ function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0]) {
   this.colorRect = [0, 0, 0, 0];
   // Contained thumbnails
   this.thumbIdxs = []; // Index in the thumbnails array.
+  // Object that this group represents, e.g. a Sequence, a Task Status, or an Assignee.
+  this.criteriaObj = criteriaObj;
 }
 
 </script>
