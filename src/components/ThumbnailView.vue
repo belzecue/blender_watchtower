@@ -1,8 +1,9 @@
 <template>
     <div id="canvas-thumb-grid-container">
+      <label for="seqFilterMode">Show</label>
       <select v-model="seqFilterMode" class="ml-4 mt-2">
         <option value="showAll">All</option>
-        <option value="showActiveSequence">Sequence</option>
+        <option value="showActiveSequence">Current Sequence</option>
       </select>
       <select v-model="taskTypeFilter" class="ml-4 mt-2">
         <option value="">No Task Type</option>
@@ -11,9 +12,10 @@
         </option>
 
       </select>
+      <label for="displayMode">Group by</label>
       <select v-model="displayMode" class="ml-4 mt-2">
-        <option value="chronological">Chronological</option>
-        <option value="groupBySequence">By Sequence</option>
+        <option value="chronological">Chronological (ungrouped)</option>
+        <option value="groupBySequence">Sequence</option>
       </select>
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
@@ -770,5 +772,11 @@ function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0]) {
   #canvas-thumb-grid-text {
     position: absolute;
     z-index: 10;
+  }
+
+  label {
+    color: #dadada;
+    font-size: 0.9em;
+    margin-left: 1rem;
   }
 </style>
