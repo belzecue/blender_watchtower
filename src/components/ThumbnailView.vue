@@ -5,18 +5,27 @@
         <option value="showAll">All</option>
         <option value="showActiveSequence">Current Sequence</option>
       </select>
+
       <select v-model="taskTypeFilter" class="ml-4 mt-2">
         <option value="">No Task Type</option>
         <option v-for="option in taskTypes" :key="option.id" :value="option.id">
           {{ option.name }}
         </option>
       </select>
+
+      <span v-if="taskTypeFilter !== ''" >
+        <input type="checkbox" id="showAssignees" v-model="showAssignees">
+        <label for="showAssignees">Show Assignees</label>
+      </span>
+
       <label for="displayMode">Group by</label>
       <select v-model="displayMode" class="ml-4 mt-2">
         <option value="chronological">Chronological (ungrouped)</option>
         <option value="groupBySequence">Sequence</option>
         <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
+        <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
       </select>
+
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
         @mousedown="onMouseEvent($event)"
@@ -37,6 +46,7 @@ export default {
   props: {
     taskTypes: Array,
     taskStatuses: Array,
+    users: Array,
     sequences: Array,
     shots: Array,
     currentFrame: Number,
@@ -46,6 +56,7 @@ export default {
       // View user configuration.
       seqFilterMode: 'showAll',
       taskTypeFilter: '',
+      showAssignees: true,
       displayMode: 'chronological',
       // Canvas & rendering context.
       canvas: null,
@@ -61,6 +72,8 @@ export default {
       // Grouped view.
       thumbGroups: [], // Display info for groups. List of ThumbnailGroup.
       summaryText: { str: "", pos: [], }, // Heading with aggregated information of the displayed groups.
+      // Assignees.
+      userTexBundleID: null, // Rendering context texture ID for the packed user avatar images.
       // Interaction.
       isMouseDragging: false,
       // "Current" elements for the playhead position.
@@ -76,8 +89,9 @@ export default {
       return {
         fontSize: 12,
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
-        shotOverlayInfo: {textPad: 5, color: [0.11, 0.11, 0.11, 0.8]},
+        shotOverlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
         taskStatus: { radius: 5, offsetX: 5, offsetY: 6, disabledColor: [0.05, 0.05, 0.05, 0.8] },
+        assignees: { avatarSize: 32, offsetX: 5, offsetY: 5, spaceInBetween: 2 },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
@@ -106,10 +120,14 @@ export default {
       this.currTaskType = taskType;
 
       // If there is no selected TaskType, ensure there is no grouping by task status.
-      if (!taskType && this.displayMode === 'groupByTaskStatus') {
+      if (!taskType
+          && (this.displayMode === 'groupByTaskStatus' || this.displayMode === 'groupByUser')) {
         this.displayMode = (this.seqFilterMode === 'showAll') ? 'chronological' : 'groupBySequence';
       }
 
+      this.refreshAndDraw();
+    },
+    showAssignees: function () {
       this.refreshAndDraw();
     },
     displayMode: function () {
@@ -119,6 +137,20 @@ export default {
       this.refreshAndDraw();
     },
     taskStatuses: function () {
+      this.refreshAndDraw();
+    },
+    users: function () {
+      console.log("Thumbnail View: Loading " + this.users.length + " users")
+
+      if (this.users.length) {
+        const thumb_size = [48, 48]; // WIP
+        let thumb_urls = []
+        for (const user of this.users) {
+          thumb_urls.push(user.profilePicture);
+        }
+        this.userTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
+      }
+
       this.refreshAndDraw();
     },
     sequences: function () {
@@ -284,45 +316,83 @@ export default {
         }
       }
 
-      // Draw task statuses.
+      // Draw task information.
       if (this.taskTypeFilter !== "") {
 
         // Get the task type. e.g. "Animation".
         const taskType = this.currTaskType;
         if (!taskType) { console.error("Selected task type not found in data."); return; }
 
-        const statusRadius = this.uiConfig.taskStatus.radius;
-        const statusOffsetX = this.uiConfig.taskStatus.offsetX;
-        const statusOffsetY = this.uiConfig.taskStatus.offsetY;
+        // Draw task statuses.
+        {
+          const statusRadius = this.uiConfig.taskStatus.radius;
+          const statusOffsetX = this.uiConfig.taskStatus.offsetX;
+          const statusOffsetY = this.uiConfig.taskStatus.offsetY;
+          const disabledColor = this.uiConfig.taskStatus.disabledColor;
 
-        const shouldDrawStatuses =
-          // Draw if the dots are not too big relative to the thumb size.
-          (thumbSize[0] > (statusRadius * 2) * 2)
-          // Don't draw if the view is grouped by status, since it would be duplicated information.
-          && this.displayMode !== "groupByTaskStatus";
-        if (shouldDrawStatuses) {
-          const offsetW = thumbSize[0] - statusRadius - statusOffsetX;
-          const offsetH = thumbSize[1] - statusRadius - statusOffsetY;
-          for (const thumb of this.thumbnails) {
-            let hasStatusForTask = false;
-            // Search if the shot has a status for the current task type.
-            for (const taskStatus of thumb.shot.tasks) {
-              if (taskStatus.task_type_id === taskType.id) {
-                // It does, get the color for the status of this task.
-                for (const status of this.taskStatuses) { // e.g. "Done"
-                  if (taskStatus.task_status_id === status.id) {
-                    ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
-                    break;
+          const shouldDrawStatuses =
+            // Draw if the dots are not too big relative to the thumb size.
+            (thumbSize[0] > (statusRadius * 2) * 2)
+            // Don't draw if the view is grouped by status, since it would be duplicated information.
+            && this.displayMode !== "groupByTaskStatus";
+          if (shouldDrawStatuses) {
+            const offsetW = thumbSize[0] - statusRadius - statusOffsetX;
+            const offsetH = thumbSize[1] - statusRadius - statusOffsetY;
+            for (const thumb of this.thumbnails) {
+              let hasStatusForTask = false;
+              // Search if the shot has a status for the current task type.
+              for (const taskStatus of thumb.shot.tasks) {
+                if (taskStatus.task_type_id === taskType.id) {
+                  // It does, get the color for the status of this task.
+                  for (const status of this.taskStatuses) { // e.g. "Done"
+                    if (taskStatus.task_status_id === status.id) {
+                      ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
+                      break;
+                    }
                   }
+                  hasStatusForTask = true;
+                  break;
                 }
-                hasStatusForTask = true;
-                break;
+              }
+              if (!hasStatusForTask) {
+                ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], disabledColor);
               }
             }
-            if (!hasStatusForTask) {
-              ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
-                this.uiConfig.taskStatus.disabledColor
-              );
+          }
+        }
+
+        // Draw assignees
+        if (this.showAssignees) {
+
+          const avatarSize = this.uiConfig.assignees.avatarSize * (thumbSize[0] / 200);
+
+          const shouldDrawAssignees =
+              // Draw if the avatar size measurable and not too big relative to the thumb size.
+              (thumbSize[0] > (avatarSize) * 2) && avatarSize > 4;
+          if (shouldDrawAssignees) {
+            const offsetW = thumbSize[0] - avatarSize - this.uiConfig.assignees.offsetX;
+            const offsetH = this.uiConfig.assignees.offsetY;
+            const stepX = avatarSize + this.uiConfig.assignees.spaceInBetween;
+            for (const thumb of this.thumbnails) {
+              // Search if the shot has a status for the current task type.
+              for (const taskStatus of thumb.shot.tasks) {
+                if (taskStatus.task_type_id === taskType.id) {
+                  // It does, get the assignee(s).
+                  for (let aIdx = 0; aIdx < taskStatus.assignees.length; aIdx++) {
+                    for (let i = 0; i < this.users.length; i++) {
+                      if (taskStatus.assignees[aIdx] === this.users[i].id) {
+                        ui.addImageFromBundle(
+                          thumb.pos[0] + offsetW - aIdx * stepX, thumb.pos[1] + offsetH,
+                          avatarSize, avatarSize,
+                          this.userTexBundleID, i, avatarSize * 0.5
+                        );
+                        break;
+                      }
+                    }
+                  }
+                  break;
+                }
+              }
             }
           }
         }
@@ -395,25 +465,29 @@ export default {
         return;
       }
       const groupBySequence = (this.displayMode === "groupBySequence");
+      const groupByStatus = (this.displayMode === "groupByTaskStatus");
       if (!groupBySequence && !this.currTaskType) {
-        console.error("Thumbnail View: can't group by task status when no task is set.");
+        console.error("Thumbnail View: can't group by task status/assignee when no task is set.");
         return;
       }
 
       // Create the thumbnail groups.
       let thumbGroups = [];
-      const groupObjs = groupBySequence ? this.sequences : this.taskStatuses;
+      const groupObjs =
+        groupBySequence ? this.sequences :
+        groupByStatus ? this.taskStatuses : this.users;
       for (const obj of groupObjs) {
         thumbGroups.push(new ThumbnailGroup(obj.name, obj.color, obj));
       }
-      const unassignedGroup = groupBySequence ?
-        new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
-        new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]);
+      const unassignedGroup =
+        groupBySequence ? new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
+        groupByStatus ? new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]) :
+          new ThumbnailGroup("Unassigned", [0.6, 0.6, 0.6, 1.0]);
 
       // Assign thumbnails to groups.
-      const shotBelongsToGroup = groupBySequence ?
-        ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
-        ((objToGroupBy, shot) => {
+      const shotBelongsToGroup =
+        groupBySequence ? ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
+        groupByStatus ? ((objToGroupBy, shot) => {
           // Search if the shot has a status for the current task type.
           for (const taskStatus of shot.tasks) {
             if (taskStatus.task_type_id === this.currTaskType.id) {
@@ -423,7 +497,23 @@ export default {
           }
           // Shot doesn't have a task status for the given task type.
           return false;
-        });
+        }) :
+          ((objToGroupBy, shot) => {
+            // Search if the shot has a status for the current task type.
+            for (const taskStatus of shot.tasks) {
+              if (taskStatus.task_type_id === this.currTaskType.id) {
+                // It does. Does any assignee match the given one?
+                for (const assignee of taskStatus.assignees) {
+                  if (assignee === objToGroupBy.id) {
+                    return true;
+                  }
+                }
+                break;
+              }
+            }
+            // Shot doesn't have a task status or assignee for the given task type.
+            return false;
+          });
       for (let i = 0; i < this.thumbnails.length; i++) {
         let g = -1;
         for (let j = 0; j < thumbGroups.length; j++) {
@@ -880,5 +970,9 @@ function ThumbnailGroup (displayStr = "", displayColor = [0.8, 0.0, 0.0, 1.0], c
     color: #dadada;
     font-size: 0.9em;
     margin-left: 20px;
+  }
+  input {
+    margin-left: 1rem;
+    margin-right: -0.8rem;
   }
 </style>

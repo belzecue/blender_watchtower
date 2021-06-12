@@ -7,6 +7,7 @@
             @set-current-frame="setCurrentFrame"
             :taskTypes="taskTypes"
             :taskStatuses="taskStatuses"
+            :users="users"
             :sequences="sequences"
             :shots="shots"
             :current-frame="currentFrame" />
@@ -61,6 +62,7 @@ export default {
       isPlaying: false,
       taskTypes: [],
       taskStatuses: [],
+      users: [],
       sequences: [],
       shots: [],
       currentFrame: 0,
@@ -136,6 +138,7 @@ export default {
         // Copy the rest of the data.
         this.taskTypes = data.taskTypes;
         this.taskStatuses = data.taskStatuses;
+        this.users = data.users;
         this.totalFrames = data.totalFrames;
         this.frameOffset = data.frameOffset;
         this.fps = data.fps;
