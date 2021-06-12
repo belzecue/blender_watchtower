@@ -30,7 +30,7 @@
 
 <script>
 
-import {UIRenderer} from '../shading';
+import { UIRenderer } from '../shading';
 
 export default {
   name: "ThumbnailView",
@@ -43,35 +43,47 @@ export default {
   },
   data () {
     return {
+      // View user configuration.
       seqFilterMode: 'showAll',
       taskTypeFilter: '',
       displayMode: 'chronological',
+      // Canvas & rendering context.
       canvas: null,
       canvasText: null,
       uiRenderer: null,
       ui2D: null,
-      uiElements: {
-        originalImageSize: [0,0],
-        thumbnailSize: [0,0],
-        thumbnails: [],
-        thumbTexBundleID: null,
-        selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
+      // Runtime state
+      // Thumbnail rendering.
+      thumbTexBundleID: null, // Rendering context texture ID for the packed thumb images.
+      originalImageSize: [0,0], // Resolution of the provided thumbnail images.
+      thumbnailSize: [0,0], // Resolution at which to render the thumbnails.
+      thumbnails: [], // Display info for the thumbs that should be rendered. List of ThumbnailImage.
+      // Grouped view.
+      thumbGroups: [], // Display info for groups. List of ThumbnailGroup.
+      // Interaction.
+      isMouseDragging: false,
+      // "Current" elements for the playhead position.
+      thumbForCurrentFrame: null,
+      activeSequence: null,
+    }
+  },
+  computed: {
+    uiConfig: function() {
+      // Layout constants.
+      return {
         fontSize: 12,
-        overlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
+        selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
+        shotOverlayInfo: {textPad: 5, color: [0.11, 0.11, 0.11, 0.8]},
         taskStatus: { radius: 5, offsetX: 5, offsetY: 6, disabledColor: [0.05, 0.05, 0.05, 0.8] },
         // View.
         minMargin: 40, // Minimum padding, in pixels, around the thumbnail area. Divide by 2 for one side.
         totalSpacing: [150, 150], // Maximum accumulated space between thumbs + margin.
         // Grouped view.
-        thumbGroups: [],
         groupedView: {
-          title: { spaceBefore: 4, spaceAfter: 2, },
+          groupTitle: { spaceBefore: 4, spaceAfter: 2, },
           colorRect: { width: 6, xOffset: 12, },
         },
-      },
-      isMouseDragging: false,
-      thumbForCurrentFrame: null,
-      activeSequence: null,
+      };
     }
   },
   watch: {
@@ -98,13 +110,13 @@ export default {
 
       if (this.shots.length) {
         const thumb_size = [150, 100] ; // [1920, 1080];// WIP
-        this.uiElements.originalImageSize = thumb_size;
+        this.originalImageSize = thumb_size;
 
         let thumb_urls = []
         for (const shot of this.shots) {
           thumb_urls.push(shot.thumbnailUrl);
         }
-        this.uiElements.thumbTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
+        this.thumbTexBundleID = this.uiRenderer.loadImageBundle(thumb_urls, thumb_size);
       }
 
       this.refreshAndDraw();
@@ -190,7 +202,7 @@ export default {
     draw: function () {
       const ui = this.uiRenderer;
       // Setup style for the text rendering in the overlaid canvas for text.
-      const fontSize = this.uiElements.fontSize;
+      const fontSize = this.uiConfig.fontSize;
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
       this.ui2D.fillStyle = "rgb(220, 220, 220)";
       this.ui2D.font = fontSize + "px sans-serif";
@@ -203,7 +215,7 @@ export default {
 
       // If the resulting layout makes the images too small, skip rendering.
       let hasProblemMsg = null;
-      const thumbSize = this.uiElements.thumbnailSize;
+      const thumbSize = this.thumbnailSize;
       if (!this.shots.length) {
         hasProblemMsg = "No shots loaded";
       } else if (thumbSize[0] <= 5 || thumbSize[1] <= 5) {
@@ -223,16 +235,16 @@ export default {
       }
 
       // Draw the thumbnails.
-      for (const thumb of this.uiElements.thumbnails) {
+      for (const thumb of this.thumbnails) {
         ui.addImageFromBundle(
           thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
-          this.uiElements.thumbTexBundleID, thumb.shotIdx
+          this.thumbTexBundleID, thumb.shotIdx
         );
       }
 
       // Draw overlaid information for the shots.
       // Check if there is enough space to show shot names
-      const shotInfoSpacing = this.uiElements.overlayInfo.textPad;
+      const shotInfoSpacing = this.uiConfig.shotOverlayInfo.textPad;
       const textHeightOffset = thumbSize[1] - fontSize - shotInfoSpacing;
       const widthForShotName = this.ui2D.measureText("010_0010_A").width + shotInfoSpacing * 2; // Sample shot name
       const widthForExtras =  this.ui2D.measureText(" - 15.5s").width; // Example
@@ -240,14 +252,14 @@ export default {
       if (thumbSize[0] > widthForShotName * 1.1) { shotInfoMode = 1; }
       if (thumbSize[0] > (widthForShotName + widthForExtras)) { shotInfoMode = 2; }
       if (shotInfoMode > 0) {
-        for (const thumb of this.uiElements.thumbnails) {
+        for (const thumb of this.thumbnails) {
           const info = thumb.shot.name + (shotInfoMode === 1 ? "" :
               " - " + thumb.shot.durationSeconds.toFixed(1) + "s");
 
           ui.addRect(
               thumb.pos[0], thumb.pos[1] + textHeightOffset - shotInfoSpacing,
               thumbSize[0], fontSize + shotInfoSpacing * 2,
-              this.uiElements.overlayInfo.color
+              this.uiConfig.shotOverlayInfo.color
           );
 
           this.ui2D.fillText(info, thumb.pos[0] + shotInfoSpacing, thumb.pos[1] + textHeightOffset);
@@ -267,13 +279,13 @@ export default {
         }
         if (!taskType) { console.warn("Selected task type not found in data."); return; }
 
-        const statusRadius = this.uiElements.taskStatus.radius;
-        const statusOffsetX = this.uiElements.taskStatus.offsetX;
-        const statusOffsetY = this.uiElements.taskStatus.offsetY;
+        const statusRadius = this.uiConfig.taskStatus.radius;
+        const statusOffsetX = this.uiConfig.taskStatus.offsetX;
+        const statusOffsetY = this.uiConfig.taskStatus.offsetY;
         if (thumbSize[0] > statusRadius * 2 * 2) {
           const offsetW = thumbSize[0] - statusRadius - statusOffsetX;
           const offsetH = thumbSize[1] - statusRadius - statusOffsetY;
-          for (const thumb of this.uiElements.thumbnails) {
+          for (const thumb of this.thumbnails) {
             let hasStatusForTask = false;
             // Search if the shot has a status for the current task type.
             for (const taskStatus of thumb.shot.tasks) {
@@ -291,7 +303,7 @@ export default {
             }
             if (!hasStatusForTask) {
               ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1],
-                this.uiElements.taskStatus.disabledColor
+                this.uiConfig.taskStatus.disabledColor
               );
             }
           }
@@ -301,15 +313,18 @@ export default {
       // Draw a border around the thumbnail corresponding to the current frame.
       if (this.thumbForCurrentFrame) {
         const thumb = this.thumbForCurrentFrame;
-        const sel = this.uiElements.selectedHighlight;
+        const sel = this.uiConfig.selectedHighlight;
         ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
       }
 
       if (this.displayMode !== "chronological") {
         // Draw each group.
-        for (const group of this.uiElements.thumbGroups) {
+        for (const group of this.thumbGroups) {
           // Draw color rect.
-          ui.addRect(group.colorRect[0], group.colorRect[1], group.colorRect[2], group.colorRect[3], group.color, 1);
+          ui.addRect(
+            group.colorRect[0], group.colorRect[1], group.colorRect[2], group.colorRect[3],
+            group.color, 1
+          );
           // Draw group name.
           this.ui2D.fillText(group.name, group.namePos[0], group.namePos[1]);
         }
@@ -321,7 +336,7 @@ export default {
 
     filterThumbnails: function () {
 
-      this.uiElements.thumbnails = [];
+      this.thumbnails = [];
 
       // Create a thumbnail for each shot to be shown.
       if (this.seqFilterMode === "showActiveSequence") {
@@ -330,14 +345,14 @@ export default {
           for (let i = 0; i < this.shots.length; i++) {
             const shot = this.shots[i];
             if (shot.sequence_id === this.activeSequence.id) {
-              this.uiElements.thumbnails.push(new ThumbnailImage(shot, i));
+              this.thumbnails.push(new ThumbnailImage(shot, i));
             }
           }
         }
       } else {
         // Show all the shots.
         for (let i = 0; i < this.shots.length; i++) {
-          this.uiElements.thumbnails.push(new ThumbnailImage(this.shots[i], i));
+          this.thumbnails.push(new ThumbnailImage(this.shots[i], i));
         }
       }
 
@@ -357,10 +372,10 @@ export default {
       thumbGroups.push(unassignedGroup);
 
       // Assign thumbnails to groups.
-      for (let i = 0; i < this.uiElements.thumbnails.length; i++) {
+      for (let i = 0; i < this.thumbnails.length; i++) {
         let g = -1;
         for (let j = 0; j < this.sequences.length; j++) {
-          if (this.sequences[j].id === this.uiElements.thumbnails[i].shot.sequence_id) {
+          if (this.sequences[j].id === this.thumbnails[i].shot.sequence_id) {
             g = j;
             break;
           }
@@ -368,22 +383,23 @@ export default {
         const group = g === -1 ? unassignedGroup : thumbGroups[g];
 
         group.thumbIdxs.push(i);
-        this.uiElements.thumbnails[i].group = group;
-        this.uiElements.thumbnails[i].posInGroup = group.thumbIdxs.length - 1;
+        this.thumbnails[i].group = group;
+        this.thumbnails[i].posInGroup = group.thumbIdxs.length - 1;
       }
 
       // Filter out empty groups.
-      this.uiElements.thumbGroups = [];
+      this.thumbGroups = [];
       for (const group of thumbGroups) {
         if (group.thumbIdxs.length) {
-          this.uiElements.thumbGroups.push(group);
+          this.thumbGroups.push(group);
 
           // Add total duration and shot count to the group name.
           let durationInSeconds = 0;
           for (const thumbIdx of group.thumbIdxs) {
-            durationInSeconds += this.uiElements.thumbnails[thumbIdx].shot.durationSeconds;
+            durationInSeconds += this.thumbnails[thumbIdx].shot.durationSeconds;
           }
-          group.name += " (shots: " + group.thumbIdxs.length + ",  " + durationInSeconds.toFixed(1) + "s)";
+          group.name += " (shots: " + group.thumbIdxs.length + ",  "
+                        + durationInSeconds.toFixed(1) + "s)";
         }
       }
     },
@@ -391,7 +407,7 @@ export default {
     layout: function () {
 
       // If there are no images to fit, we're done!
-      if (!this.uiElements.thumbnails.length)
+      if (!this.thumbnails.length)
         return;
 
       if (this.displayMode === "chronological") {
@@ -403,7 +419,7 @@ export default {
 
     fitThumbsInGrid: function () {
 
-      const numImages = this.uiElements.thumbnails.length;
+      const numImages = this.thumbnails.length;
 
       // Get size of the region containing the thumbnails.
       const rect = this.getCanvasRect();
@@ -413,15 +429,15 @@ export default {
       //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
-      const totalSpacing = this.uiElements.totalSpacing;
-      const minMargin = this.uiElements.minMargin;
+      const totalSpacing = this.uiConfig.totalSpacing;
+      const minMargin = this.uiConfig.minMargin;
       const availableW = totalAvailableW - totalSpacing[0];
       const availableH = totalAvailableH - totalSpacing[1];
 
       // Get the original size and aspect ratio of the images.
       // Assume all images in the edit have the same aspect ratio.
-      const originalImageW = this.uiElements.originalImageSize[0];
-      const originalImageH = this.uiElements.originalImageSize[1];
+      const originalImageW = this.originalImageSize[0];
+      const originalImageH = this.originalImageSize[1];
       //console.log("Image a.ratio=", originalImageW / originalImageH, "(", originalImageW, "x", originalImageH,")");
 
       // Calculate maximum limit for thumbnail size.
@@ -434,7 +450,7 @@ export default {
       const thumbnailArea = availableArea / numImages;
       // If the pixel area gets very small, early out, not worth rendering.
       if (thumbnailArea < 20) {
-        this.uiElements.thumbnailSize = [0,0];
+        this.uiConfig.thumbnailSize = [0,0];
         return
       }
       let scaleFactor = Math.sqrt(thumbnailArea / (originalImageW * originalImageH));
@@ -458,7 +474,7 @@ export default {
       //console.log("Reduced scale factor:", scaleFactor);
 
       thumbnailSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
-      this.uiElements.thumbnailSize = thumbnailSize
+      this.thumbnailSize = thumbnailSize
 
       //console.log("X");
       const spaceW = calculateSpacingCentered(totalAvailableW, thumbnailSize[0], numImagesPerRow, minMargin);
@@ -475,7 +491,7 @@ export default {
         margins[0] + (numImagesPerRow - 1) * (thumbnailSize[0] + spacing[0])
       );
 
-      for (let img of this.uiElements.thumbnails) {
+      for (let img of this.thumbnails) {
         img.pos = [startPosX, startPosY];
         startPosX += thumbnailSize[0] + spacing[0];
         // Next row
@@ -488,14 +504,14 @@ export default {
 
     fitThumbsInGroup: function () {
 
-      const numGroups = this.uiElements.thumbGroups.length;
-      //console.log("Assigned", this.uiElements.thumbnails.length, "shots to", numGroups, "groups");
+      const numGroups = this.thumbGroups.length;
+      //console.log("Assigned", this.thumbnails.length, "shots to", numGroups, "groups");
 
       // Find the maximum scale at which the thumbnails can be displayed.
 
       // Get the distribution of thumbnails per group, sorted, with highest first.
       let thumbsPerGroup = [];
-      for (const group of this.uiElements.thumbGroups) {
+      for (const group of this.thumbGroups) {
         thumbsPerGroup.push(group.thumbIdxs.length);
       }
       thumbsPerGroup.sort((a, b) => b - a);
@@ -508,20 +524,20 @@ export default {
       //console.log("Region w:", totalAvailableW, "h:", totalAvailableH);
 
       // Get the available size, discounting white space size.
-      const titleHeight = this.uiElements.fontSize
-                        + this.uiElements.groupedView.title.spaceBefore
-                        + this.uiElements.groupedView.title.spaceAfter;
-      const colorRectOffset = this.uiElements.groupedView.colorRect.xOffset;
-      const colorRectWidth = this.uiElements.groupedView.colorRect.width;
-      const bothMargins = this.uiElements.minMargin;
+      const titleHeight = this.uiConfig.fontSize
+                        + this.uiConfig.groupedView.groupTitle.spaceBefore
+                        + this.uiConfig.groupedView.groupTitle.spaceAfter;
+      const colorRectOffset = this.uiConfig.groupedView.colorRect.xOffset;
+      const colorRectWidth = this.uiConfig.groupedView.colorRect.width;
+      const bothMargins = this.uiConfig.minMargin;
       const minSideMargin = bothMargins * 0.5;
       const availableW = totalAvailableW - bothMargins - colorRectOffset;
       const availableH = totalAvailableH - bothMargins - titleHeight * numGroups;
 
       // Get the original size and aspect ratio of the images.
       // Assume all images in the edit have the same aspect ratio.
-      const originalImageW = this.uiElements.originalImageSize[0];
-      const originalImageH = this.uiElements.originalImageSize[1];
+      const originalImageW = this.originalImageSize[0];
+      const originalImageH = this.originalImageSize[1];
 
       // Calculate by how much images need to be scaled in order to fit.
 
@@ -567,7 +583,7 @@ export default {
       }
 
       const thumbSize = [originalImageW * scaleFactor, originalImageH * scaleFactor];
-      this.uiElements.thumbnailSize = thumbSize;
+      this.thumbnailSize = thumbSize;
       //console.log("[", numImagesPerRow, "cols x", numImagesPerCol, "rows]. Scale factor:",
       // scaleFactor, "Thumb size:", thumbSize);
 
@@ -581,12 +597,12 @@ export default {
       // Set the position of each thumbnail.
       let startPosX = minSideMargin + colorRectOffset;
       let titlePosY = minSideMargin;
-      const titleSize = this.uiElements.fontSize + this.uiElements.groupedView.title.spaceAfter;
+      const titleSize = this.uiConfig.fontSize + this.uiConfig.groupedView.groupTitle.spaceAfter;
       const thumbnailStepX = thumbSize[0] + spaceW;
       const thumbnailStepY = thumbSize[1] + spaceH;
 
       // Set the position of each group title and colored rectangle.
-      for (const group of this.uiElements.thumbGroups) {
+      for (const group of this.thumbGroups) {
         const numThumbRows = Math.ceil(group.thumbIdxs.length / numImagesPerRow);
 
         // Set the title position and step.
@@ -602,7 +618,7 @@ export default {
       }
 
       // Set the position of each thumbnail.
-      for (let thumb of this.uiElements.thumbnails) {
+      for (let thumb of this.thumbnails) {
         const row = Math.floor(thumb.posInGroup / numImagesPerRow);
         const col = thumb.posInGroup % numImagesPerRow;
         const groupY = thumb.group.namePos[1];
@@ -615,7 +631,7 @@ export default {
 
     findThumbnailForCurrentFrame: function () {
       let thumbForCurrentFrame = null;
-      for (const thumb of this.uiElements.thumbnails) {
+      for (const thumb of this.thumbnails) {
         if(thumb.shot.startFrame > this.currentFrame)
           break;
         thumbForCurrentFrame = thumb;
@@ -656,8 +672,8 @@ export default {
         && (event.type === 'mousemove' || event.type === 'mouseup')) {
         // Hit test against each thumbnail
         const mouse = this.clientToCanvasCoords(event);
-        const thumbSize = this.uiElements.thumbnailSize;
-        for (const thumb of this.uiElements.thumbnails) {
+        const thumbSize = this.thumbnailSize;
+        for (const thumb of this.thumbnails) {
           if ( thumb.pos[0] <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0]
             && thumb.pos[1] <= mouse.y && mouse.y <= thumb.pos[1] + thumbSize[1]) {
 
@@ -673,10 +689,6 @@ export default {
       } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
         this.isMouseDragging = false;
       }
-    },
-
-    onVueReload: function () {
-
     },
   }
 }

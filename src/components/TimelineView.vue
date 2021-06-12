@@ -28,14 +28,25 @@ export default {
   },
   data () {
     return {
+      // Canvas & rendering context.
       canvas: null,
       canvasText: null,
-      isPlayheadDraggable: false,
       uiRenderer: null,
       ui2D: null,
-      uiElements: {
-        margin: {x: 15, top: 22, bottom: 7}, // Spacing around the contents of the timeline canvas. One side, in px.
+      // Runtime state
+      timelineRange: { x: 0 , w: 100 }, // Position where the timeline starts and the width, in canvas coordinates.
+      // Interaction.
+      isPlayheadDraggable: false,
+      // "Current" elements for the playhead position.
+      shotForCurrentFrame: null,
+    }
+  },
+  computed: {
+    uiConfig: function() {
+      // Layout constants.
+      return {
         fontSize: 12,
+        margin: {x: 15, top: 22, bottom: 7}, // Spacing around the contents of the timeline canvas. One side, in px.
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
         playhead: {
           padY: 8, // From the absolute top. Ignores 'margin'.
@@ -69,9 +80,7 @@ export default {
           colorOdd: [0.167, 0.167, 0.167, 1.0],
           colorEven: [0.21, 0.21, 0.21, 1.0],
         }
-      },
-      timelineRange: { x: 0 , w: 100},
-      shotForCurrentFrame: null,
+      };
     }
   },
   watch: {
@@ -118,11 +127,11 @@ export default {
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-timeline-container');
       this.canvas.width = canvasContainer.offsetWidth;
-      this.canvas.height = this.uiElements.margin.top
-          + this.uiElements.sequences.channelHeight
-          + this.uiElements.shots.channelHeight
-          + this.uiElements.channels.height * this.taskTypes.length
-          + this.uiElements.margin.bottom;
+      this.canvas.height = this.uiConfig.margin.top
+          + this.uiConfig.sequences.channelHeight
+          + this.uiConfig.shots.channelHeight
+          + this.uiConfig.channels.height * this.taskTypes.length
+          + this.uiConfig.margin.bottom;
 
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
@@ -153,7 +162,7 @@ export default {
       const ui = this.uiRenderer;
       const rect = this.getCanvasRect();
       // Setup style for the text rendering in the overlaid canvas for text.
-      const fontSize = this.uiElements.fontSize;
+      const fontSize = this.uiConfig.fontSize;
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
       this.ui2D.fillStyle = "rgb(220, 220, 220)";
       this.ui2D.font = fontSize + "px sans-serif";
@@ -165,33 +174,33 @@ export default {
       this.ui2D.shadowColor = 'rgba(0, 0, 0, 0.5)';
 
       // Calculate size and position of elements.
-      const margin = this.uiElements.margin;
+      const margin = this.uiConfig.margin;
       let channelNamesWidth = this.ui2D.measureText("Sequences").width;
       for (const task of this.taskTypes) {
         channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
       }
       const numChannels = this.taskTypes.length;
-      const channelStep = this.uiElements.channels.height;
-      const timelinePadX = this.uiElements.timeline.padX;
+      const channelStep = this.uiConfig.channels.height;
+      const timelinePadX = this.uiConfig.timeline.padX;
       const timelineX = margin.x + channelNamesWidth + timelinePadX;
       const timelineW = rect.width - timelineX - margin.x;
       const timelineTop = margin.top;
-      const timelineBottom = rect.height - this.uiElements.margin.bottom;
-      const seqChannelHeight = this.uiElements.sequences.channelHeight;
-      const seqHeight = this.uiElements.sequences.height;
-      const seqTextPad = this.uiElements.sequences.fontPad;
-      const seqFontSize = this.uiElements.sequences.fontSize;
+      const timelineBottom = rect.height - this.uiConfig.margin.bottom;
+      const seqChannelHeight = this.uiConfig.sequences.channelHeight;
+      const seqHeight = this.uiConfig.sequences.height;
+      const seqTextPad = this.uiConfig.sequences.fontPad;
+      const seqFontSize = this.uiConfig.sequences.fontSize;
       const seqPaddedTextHeight = seqTextPad.top + seqTextPad.bottom + seqFontSize;
       const seqTop = margin.top + seqPaddedTextHeight;
-      const shotHeight = this.uiElements.shots.height;
-      const shotChannelHeight = this.uiElements.shots.channelHeight;
+      const shotHeight = this.uiConfig.shots.height;
+      const shotChannelHeight = this.uiConfig.shots.channelHeight;
       const shotChannelTop = margin.top + seqChannelHeight;
       const shotTop = shotChannelTop + Math.round((shotChannelHeight - shotHeight) / 2);
       const channelStartY = margin.top + seqChannelHeight + shotChannelHeight;
-      const channelContentPadY = Math.round((channelStep - this.uiElements.channels.contentHeight) / 2);
+      const channelContentPadY = Math.round((channelStep - this.uiConfig.channels.contentHeight) / 2);
       const channelBGWidth = channelNamesWidth + timelinePadX + timelineW;
-      const channelColor0 = this.uiElements.channels.colorEven;
-      const channelColor1 = this.uiElements.channels.colorOdd;
+      const channelColor0 = this.uiConfig.channels.colorEven;
+      const channelColor1 = this.uiConfig.channels.colorOdd;
 
       // Update cached timeline horizontal range.
       this.timelineRange.x = timelineX;
@@ -208,12 +217,12 @@ export default {
       }
       // Render timeline start as a line between the channel names and the timeline content.
       // The timeline content might not start at frame 0, so the line is important.
-      const frame0LineColor = this.uiElements.timeline.frame0Color;
+      const frame0LineColor = this.uiConfig.timeline.frame0Color;
       ui.addLine([timelineX, timelineTop], [timelineX, timelineBottom], 1, frame0LineColor);
 
       // Draw shots.
-      const shotsStyle = this.uiElements.shots;
-      const taskHeight = this.uiElements.channels.contentHeight;
+      const shotsStyle = this.uiConfig.shots;
+      const taskHeight = this.uiConfig.channels.contentHeight;
       for (const shot of this.shots) {
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
         const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
@@ -224,7 +233,7 @@ export default {
       // Draw a border around the shot corresponding to the current frame.
       if (this.shotForCurrentFrame) {
         const shot = this.shotForCurrentFrame;
-        const sel = this.uiElements.selectedHighlight;
+        const sel = this.uiConfig.selectedHighlight;
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
         const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
@@ -256,7 +265,7 @@ export default {
       }
 
       // Draw sequences
-      const seqCorner = this.uiElements.sequences.corner;
+      const seqCorner = this.uiConfig.sequences.corner;
       this.ui2D.font = seqFontSize + "px sans-serif";
       for (const sequence of this.sequences) {
         // Find continuous ranges of shots that belong to this sequence.
@@ -286,8 +295,8 @@ export default {
       // Playhead
       // Update the playhead position according to the current frame.
       const playheadPos = timelineX + this.currentFrame * timelineW / this.totalFrames;
-      const playhead = this.uiElements.playhead;
-      const triangle = this.uiElements.playhead.triangle;
+      const playhead = this.uiConfig.playhead;
+      const triangle = this.uiConfig.playhead.triangle;
       const triangleTop = playhead.padY + playhead.triangle.flatHeight;
       const triangleHalfWidth = (triangle.width - 0.5) * 0.5;
       // Shadow.
@@ -326,7 +335,7 @@ export default {
       );
 
       const halfFontSize = fontSize / 2;
-      const textX = margin.x + this.uiElements.channels.namePadX;
+      const textX = margin.x + this.uiConfig.channels.namePadX;
       let textY = margin.top + Math.round(seqChannelHeight / 2) - halfFontSize;
       this.ui2D.fillText("Sequences", textX, textY);
       textY = shotChannelTop + Math.round(shotChannelHeight / 2) - halfFontSize;
