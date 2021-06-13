@@ -15,7 +15,10 @@
 
       <span v-if="taskTypeFilter !== ''" >
         <input type="checkbox" id="showAssignees" v-model="showAssignees">
-        <label for="showAssignees">Show Assignees</label>
+        <label for="showAssignees">Assignees</label>
+
+        <input type="checkbox" id="showStatuses" v-model="showStatuses">
+        <label for="showStatuses">Status</label>
       </span>
 
       <label for="displayMode">Group by</label>
@@ -57,6 +60,7 @@ export default {
       seqFilterMode: 'showAll',
       taskTypeFilter: '',
       showAssignees: true,
+      showStatuses: true,
       displayMode: 'chronological',
       // Canvas & rendering context.
       canvas: null,
@@ -128,6 +132,9 @@ export default {
       this.refreshAndDraw();
     },
     showAssignees: function () {
+      this.refreshAndDraw();
+    },
+    showStatuses: function () {
       this.refreshAndDraw();
     },
     displayMode: function () {
@@ -324,7 +331,7 @@ export default {
         if (!taskType) { console.error("Selected task type not found in data."); return; }
 
         // Draw task statuses.
-        {
+        if (this.showStatuses) {
           const statusRadius = this.uiConfig.taskStatus.radius;
           const statusOffsetX = this.uiConfig.taskStatus.offsetX;
           const statusOffsetY = this.uiConfig.taskStatus.offsetY;
