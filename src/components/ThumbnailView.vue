@@ -83,6 +83,7 @@ export default {
       originalImageSize: [0,0], // Resolution of the provided thumbnail images.
       thumbnailSize: [0,0], // Resolution at which to render the thumbnails.
       thumbnails: [], // Display info for the thumbs that should be rendered. List of ThumbnailImage.
+      duplicatedThumbs: [], // Keep track of thumbnails that represent the same shot (because it shows in multiple groups).
       // Grouped view.
       thumbGroups: [], // Display info for groups. List of ThumbnailGroup.
       summaryText: { str: "", pos: [], }, // Heading with aggregated information of the displayed groups.
@@ -323,8 +324,11 @@ export default {
       if (thumbSize[0] > (widthForShotName + widthForExtras)) { shotInfoMode = 2; }
       if (shotInfoMode > 0) {
         for (const thumb of this.thumbnails) {
-          const info = thumb.shot.name + (shotInfoMode === 1 ? "" :
-              " - " + thumb.shot.durationSeconds.toFixed(1) + "s");
+          const info = thumb.shot.name
+            + (this.duplicatedThumbs[thumb.shotIdx] ? "**" : "")
+            + (shotInfoMode === 1 ?
+                "" :
+                " - " + thumb.shot.durationSeconds.toFixed(1) + "s");
 
           ui.addRect(
               thumb.pos[0], thumb.pos[1] + textHeightOffset - shotInfoSpacing,
@@ -426,11 +430,16 @@ export default {
         }
       }
 
-      // Draw a border around the thumbnail corresponding to the current frame.
+      // Draw a border around the thumbnail(s) corresponding to the current frame.
       if (this.thumbForCurrentFrame) {
         const thumb = this.thumbForCurrentFrame;
         const sel = this.uiConfig.selectedHighlight;
-        ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+        if (this.duplicatedThumbs[thumb.shotIdx]) {
+          for (const thumb of this.duplicatedThumbs[thumb.shotIdx])
+            ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+        } else {
+          ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+        }
       }
 
       // Draw grouping.
@@ -460,6 +469,7 @@ export default {
     filterThumbnails: function () {
 
       this.thumbnails = [];
+      this.duplicatedThumbs = [];
 
       // Create a thumbnail for each shot to be shown.
       if (this.seqFilterMode === "showActiveSequence") {
@@ -542,19 +552,35 @@ export default {
             // Shot doesn't have a task status or assignee for the given task type.
             return false;
           });
-      for (let i = 0; i < this.thumbnails.length; i++) {
-        let g = -1;
+      const numShots = this.thumbnails.length;
+      for (let i = 0; i < numShots; i++) {
+        // Find all the groups that the shot of this thumbnail belongs to.
+        let groupsShotBelongsTo = [];
         for (let j = 0; j < thumbGroups.length; j++) {
           if (shotBelongsToGroup(thumbGroups[j].criteriaObj, this.thumbnails[i].shot)) {
-            g = j;
-            break;
+            groupsShotBelongsTo.push(j);
           }
         }
-        const group = g === -1 ? unassignedGroup : thumbGroups[g];
 
-        group.thumbIdxs.push(i);
-        this.thumbnails[i].group = group;
-        this.thumbnails[i].posInGroup = group.thumbIdxs.length - 1;
+        // Register the thumbnail to its group.
+        const numGroupsShotBelongsTo = groupsShotBelongsTo.length;
+        for (let g = numGroupsShotBelongsTo > 0 ? 0 : -1; g < numGroupsShotBelongsTo; g++) {
+          const group = g === -1 ? unassignedGroup : thumbGroups[groupsShotBelongsTo[g]];
+
+          let thumbIdx = i;
+          if (g >= 1) {
+            // Create a duplicate thumbnail if the shot is in multiple groups.
+            thumbIdx = this.thumbnails.push(new ThumbnailImage(
+              this.thumbnails[i].shot, this.thumbnails[i].shotIdx)
+            ) - 1;
+            if (!this.duplicatedThumbs[this.thumbnails[i].shotIdx])
+              this.duplicatedThumbs[this.thumbnails[i].shotIdx] = [this.thumbnails[i]];
+            this.duplicatedThumbs[this.thumbnails[i].shotIdx].push(this.thumbnails[thumbIdx]);
+          }
+          group.thumbIdxs.push(thumbIdx);
+          this.thumbnails[thumbIdx].group = group;
+          this.thumbnails[thumbIdx].posInGroup = group.thumbIdxs.length - 1;
+        }
       }
 
       // Filter out empty groups.
