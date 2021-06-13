@@ -29,6 +29,15 @@
         <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
       </select>
 
+      <span v-if="taskTypeFilter !== ''">
+      <label for="debugOpt1">WIP</label>
+      <select v-model="debugOpt1" class="ml-4 mt-2">
+        <option value="dots">Dots</option>
+        <option value="stripes">Stripes</option>
+        <option value="rects">Heatmap</option>
+      </select>
+      </span>
+
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
         @mousedown="onMouseEvent($event)"
@@ -62,6 +71,7 @@ export default {
       showAssignees: true,
       showStatuses: true,
       displayMode: 'chronological',
+      debugOpt1: 'dots',
       // Canvas & rendering context.
       canvas: null,
       canvasText: null,
@@ -139,6 +149,9 @@ export default {
     },
     displayMode: function () {
       this.refreshAndDraw();
+    },
+    debugOpt1: function () {
+      this.draw();
     },
     taskTypes: function () {
       this.refreshAndDraw();
@@ -332,6 +345,7 @@ export default {
 
         // Draw task statuses.
         if (this.showStatuses) {
+
           const statusRadius = this.uiConfig.taskStatus.radius;
           const statusOffsetX = this.uiConfig.taskStatus.offsetX;
           const statusOffsetY = this.uiConfig.taskStatus.offsetY;
@@ -339,7 +353,7 @@ export default {
 
           const shouldDrawStatuses =
             // Draw if the dots are not too big relative to the thumb size.
-            (thumbSize[0] > (statusRadius * 2) * 2)
+            ((thumbSize[0] > (statusRadius * 2) * 2) || this.debugOpt1 !== 'dots')
             // Don't draw if the view is grouped by status, since it would be duplicated information.
             && this.displayMode !== "groupByTaskStatus";
           if (shouldDrawStatuses) {
@@ -353,7 +367,14 @@ export default {
                   // It does, get the color for the status of this task.
                   for (const status of this.taskStatuses) { // e.g. "Done"
                     if (taskStatus.task_status_id === status.id) {
-                      ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
+                      if (this.debugOpt1 === 'dots') {
+                        ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
+                      } else if (this.debugOpt1 === 'stripes') {
+                        ui.addRect(thumb.pos[0], thumb.pos[1] + thumbSize[1] - 6, thumbSize[0], 6, status.color);
+                      } else {
+                        const color = [status.color[0], status.color[1], status.color[2], 0.4];
+                        ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], color);
+                      }
                       break;
                     }
                   }
