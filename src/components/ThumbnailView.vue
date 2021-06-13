@@ -196,6 +196,7 @@ export default {
     },
     currentFrame: function () {
       // Find the thumbnail that should be highlighted.
+      const previouslyCurrShot = this.thumbForCurrentFrame;
       this.thumbForCurrentFrame = this.findThumbnailForCurrentFrame();
 
       // Find the sequence that is active for the current frame.
@@ -204,9 +205,9 @@ export default {
       this.activeSequence = currSequence;
 
       // Re-layout if the change in current scene affects the filtering.
-      if (previouslyCurrSequence!== currSequence && this.seqFilterMode === "showActiveSequence") {
+      if (previouslyCurrSequence !== currSequence && this.seqFilterMode === "showActiveSequence") {
         this.refreshAndDraw();
-      } else {
+      } else if (previouslyCurrShot !== this.thumbForCurrentFrame) {
         this.draw();
       }
     },
