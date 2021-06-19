@@ -165,7 +165,7 @@ export default {
       console.log("Thumbnail View: Loading " + this.users.length + " users")
 
       if (this.users.length) {
-        const thumb_size = [48, 48]; // WIP
+        const thumb_size = [400, 400]; // WIP
         let thumb_urls = []
         for (const user of this.users) {
           thumb_urls.push(user.profilePicture);

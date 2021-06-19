@@ -23,5 +23,6 @@ pnpm-debug.log*
 *.sw?
 *.paw
 /public/preview-files/
+/public/pictures/
 /public/*.mkv
 /public/*.mp4
