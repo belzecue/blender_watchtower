@@ -725,7 +725,7 @@ function secToStr(timeInSeconds) {
 
   label {
     color: #dadada;
-    font-size: 0.9em;
+    font-size: 0.83em;
     margin-left: 20px;
   }
   input {

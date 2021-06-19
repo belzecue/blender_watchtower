@@ -1,5 +1,11 @@
 <template>
   <div id="canvas-timeline-container">
+
+    <span>
+      <input type="checkbox" id="showTasksStatus" v-model="showTasksStatus">
+      <label for="showTasksStatus">Show Tasks Status</label>
+    </span>
+
     <canvas id="canvas-timeline"></canvas>
     <canvas id="canvas-timeline-text"
       @mousedown="onMouseEvent($event)"
@@ -28,6 +34,8 @@ export default {
   },
   data () {
     return {
+      // View user configuration.
+      showTasksStatus: true,
       // Canvas & rendering context.
       canvas: null,
       canvasText: null,
@@ -84,6 +92,9 @@ export default {
     }
   },
   watch: {
+    showTasksStatus: function () {
+      this.resizeCanvas();
+    },
     taskTypes: function () {
       this.resizeCanvas();
     },
@@ -126,11 +137,12 @@ export default {
 
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-timeline-container');
+      const numChannels = this.showTasksStatus ? this.taskTypes.length : 0;
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = this.uiConfig.margin.top
           + this.uiConfig.sequences.channelHeight
           + this.uiConfig.shots.channelHeight
-          + this.uiConfig.channels.height * this.taskTypes.length
+          + this.uiConfig.channels.height * numChannels
           + this.uiConfig.margin.bottom;
 
       this.canvasText.width = this.canvas.width;
@@ -242,26 +254,28 @@ export default {
       }
 
       // Draw task statuses.
-      channelY = channelStartY + channelContentPadY;
-      for (const taskType of this.taskTypes) { // e.g. "Animation"
-        for (const status of this.taskStatuses) { // e.g. "Done"
-          // Get the contiguous frame ranges for this task status.
-          let {startPos, widths} = this.getRangesWhere((shot) => {
-            // Search if the shot has a status for the current task type.
-            for (const taskStatus of shot.tasks) {
-              if (taskStatus.task_type_id === taskType.id) {
-                // It does, check if the status for this task matches the requested one.
-                return (taskStatus.task_status_id === status.id);
+      if (this.showTasksStatus) {
+        channelY = channelStartY + channelContentPadY;
+        for (const taskType of this.taskTypes) { // e.g. "Animation"
+          for (const status of this.taskStatuses) { // e.g. "Done"
+            // Get the contiguous frame ranges for this task status.
+            let {startPos, widths} = this.getRangesWhere((shot) => {
+              // Search if the shot has a status for the current task type.
+              for (const taskStatus of shot.tasks) {
+                if (taskStatus.task_type_id === taskType.id) {
+                  // It does, check if the status for this task matches the requested one.
+                  return (taskStatus.task_status_id === status.id);
+                }
               }
+              return false;
+            });
+            // Draw a rect for each range of shots.
+            for (let i = 0; i < startPos.length; i++) {
+              ui.addRect(startPos[i], channelY, widths[i], taskHeight, status.color);
             }
-            return false;
-          });
-          // Draw a rect for each range of shots.
-          for (let i = 0; i < startPos.length; i++) {
-            ui.addRect(startPos[i], channelY, widths[i], taskHeight, status.color);
           }
+          channelY += channelStep;
         }
-        channelY += channelStep;
       }
 
       // Draw sequences
@@ -271,7 +285,7 @@ export default {
         // Find continuous ranges of shots that belong to this sequence.
         // In theory, a sequence has a single contiguous range, but in practice,
         // there might shots mistakenly assigned to sequences or shots missing.
-        let {startPos, widths} = this.getRangesWhere((shot) => sequence.id === shot.sequence_id );
+        let {startPos, widths} = this.getRangesWhere((shot) => sequence.id === shot.sequence_id);
         // Draw a rect for each range of shots belonging to this sequence.
         for (let i = 0; i < startPos.length; i++) {
           ui.addRect(startPos[i], seqTop, widths[i], seqHeight, sequence.color, seqCorner);
@@ -340,10 +354,12 @@ export default {
       this.ui2D.fillText("Sequences", textX, textY);
       textY = shotChannelTop + Math.round(shotChannelHeight / 2) - halfFontSize;
       this.ui2D.fillText("Shots", textX, textY);
-      textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
-      for (const task of this.taskTypes) {
-        this.ui2D.fillText(task.name, textX, textY);
-        textY += channelStep;
+      if (this.showTasksStatus) {
+        textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
+        for (const task of this.taskTypes) {
+          this.ui2D.fillText(task.name, textX, textY);
+          textY += channelStep;
+        }
       }
 
       // Draw the frame.
@@ -428,6 +444,7 @@ export default {
 
   #canvas-timeline-container {
     position: relative;
+    background-color: rgb(46, 46, 46);
   }
   #canvas-timeline {
     position: absolute;
@@ -435,5 +452,15 @@ export default {
   #canvas-timeline-text {
     position: absolute;
     z-index: 10;
+  }
+
+  label {
+    color: #dadada;
+    font-size: 0.83em;
+    margin-left: 20px;
+  }
+  input {
+    margin-left: 1rem;
+    margin-right: -0.8rem;
   }
 </style>
