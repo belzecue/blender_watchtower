@@ -30,7 +30,7 @@
       </select>
 
       <span v-if="taskTypeFilter !== ''">
-      <label for="debugOpt1">WIP</label>
+      <label for="debugOpt1">Show Task Status with</label>
       <select v-model="debugOpt1" class="ml-4 mt-2">
         <option value="dots">Dots</option>
         <option value="stripes">Stripes</option>
@@ -437,8 +437,8 @@ export default {
         const thumb = this.thumbForCurrentFrame;
         const sel = this.uiConfig.selectedHighlight;
         if (this.duplicatedThumbs[thumb.shotIdx]) {
-          for (const thumb of this.duplicatedThumbs[thumb.shotIdx])
-            ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+          for (const dupThumb of this.duplicatedThumbs[thumb.shotIdx])
+            ui.addFrame(dupThumb.pos[0], dupThumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
         } else {
           ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
         }
