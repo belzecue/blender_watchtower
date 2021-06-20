@@ -14,6 +14,7 @@
       @mouseup="onMouseEvent($event)"
       @mousemove="onMouseEvent($event)"
       @mouseleave="onMouseEvent($event)"
+      @wheel="onScroll($event)"
     >
     </canvas>
   </div>
@@ -537,15 +538,9 @@ export default {
     onScroll: function (event) {
       const mouse = this.clientToCanvasCoords(event);
       this.zoomTimelineView(mouse.x, event.deltaY);
-    }
-  },
-
-  created () {
-    document.body.addEventListener('wheel', this.onScroll, { passive: true });
-  },
-  destroyed () {
-    document.body.removeEventListener('wheel', this.onScroll);
-  }
+      // Prevent the full page from scrolling vertically.
+      event.preventDefault();
+    },
 }
 
 </script>
