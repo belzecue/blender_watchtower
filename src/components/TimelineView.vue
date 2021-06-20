@@ -6,6 +6,8 @@
       <label for="showTasksStatus">Show Tasks Status</label>
     </span>
 
+    <button @click="fitTimelineView">Fit View</button>
+
     <canvas id="canvas-timeline"></canvas>
     <canvas id="canvas-timeline-text"
       @mousedown="onMouseEvent($event)"
@@ -43,8 +45,14 @@ export default {
       ui2D: null,
       // Runtime state
       timelineRange: { x: 0 , w: 100 }, // Position where the timeline starts and the width, in canvas coordinates.
+      timelineView: { x: 0, w: 100 }, // Window of the visible timeline, mapped to occupy timelineRange. Represents pan and zoom.
+      channelNamesWidth: 50, // Width in px of the longest channel name. Channel name area is this value + timeline.padX.
       // Interaction.
-      isPlayheadDraggable: false,
+      isMouseDragging: { LMB: false, MMB: false, },
+      gesture: {
+        initialMouseCoords: null,
+        initialViewRect: null,
+      },
       // "Current" elements for the playhead position.
       shotForCurrentFrame: null,
     }
@@ -96,7 +104,17 @@ export default {
       this.resizeCanvas();
     },
     taskTypes: function () {
+      // Update the width needed to show the task names.
+      this.updateChannelNamesWidth();
+      // Resize the timeline area to fit all channels (that are visible).
       this.resizeCanvas();
+
+      // Ensure the timeline area view doesn't go under the channel names.
+      const overlap = this.timelineRange.x - this.timelineView.x;
+      if (overlap > 0) {
+        this.timelineView.x = this.timelineRange.x;
+        this.timelineView.w -= overlap;
+      }
     },
     taskStatuses: function () {
       this.draw();
@@ -113,9 +131,13 @@ export default {
 
       this.draw();
     },
+    timelineView: function () {
+      this.draw();
+    },
   },
   mounted: function () {
     this.initCanvas();
+    this.fitTimelineView();
 
     // Note: Image loading, if any, should go here.
 
@@ -148,6 +170,12 @@ export default {
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
 
+      // Update cached timeline horizontal range.
+      const margin = this.uiConfig.margin;
+      const timelineX = margin.x + this.channelNamesWidth + this.uiConfig.timeline.padX;
+      this.timelineRange.x = timelineX;
+      this.timelineRange.w = this.canvas.width - timelineX - margin.x;
+
       if (shouldDraw) {
         this.draw();
       }
@@ -169,6 +197,15 @@ export default {
       this.resizeCanvas(false);
     },
 
+    updateChannelNamesWidth: function () {
+      let channelNamesWidth = this.ui2D.measureText("Sequences").width;
+      for (const task of this.taskTypes) {
+        channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
+      }
+
+      this.channelNamesWidth = channelNamesWidth;
+    },
+
     draw: function () {
 
       const ui = this.uiRenderer;
@@ -187,15 +224,11 @@ export default {
 
       // Calculate size and position of elements.
       const margin = this.uiConfig.margin;
-      let channelNamesWidth = this.ui2D.measureText("Sequences").width;
-      for (const task of this.taskTypes) {
-        channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
-      }
       const numChannels = this.taskTypes.length;
       const channelStep = this.uiConfig.channels.height;
       const timelinePadX = this.uiConfig.timeline.padX;
-      const timelineX = margin.x + channelNamesWidth + timelinePadX;
-      const timelineW = rect.width - timelineX - margin.x;
+      const timelineX = this.timelineRange.x;
+      const timelineW = this.timelineRange.w;
       const timelineTop = margin.top;
       const timelineBottom = rect.height - this.uiConfig.margin.bottom;
       const seqChannelHeight = this.uiConfig.sequences.channelHeight;
@@ -210,13 +243,9 @@ export default {
       const shotTop = shotChannelTop + Math.round((shotChannelHeight - shotHeight) / 2);
       const channelStartY = margin.top + seqChannelHeight + shotChannelHeight;
       const channelContentPadY = Math.round((channelStep - this.uiConfig.channels.contentHeight) / 2);
-      const channelBGWidth = channelNamesWidth + timelinePadX + timelineW;
+      const channelBGWidth = this.channelNamesWidth + timelinePadX + timelineW;
       const channelColor0 = this.uiConfig.channels.colorEven;
       const channelColor1 = this.uiConfig.channels.colorOdd;
-
-      // Update cached timeline horizontal range.
-      this.timelineRange.x = timelineX;
-      this.timelineRange.w = timelineW;
 
       // Draw channel strips background.
       ui.addRect(margin.x, margin.top, channelBGWidth, seqChannelHeight, channelColor0);
@@ -227,17 +256,21 @@ export default {
         ui.addRect(margin.x, channelY, channelBGWidth, channelStep, color);
         channelY += channelStep;
       }
-      // Render timeline start as a line between the channel names and the timeline content.
-      // The timeline content might not start at frame 0, so the line is important.
-      const frame0LineColor = this.uiConfig.timeline.frame0Color;
-      ui.addLine([timelineX, timelineTop], [timelineX, timelineBottom], 1, frame0LineColor);
+
+      // Set the timeline area view window.
+      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
+      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
+      const view = ui.pushView(
+        this.timelineRange.x, 0, this.timelineRange.w, rect.height,
+        [scale, 1], [offset, 0]
+      );
 
       // Draw shots.
       const shotsStyle = this.uiConfig.shots;
       const taskHeight = this.uiConfig.channels.contentHeight;
       for (const shot of this.shots) {
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
-        const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
+        const endFrame = shot.startFrame + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
         const shotWidth = endPos - startPos;
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, shotsStyle.lineWidth, shotsStyle.color, shotsStyle.corner);
@@ -291,62 +324,76 @@ export default {
           ui.addRect(startPos[i], seqTop, widths[i], seqHeight, sequence.color, seqCorner);
         }
         if (startPos.length) {
-          let name = sequence.name;
-          const availableWidth = widths[0] - seqTextPad.x * 2 - this.ui2D.measureText("..").width;
+          // Draw the sequence name in the visible space above the first range.
+          const clipL = Math.max(view.transformPosX(startPos[0]), view.left);
+          const clipR = Math.min(view.transformPosX(startPos[0] + widths[0]), view.right);
+          const clippedWidth = clipR - clipL;
+          const availableWidth = clippedWidth - seqTextPad.x * 2 - this.ui2D.measureText("..").width;
           if (availableWidth > 0) {
+            let name = sequence.name;
             while (this.ui2D.measureText(name).width > availableWidth) {
               name = name.slice(0, -1);
             }
             if (name !== sequence.name) {
               name += "..";
             }
-            this.ui2D.fillText(name, startPos[0] + seqTextPad.x, seqTop - (seqFontSize + seqTextPad.bottom));
+            this.ui2D.fillText(name, clipL + seqTextPad.x, seqTop - (seqFontSize + seqTextPad.bottom));
           }
         }
       }
       this.ui2D.font = fontSize + "px sans-serif";
 
+      ui.popView();
+
+      // Render timeline start as a line between the channel names and the timeline content.
+      // The timeline content might not start at frame 0, so the line is important.
+      const frame0LineColor = this.uiConfig.timeline.frame0Color;
+      ui.addLine([timelineX, timelineTop], [timelineX, timelineBottom], 1, frame0LineColor);
+
       // Playhead
       // Update the playhead position according to the current frame.
-      const playheadPos = timelineX + this.currentFrame * timelineW / this.totalFrames;
-      const playhead = this.uiConfig.playhead;
-      const triangle = this.uiConfig.playhead.triangle;
-      const triangleTop = playhead.padY + playhead.triangle.flatHeight;
-      const triangleHalfWidth = (triangle.width - 0.5) * 0.5;
-      // Shadow.
-      const shadowRadius = playhead.shadow.radius;
-      const shadowColor = playhead.shadow.color;
-      ui.addLine(
+      // The playhead position moves with the current zoom and pan, but the playhead geometry is unscaled.
+      const playheadPos = view.transformPosX(timelineX + this.currentFrame / this.totalFrames * timelineW);
+      if (playheadPos >= view.left && playheadPos <= view.right) {
+        const playhead = this.uiConfig.playhead;
+        const triangle = this.uiConfig.playhead.triangle;
+        const triangleTop = playhead.padY + playhead.triangle.flatHeight;
+        const triangleHalfWidth = (triangle.width - 0.5) * 0.5;
+        // Shadow.
+        const shadowRadius = playhead.shadow.radius;
+        const shadowColor = playhead.shadow.color;
+        ui.addLine(
           [playheadPos + shadowRadius, playhead.padY + triangle.height + shadowRadius], // Triangle tip. (Up)
           [playheadPos + shadowRadius, rect.height - playhead.padY + shadowRadius], // (Down)
           playhead.lineWidth, shadowColor
-      );
-      ui.addLine(
-          [playheadPos                    , triangleTop + triangle.height], // Center, down.
+        );
+        ui.addLine(
+          [playheadPos,                     triangleTop + triangle.height], // Center, down.
           [playheadPos + triangleHalfWidth, triangleTop], // Top, right.
           3, shadowColor
-      );
-      ui.addLine(
+        );
+        ui.addLine(
           [playheadPos + triangleHalfWidth + shadowRadius * 0.8, triangleTop], // Top, right.
           [playheadPos + triangleHalfWidth + shadowRadius * 0.8, playhead.padY + shadowRadius], // Toppest, right.
           2, shadowColor
-      );
-      // Playhead.
-      ui.addLine(
-        [playheadPos, playhead.padY + triangle.height], // Triangle tip. (Up)
-        [playheadPos, rect.height - playhead.padY], // (Down)
-        playhead.lineWidth, playhead.color
-      );
-      ui.addTriangle(
-        [playheadPos                    , triangleTop + triangle.height], // Center, down.
-        [playheadPos - triangleHalfWidth, triangleTop], // Top, left.
-        [playheadPos + triangleHalfWidth, triangleTop], // Top, right.
-        playhead.color
-      );
-      ui.addRect(
-        playheadPos - triangle.width * 0.5, playhead.padY,
-        triangle.width + 1, playhead.triangle.flatHeight + 1, playhead.color, 1
-      );
+        );
+        // Playhead.
+        ui.addLine(
+          [playheadPos, playhead.padY + triangle.height], // Triangle tip. (Up)
+          [playheadPos, rect.height - playhead.padY], // (Down)
+          playhead.lineWidth, playhead.color
+        );
+        ui.addTriangle(
+          [playheadPos,                     triangleTop + triangle.height], // Center, down.
+          [playheadPos - triangleHalfWidth, triangleTop], // Top, left.
+          [playheadPos + triangleHalfWidth, triangleTop], // Top, right.
+          playhead.color
+        );
+        ui.addRect(
+          playheadPos - triangle.width * 0.5, playhead.padY,
+          triangle.width + 1, playhead.triangle.flatHeight + 1, playhead.color, 1
+        );
+      }
 
       const halfFontSize = fontSize / 2;
       const textX = margin.x + this.uiConfig.channels.namePadX;
@@ -414,26 +461,90 @@ export default {
     },
 
     setCurrentFrame: function (canvasX) {
-      let newCurrentFrame = (canvasX - this.timelineRange.x) / this.timelineRange.w * this.totalFrames;
+      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
+      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
+      const timelineFracPx = offset + (canvasX - this.timelineRange.x) / scale;
+      let newCurrentFrame = timelineFracPx * this.totalFrames / this.timelineRange.w;
       newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
       this.$emit('set-current-frame', Math.round(newCurrentFrame));
     },
 
+    fitTimelineView: function() {
+      this.timelineView = { x: this.timelineRange.x, w: this.timelineRange.w };
+    },
+
+    panTimelineView: function(deltaX) {
+      const viewWidth = this.timelineView.w;
+      const scaleFactor = this.timelineView.w / this.timelineRange.w;
+      let newViewRectX = this.gesture.initialViewRect.x - deltaX * scaleFactor;
+      newViewRectX = Math.max(newViewRectX, this.timelineRange.x);
+      newViewRectX = Math.min(newViewRectX, this.timelineRange.x + this.timelineRange.w - viewWidth);
+
+      this.timelineView = { x: newViewRectX, w: viewWidth };
+    },
+
+    zoomTimelineView: function(pivotX, delta) {
+      let pivotFrac = (pivotX - this.timelineRange.x) / this.timelineRange.w;
+      pivotFrac = Math.min(Math.max(0, pivotFrac), 1);
+
+      let widthIncrease = delta * 2;
+      if (this.timelineView.w + widthIncrease < 20) {
+        widthIncrease = 0;
+      }
+      let viewPosX = this.timelineView.x - widthIncrease * pivotFrac;
+      let viewWidth = this.timelineView.w + widthIncrease;
+      viewPosX = Math.max(viewPosX, this.timelineRange.x);
+      const viewRight = Math.min(viewPosX + viewWidth, this.timelineRange.x + this.timelineRange.w);
+      viewWidth = viewRight - viewPosX;
+
+      this.timelineView = { x: viewPosX, w: viewWidth };
+    },
+
     onMouseEvent: function (event) {
       // Set a new playhead position when LMB clicking or dragging.
-      if (this.isPlayheadDraggable
+      if (this.isMouseDragging.LMB
         && (event.type === 'mousemove' || event.type === 'mouseup')) {
         const mouse = this.clientToCanvasCoords(event);
         this.setCurrentFrame(mouse.x);
       }
 
+      // Pan when MMB dragging.
+      if (event.type === 'mousedown' && event.button === 1) {
+        this.gesture.initialMouseCoords = this.clientToCanvasCoords(event);
+        this.gesture.initialViewRect = this.timelineView;
+      }
+
+      if (this.isMouseDragging.MMB
+          && (event.type === 'mousemove' || event.type === 'mouseup')) {
+        const mouse = this.clientToCanvasCoords(event);
+        this.panTimelineView(mouse.x - this.gesture.initialMouseCoords.x);
+        //console.log(mouse, event.movementX, event.movementY, this.mmbxy.x - mouse.x);
+      }
+
       // Update mouse capturing state.
       if (event.type === 'mousedown') {
-        this.isPlayheadDraggable = true;
-      } else if (event.type === 'mouseup' || event.type === 'mouseleave') {
-        this.isPlayheadDraggable = false;
+        if      (event.button === 0) { this.isMouseDragging.LMB = true; }
+        else if (event.button === 1) { this.isMouseDragging.MMB = true; }
+      } else if (event.type === 'mouseup' ) {
+        if      (event.button === 0) { this.isMouseDragging.LMB = false; }
+        else if (event.button === 1) { this.isMouseDragging.MMB = false; }
+      } else if (event.type === 'mouseleave') {
+        this.isMouseDragging.LMB = false;
+        this.isMouseDragging.MMB = false;
       }
     },
+
+    onScroll: function (event) {
+      const mouse = this.clientToCanvasCoords(event);
+      this.zoomTimelineView(mouse.x, event.deltaY);
+    }
+  },
+
+  created () {
+    document.body.addEventListener('wheel', this.onScroll, { passive: true });
+  },
+  destroyed () {
+    document.body.removeEventListener('wheel', this.onScroll);
   }
 }
 
@@ -462,5 +573,8 @@ export default {
   input {
     margin-left: 1rem;
     margin-right: -0.8rem;
+  }
+  button {
+    margin-left: 1.5rem;
   }
 </style>
