@@ -82,16 +82,18 @@ export default {
     togglePlayback: function () {
       this.isPlaying = !this.isPlaying;
     },
-    handleHotkey: function (ev) {
-      if (ev.isComposing || ev.keyCode === 32) {
+    handleHotkey: function (event) {
+      if (event.isComposing || event.key === " ") {
         this.togglePlayback();
       }
     }
   },
+  unmounted () {
+    document.body.removeEventListener('keydown', this.handleHotkey);
+  },
   mounted() {
-
     // Global listener for any key pressed while the document is in focus
-    document.addEventListener('keydown', this.handleHotkey);
+    document.body.addEventListener('keydown', this.handleHotkey);
 
     // Load edit data (to be fetched from a web API later)
     fetch('edit.json')

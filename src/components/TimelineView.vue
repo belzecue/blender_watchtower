@@ -541,6 +541,28 @@ export default {
       // Prevent the full page from scrolling vertically.
       event.preventDefault();
     },
+
+    onKeyDown: function (event) {
+      if (event.key === "Home") {
+        this.fitTimelineView();
+      } else if (event.key === "ArrowRight") {
+        const idx = this.shots.indexOf(this.shotForCurrentFrame);
+        const newIdx = Math.min(this.shots.length, (idx === -1) ? 0 : idx + 1);
+        this.$emit('set-current-frame', this.shots[newIdx].startFrame);
+      } else if (event.key === "ArrowLeft") {
+        const idx = this.shots.indexOf(this.shotForCurrentFrame);
+        const newIdx = Math.max(0, (idx === -1) ? 0 : idx - 1);
+        this.$emit('set-current-frame', this.shots[newIdx].startFrame);
+      }
+    }
+  },
+
+  created () {
+    document.body.addEventListener('keydown', this.onKeyDown);
+  },
+  unmounted () {
+    document.body.removeEventListener('keydown', this.onKeyDown);
+  }
 }
 
 </script>
