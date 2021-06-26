@@ -98,6 +98,9 @@ export default {
           colorEven: [0.21, 0.21, 0.21, 1.0],
         }
       };
+    },
+    taskTypesForShots: function() {
+      return this.taskTypes.filter(taskType => taskType.for_shots === true);
     }
   },
   watch: {
@@ -176,7 +179,7 @@ export default {
     resizeCanvas: function (shouldDraw = true) {
       // Resize canvas height according to the number of channels and to the full available width.
       const canvasContainer = document.getElementById('canvas-timeline-container');
-      const numChannels = this.showTasksStatus ? this.taskTypes.length : 0;
+      const numChannels = this.showTasksStatus ? this.taskTypesForShots.length : 0;
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = this.uiConfig.margin.top
           + this.uiConfig.sequences.channelHeight
@@ -224,7 +227,7 @@ export default {
 
     updateChannelNamesWidth: function () {
       let channelNamesWidth = this.ui2D.measureText("Sequences").width;
-      for (const task of this.taskTypes) {
+      for (const task of this.taskTypesForShots) {
         channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
       }
 
@@ -249,7 +252,7 @@ export default {
 
       // Calculate size and position of elements.
       const margin = this.uiConfig.margin;
-      const numChannels = this.taskTypes.length;
+      const numChannels = this.taskTypesForShots.length;
       const channelStep = this.uiConfig.channels.height;
       const timelinePadX = this.uiConfig.timeline.padX;
       const timelineX = this.timelineRange.x;
@@ -314,7 +317,7 @@ export default {
       // Draw task statuses.
       if (this.showTasksStatus) {
         channelY = channelStartY + channelContentPadY;
-        for (const taskType of this.taskTypes) { // e.g. "Animation"
+        for (const taskType of this.taskTypesForShots) { // e.g. "Animation"
           for (const status of this.taskStatuses) { // e.g. "Done"
             // Get the contiguous frame ranges for this task status.
             let {startPos, widths} = this.getRangesWhere((shot) => {
@@ -428,7 +431,7 @@ export default {
       this.ui2D.fillText("Shots", textX, textY);
       if (this.showTasksStatus) {
         textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
-        for (const task of this.taskTypes) {
+        for (const task of this.taskTypesForShots) {
           this.ui2D.fillText(task.name, textX, textY);
           textY += channelStep;
         }

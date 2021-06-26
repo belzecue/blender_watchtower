@@ -10,6 +10,8 @@
             :users="users"
             :sequences="sequences"
             :shots="shots"
+            :assets="assets"
+            :assetTypes="assetTypes"
             :current-frame="currentFrame"
             :fps="fps"
             :timeline-visible-frames="timelineVisibleFrames"
@@ -69,6 +71,8 @@ export default {
       users: [],
       sequences: [],
       shots: [],
+      assets: [],
+      assetTypes: [],
       currentFrame: 0,
       totalFrames: 1,
       frameOffset: 0,
@@ -144,6 +148,17 @@ export default {
         }
         this.shots = data.shots;
         this.shots.sort((a, b) => (a.startFrame > b.startFrame) ? 1 : -1)
+
+        // Setup data for Assets.
+        for (let asset of data.assets) {
+          asset.thumbnailUrl = data.sourceBase + asset.thumbnailFile;
+        }
+        this.assets = data.assets;
+        for (let i = 0; i < data.assetTypes.length; i++) {
+          let assetType = data.assetTypes[i];
+          assetType.color = colorPalette[i];
+        }
+        this.assetTypes = data.assetTypes;
 
         // Copy the rest of the data.
         this.taskTypes = data.taskTypes;
