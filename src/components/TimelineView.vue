@@ -173,17 +173,6 @@ export default {
       return Math.round(newCurrentFrame);
     },
 
-    frameToPx: function (frame) {
-      // Convert a frame to a canvas pixel position taking the current pan and zoom into account.
-      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
-      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
-      const timelineFrac = (frame / this.totalFrames) * this.timelineRange.w;
-      const timelinePx = this.timelineRange.x + timelineFrac;
-      let px = (timelinePx - this.timelineView.x - offset) * scale + this.timelineView.x;
-      // Clamp to the view range.
-      return Math.min(Math.max(px, this.timelineView.x), this.timelineView.x + this.timelineView.w);
-    },
-
     resizeCanvas: function (shouldDraw = true) {
       // Resize canvas height according to the number of channels and to the full available width.
       const canvasContainer = document.getElementById('canvas-timeline-container');
