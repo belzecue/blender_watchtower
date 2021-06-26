@@ -10,7 +10,10 @@
             :users="users"
             :sequences="sequences"
             :shots="shots"
-            :current-frame="currentFrame" />
+            :current-frame="currentFrame"
+            :fps="fps"
+            :timeline-visible-frames="timelineVisibleFrames"
+        />
       </div>
       <div class="column">
         <VideoPlayer
@@ -29,6 +32,7 @@
       <div class="column is-full">
         <TimelineView
             @set-current-frame="setCurrentFrame"
+            @set-timeline-visible-frames="setTimelineVisibleFrames"
             :taskTypes="taskTypes"
             :taskStatuses="taskStatuses"
             :sequences="sequences"
@@ -69,12 +73,16 @@ export default {
       totalFrames: 1,
       frameOffset: 0,
       fps: 24,
+      timelineVisibleFrames: [0, 1],
       videoPlayerOptions: null,
     }
   },
   methods: {
     setCurrentFrame: function (frame) {
-      this.currentFrame = frame
+      this.currentFrame = frame;
+    },
+    setTimelineVisibleFrames: function (frameRange) {
+      this.timelineVisibleFrames = frameRange;
     },
     setIsPlaying: function (value) {
       this.isPlaying = value;

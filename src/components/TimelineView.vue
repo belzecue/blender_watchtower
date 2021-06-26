@@ -132,8 +132,11 @@ export default {
 
       this.draw();
     },
+    totalFrames: function () {
+      this.onVisibleFrameRangeUpdated();
+    },
     timelineView: function () {
-      this.draw();
+      this.onVisibleFrameRangeUpdated();
     },
   },
   mounted: function () {
@@ -158,7 +161,31 @@ export default {
       };
     },
 
+    pxToFrame: function (canvasX) {
+      // Convert from a pixel position in the canvas to a frame.
+      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
+      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
+      const timelineFracPx = offset + (canvasX - this.timelineRange.x) / scale;
+      let newCurrentFrame = (timelineFracPx / this.timelineRange.w) * this.totalFrames;
+      // Clamp to the edit's frame range.
+      newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
+      // Return the closest frame.
+      return Math.round(newCurrentFrame);
+    },
+
+    frameToPx: function (frame) {
+      // Convert a frame to a canvas pixel position taking the current pan and zoom into account.
+      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
+      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
+      const timelineFrac = (frame / this.totalFrames) * this.timelineRange.w;
+      const timelinePx = this.timelineRange.x + timelineFrac;
+      let px = (timelinePx - this.timelineView.x - offset) * scale + this.timelineView.x;
+      // Clamp to the view range.
+      return Math.min(Math.max(px, this.timelineView.x), this.timelineView.x + this.timelineView.w);
+    },
+
     resizeCanvas: function (shouldDraw = true) {
+      // Resize canvas height according to the number of channels and to the full available width.
       const canvasContainer = document.getElementById('canvas-timeline-container');
       const numChannels = this.showTasksStatus ? this.taskTypes.length : 0;
       this.canvas.width = canvasContainer.offsetWidth;
@@ -171,11 +198,19 @@ export default {
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
 
+      // Store the view window before the resize. Pan and zoom will be preserved.
+      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
+      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
+
       // Update cached timeline horizontal range.
       const margin = this.uiConfig.margin;
       const timelineX = margin.x + this.channelNamesWidth + this.uiConfig.timeline.padX;
       this.timelineRange.x = timelineX;
       this.timelineRange.w = this.canvas.width - timelineX - margin.x;
+
+      // Update the view window to show the same frame range as before the resize.
+      this.timelineView.x = this.timelineRange.x + offset;
+      this.timelineView.w = this.timelineRange.w / scale;
 
       if (shouldDraw) {
         this.draw();
@@ -281,7 +316,7 @@ export default {
         const shot = this.shotForCurrentFrame;
         const sel = this.uiConfig.selectedHighlight;
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
-        const endFrame = shot.startFrame + 1 + shot.durationSeconds * this.fps;
+        const endFrame = shot.startFrame + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
         const shotWidth = endPos - startPos;
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, sel.width, sel.color, shotsStyle.corner);
@@ -462,12 +497,15 @@ export default {
     },
 
     setCurrentFrame: function (canvasX) {
-      const offset = this.timelineView.x - this.timelineRange.x; // Pan.
-      const scale = this.timelineRange.w / this.timelineView.w; // Zoom.
-      const timelineFracPx = offset + (canvasX - this.timelineRange.x) / scale;
-      let newCurrentFrame = timelineFracPx * this.totalFrames / this.timelineRange.w;
-      newCurrentFrame = Math.min(Math.max(newCurrentFrame, 0), this.totalFrames);
-      this.$emit('set-current-frame', Math.round(newCurrentFrame));
+      this.$emit('set-current-frame', this.pxToFrame(canvasX));
+    },
+
+    onVisibleFrameRangeUpdated: function() {
+      const startFrame = this.pxToFrame(this.timelineRange.x);
+      const endFrame = this.pxToFrame(this.timelineRange.x + this.timelineRange.w);
+      this.$emit('set-timeline-visible-frames', [startFrame, endFrame]);
+
+      this.draw();
     },
 
     fitTimelineView: function() {
@@ -489,7 +527,7 @@ export default {
       pivotFrac = Math.min(Math.max(0, pivotFrac), 1);
 
       let widthIncrease = delta * 2;
-      if (this.timelineView.w + widthIncrease < 20) {
+      if (this.timelineView.w + widthIncrease < 10) {
         widthIncrease = 0;
       }
       let viewPosX = this.timelineView.x - widthIncrease * pivotFrac;

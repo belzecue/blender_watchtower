@@ -4,6 +4,7 @@
       <select v-model="seqFilterMode" class="ml-4 mt-2">
         <option value="showAll">All</option>
         <option value="showActiveSequence">Current Sequence</option>
+        <option value="showShotsInTimelineView">Timeline View</option>
       </select>
 
       <select v-model="taskTypeFilter" class="ml-4 mt-2">
@@ -63,6 +64,8 @@ export default {
     sequences: Array,
     shots: Array,
     currentFrame: Number,
+    fps: Number,
+    timelineVisibleFrames: Array,
   },
   data () {
     return {
@@ -154,6 +157,11 @@ export default {
     },
     debugOpt1: function () {
       this.draw();
+    },
+    timelineVisibleFrames: function () {
+      if (this.seqFilterMode === "showShotsInTimelineView") {
+        this.refreshAndDraw();
+      }
     },
     taskTypes: function () {
       this.refreshAndDraw();
@@ -482,6 +490,16 @@ export default {
             if (shot.sequence_id === this.activeSequence.id) {
               this.thumbnails.push(new ThumbnailImage(shot, i));
             }
+          }
+        }
+      } else if (this.seqFilterMode === "showShotsInTimelineView") {
+        // Show only shots that are visible in the timeline.
+        for (let i = 0; i < this.shots.length; i++) {
+          const shot = this.shots[i];
+          const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
+          if (lastShotFrame > this.timelineVisibleFrames[0]
+          && shot.startFrame < this.timelineVisibleFrames[1]) {
+            this.thumbnails.push(new ThumbnailImage(shot, i));
           }
         }
       } else {
