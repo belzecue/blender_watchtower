@@ -145,6 +145,7 @@ export default {
         // Setup data for Shots.
         for (let shot of data.shots) {
           shot.thumbnailUrl = data.sourceBase + shot.thumbnailFile;
+          shot.assets = [];
         }
         this.shots = data.shots;
         this.shots.sort((a, b) => (a.startFrame > b.startFrame) ? 1 : -1)
@@ -152,6 +153,7 @@ export default {
         // Setup data for Assets.
         for (let asset of data.assets) {
           asset.thumbnailUrl = data.sourceBase + asset.thumbnailFile;
+          asset.shots = [];
         }
         this.assets = data.assets;
         for (let i = 0; i < data.assetTypes.length; i++) {
@@ -159,6 +161,30 @@ export default {
           assetType.color = colorPalette[i];
         }
         this.assetTypes = data.assetTypes;
+
+        // Index casting relations.
+        for (const item of data.casting) {
+          for (let shot of this.shots) {
+            if (shot.name === item.shot_id) {
+              // Add assets to shot.
+              shot.assets = item.assets;
+
+              // Add shot to each of the assets.
+              for (let asset_cast of item.assets) {
+                for (let asset of this.assets) {
+                  if (asset.id === asset_cast.asset_id) {
+                    asset.shots.push(item.shot_id);
+                    // Add a link to the asset object.
+                    asset_cast.asset = asset;
+                    break;
+                  }
+                }
+              }
+
+              break;
+            }
+          }
+        }
 
         // Copy the rest of the data.
         this.taskTypes = data.taskTypes;

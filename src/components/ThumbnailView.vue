@@ -9,8 +9,8 @@
       <label for="seqFilterMode">Show</label>
       <select v-model="seqFilterMode" class="ml-4 mt-2">
         <option value="showAll">All</option>
-        <option v-if="mode === 'shots'"  value="showActiveSequence">Current Sequence</option>
-        <option v-if="mode === 'shots'"  value="showShotsInTimelineView">Timeline View</option>
+        <option value="showActiveSequence">Current Sequence</option>
+        <option value="showShotsInTimelineView">Timeline View</option>
       </select>
 
       <select v-model="taskTypeFilter" class="ml-4 mt-2">
@@ -30,7 +30,8 @@
 
       <label for="displayMode">Group by</label>
       <select v-model="displayMode" class="ml-4 mt-2">
-        <option value="chronological">Chronological (ungrouped)</option>
+        <option v-if="mode === 'shots'" value="chronological">Chronological (ungrouped)</option>
+        <option v-if="mode === 'assets'" value="chronological">Ungrouped</option>
         <option v-if="mode === 'shots'" value="groupBySequence">Sequence</option>
         <option v-if="mode === 'assets'" value="groupByAssetType">Asset Type</option>
         <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
@@ -79,7 +80,7 @@ export default {
   data () {
     return {
       // View user configuration.
-      mode: 'assets',
+      mode: 'shots',
       seqFilterMode: 'showAll',
       taskTypeFilter: '',
       showAssignees: true,
@@ -153,7 +154,6 @@ export default {
 
       // Remove unsupported options for assets.
       if (this.mode === 'assets') {
-        this.seqFilterMode = 'showAll';
         if (this.displayMode === 'groupBySequence') {
           this.displayMode = 'groupByAssetType';
         }
@@ -552,6 +552,7 @@ export default {
       this.duplicatedThumbs = [];
 
       if (this.mode === 'shots') {
+
         // Create a thumbnail for each shot to be shown.
         if (this.seqFilterMode === "showActiveSequence") {
           if (this.activeSequence) {
@@ -579,11 +580,49 @@ export default {
             this.thumbnails.push(new ThumbnailImage(this.shots[i], i));
           }
         }
-      } else {
-        // Show all the assets.
-        for (let i = 0; i < this.assets.length; i++) {
-          this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+
+      } else { // 'assets'
+
+        // Create a thumbnail for each shot to be shown.
+        if (this.seqFilterMode === "showActiveSequence") {
+          if (this.activeSequence) {
+            // Show the assets present in shots associated with the active sequence.
+            for (const shot of this.shots) {
+              if (shot.sequence_id === this.activeSequence.id) {
+                for (const cast_asset of shot.assets) {
+                  for (let i = 0; i < this.assets.length; i++) {
+                    if (this.assets[i].id === cast_asset.asset_id) {
+                      this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } else if (this.seqFilterMode === "showShotsInTimelineView") {
+          // Show only assets present in shots that are visible in the timeline.
+          for (const shot of this.shots) {
+            const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
+            if (lastShotFrame > this.timelineVisibleFrames[0]
+                && shot.startFrame < this.timelineVisibleFrames[1]) {
+              for (const cast_asset of shot.assets) {
+                for (let i = 0; i < this.assets.length; i++) {
+                  if (this.assets[i].id === cast_asset.asset_id) {
+                    this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          // Show all the assets.
+          for (let i = 0; i < this.assets.length; i++) {
+            this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+          }
         }
+
       }
 
       // Update the thumbnail that should be highlighted.
