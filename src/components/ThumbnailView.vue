@@ -34,6 +34,7 @@
         <option v-if="mode === 'assets'" value="chronological">Ungrouped</option>
         <option v-if="mode === 'shots'" value="groupBySequence">Sequence</option>
         <option v-if="mode === 'assets'" value="groupByAssetType">Asset Type</option>
+        <option v-if="mode === 'assets'" value="groupByShot">Shot</option>
         <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
         <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
       </select>
@@ -110,6 +111,7 @@ export default {
       // "Current" elements for the playhead position.
       thumbForCurrentFrame: null,
       activeSequence: null,
+      activeShot: null,
       // Task & statuses cache.
       currTaskType: null,
     }
@@ -159,7 +161,7 @@ export default {
         }
       } else {
         // Remove unsupported options for shots.
-        if (this.displayMode === 'groupByAssetType') {
+        if (this.displayMode === 'groupByAssetType' || this.displayMode === 'groupByShot') {
           this.displayMode = 'groupBySequence';
         }
       }
@@ -262,10 +264,11 @@ export default {
     },
     currentFrame: function () {
       // Find the thumbnail that should be highlighted.
-      const previouslyCurrShot = this.thumbForCurrentFrame;
+      const previouslyCurrThumb = this.thumbForCurrentFrame;
       this.thumbForCurrentFrame = this.findThumbnailForCurrentFrame();
 
-      // Find the sequence that is active for the current frame.
+      // Find the shot and sequence that are active for the current frame.
+      this.activeShot = this.findShotForCurrentFrame();
       const currSequence = this.findSequenceForCurrentFrame();
       const previouslyCurrSequence = this.activeSequence;
       this.activeSequence = currSequence;
@@ -273,7 +276,7 @@ export default {
       // Re-layout if the change in current scene affects the filtering.
       if (previouslyCurrSequence !== currSequence && this.seqFilterMode === "showActiveSequence") {
         this.refreshAndDraw();
-      } else if (previouslyCurrShot !== this.thumbForCurrentFrame) {
+      } else if (previouslyCurrThumb !== this.thumbForCurrentFrame) {
         this.draw();
       }
     },
@@ -372,6 +375,7 @@ export default {
         this.ui2D.textAlign = "center";
         this.ui2D.textBaseline = "middle";
         this.ui2D.fillText(hasProblemMsg, this.canvasText.width * 0.5, this.canvasText.height * 0.5);
+        ui.draw();
         return;
       }
 
@@ -583,44 +587,51 @@ export default {
 
       } else { // 'assets'
 
-        // Create a thumbnail for each shot to be shown.
-        if (this.seqFilterMode === "showActiveSequence") {
-          if (this.activeSequence) {
-            // Show the assets present in shots associated with the active sequence.
-            for (const shot of this.shots) {
-              if (shot.sequence_id === this.activeSequence.id) {
-                for (const cast_asset of shot.assets) {
-                  for (let i = 0; i < this.assets.length; i++) {
-                    if (this.assets[i].id === cast_asset.asset_id) {
-                      this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
-                      break;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } else if (this.seqFilterMode === "showShotsInTimelineView") {
-          // Show only assets present in shots that are visible in the timeline.
-          for (const shot of this.shots) {
-            const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
-            if (lastShotFrame > this.timelineVisibleFrames[0]
-                && shot.startFrame < this.timelineVisibleFrames[1]) {
-              for (const cast_asset of shot.assets) {
-                for (let i = 0; i < this.assets.length; i++) {
-                  if (this.assets[i].id === cast_asset.asset_id) {
-                    this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        } else {
+        if (this.seqFilterMode === 'showAll') {
           // Show all the assets.
           for (let i = 0; i < this.assets.length; i++) {
             this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
           }
+        } else {
+          // Find which shots to filter by.
+          let filtered_shots = [];
+          if (this.seqFilterMode === "showActiveSequence") {
+            // Get the shots associated with the active sequence.
+            if (this.activeSequence) {
+              for (const shot of this.shots) {
+                if (shot.sequence_id === this.activeSequence.id) {
+                  filtered_shots.push(shot);
+                }
+              }
+            }
+          } else if (this.seqFilterMode === "showShotsInTimelineView") {
+            // Get the shots that are visible in the timeline.
+            for (const shot of this.shots) {
+              const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
+              if (lastShotFrame > this.timelineVisibleFrames[0]
+                  && shot.startFrame < this.timelineVisibleFrames[1]) {
+                filtered_shots.push(shot);
+              }
+            }
+          }
+
+          // Create a thumbnail for each asset to be shown.
+          for (let i = 0; i < this.assets.length; i++) {
+            let is_asset_used_in_a_filtered_shot = false;
+            for (const shot of filtered_shots) {
+              for (const cast_asset of shot.assets) {
+                if (this.assets[i].id === cast_asset.asset_id) {
+                  is_asset_used_in_a_filtered_shot = true;
+                  break;
+                }
+              }
+              if (is_asset_used_in_a_filtered_shot) { break; }
+            }
+            if (is_asset_used_in_a_filtered_shot) {
+              this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+            }
+          }
+
         }
 
       }
@@ -640,6 +651,7 @@ export default {
       }
       const groupBySequence = (this.displayMode === "groupBySequence");
       const groupByAssetType = (this.displayMode === "groupByAssetType");
+      const groupByShot = (this.displayMode === "groupByShot");
       const groupByStatus = (this.displayMode === "groupByTaskStatus");
       const groupByAssignee = (this.displayMode === "groupByAssignee");
       if ((groupByStatus || groupByAssignee) && !this.currTaskType) {
@@ -652,6 +664,7 @@ export default {
       const groupObjs =
         groupBySequence ? this.sequences :
         groupByAssetType ? this.assetTypes :
+        groupByShot ? this.shots :
         groupByStatus ? this.taskStatuses :
         /* groupByAssignee */ this.users;
       for (const obj of groupObjs) {
@@ -660,6 +673,7 @@ export default {
       const unassignedGroup =
         groupBySequence ? new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
         groupByAssetType ? new ThumbnailGroup("No Type", [0.8, 0.0, 0.0, 1.0]) :
+        groupByShot ? new ThumbnailGroup("Unused", [0.6, 0.6, 0.6, 1.0]) :
         groupByStatus ? new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]) :
         /* groupByAssignee */ new ThumbnailGroup("Unassigned", [0.6, 0.6, 0.6, 1.0]);
 
@@ -667,6 +681,7 @@ export default {
       const objBelongsToGroup =
         groupBySequence ? ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
         groupByAssetType ? ((objToGroupBy, asset) => { return objToGroupBy.id === asset.asset_type_id; }) :
+        groupByShot ? ((objToGroupBy, asset) => { return asset.shots.includes(objToGroupBy.name); }) :
         groupByStatus ? ((objToGroupBy, shotOrAsset) => {
           // Search if the shot/asset has a status for the current task type.
           for (const taskStatus of shotOrAsset.tasks) {
@@ -679,7 +694,7 @@ export default {
           return false;
         }) : /* groupByAssignee */
           ((objToGroupBy, shotOrAsset) => {
-            // Search if the shot has a status for the current task type.
+            // Search if the shot/asset has a status for the current task type.
             for (const taskStatus of shotOrAsset.tasks) {
               if (taskStatus.task_type_id === this.currTaskType.id) {
                 // It does. Does any assignee match the given one?
@@ -691,7 +706,7 @@ export default {
                 break;
               }
             }
-            // Shot doesn't have a task status or assignee for the given task type.
+            // Shot/asset doesn't have a task status or assignee for the given task type.
             return false;
           });
       const numObjs = this.thumbnails.length;
@@ -795,14 +810,21 @@ export default {
       return thumbForCurrentFrame;
     },
 
-    findSequenceForCurrentFrame: function () {
+    findShotForCurrentFrame: function () {
       // Find the shot for the current frame (not necessarily visible as a thumbnail).
-      let shotForCurrentFrame = this.shots.length ? this.shots[0] : null;
+      let shotForCurrentFrame = null;
       for (const shot of this.shots) {
-        if(shot.startFrame > this.currentFrame)
+        if (shot.startFrame > this.currentFrame) {
           break;
+        }
         shotForCurrentFrame = shot;
       }
+      return shotForCurrentFrame;
+    },
+
+    findSequenceForCurrentFrame: function () {
+      // Find the shot for the current frame (not necessarily visible as a thumbnail).
+      let shotForCurrentFrame = this.findShotForCurrentFrame();
 
       // Find the corresponding sequence, if any.
       let currSequence = null;
