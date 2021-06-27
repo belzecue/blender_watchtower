@@ -504,10 +504,10 @@ export default {
       this.timelineView = { x: this.timelineRange.x, w: this.timelineRange.w };
     },
 
-    panTimelineView: function(deltaX) {
+    panTimelineView: function(deltaX, initialX) {
       const viewWidth = this.timelineView.w;
       const scaleFactor = this.timelineView.w / this.timelineRange.w;
-      let newViewRectX = this.gesture.initialViewRect.x - deltaX * scaleFactor;
+      let newViewRectX = initialX - deltaX * scaleFactor;
       newViewRectX = Math.max(newViewRectX, this.timelineRange.x);
       newViewRectX = Math.min(newViewRectX, this.timelineRange.x + this.timelineRange.w - viewWidth);
 
@@ -548,7 +548,7 @@ export default {
       if (this.isMouseDragging.MMB
           && (event.type === 'mousemove' || event.type === 'mouseup')) {
         const mouse = this.clientToCanvasCoords(event);
-        this.panTimelineView(mouse.x - this.gesture.initialMouseCoords.x);
+        this.panTimelineView(mouse.x - this.gesture.initialMouseCoords.x, this.gesture.initialViewRect.x);
         //console.log(mouse, event.movementX, event.movementY, this.mmbxy.x - mouse.x);
       }
 
@@ -567,7 +567,12 @@ export default {
 
     onScroll: function (event) {
       const mouse = this.clientToCanvasCoords(event);
-      this.zoomTimelineView(mouse.x, event.deltaY);
+      if (event.deltaY !== 0) {
+        this.zoomTimelineView(mouse.x, event.deltaY);
+      }
+      if (event.deltaX !== 0) {
+         this.panTimelineView(-event.deltaX, this.timelineView.x);
+      }
       // Prevent the full page from scrolling vertically.
       event.preventDefault();
     },
