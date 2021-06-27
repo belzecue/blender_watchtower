@@ -22,20 +22,18 @@ export default {
   },
   methods: {
     fetchScenes() {
-      let url = new URL(process.env.KITSU_API + '/data/sequences');
+      console.log(this);
       superagent
-        .get(url)
-        .set('Authorization', 'Bearer ' + this.$cookies.get('access_token_cookie'))
+        .get('/api/data/sequences')
+        .set('Authorization', 'Bearer ' + this.$cookie.get('access_token_cookie'))
         .end((err, res) => {
           console.log(err, res.body)
         })
     },
     onSubmit(){
-      let url = new URL(process.env.KITSU_API + '/auth/login');
       const agent = superagent.agent();
       agent
-        .post(url)
-        .set('User-Agent', 'edit-breakdown')
+        .post('/api/auth/login')
         .send({
           "email": this.email,
           "password": this.password
@@ -49,8 +47,6 @@ export default {
         } else {
           if (res.body.login) {
             // const user = res.body.user
-            console.log(res.body)
-            this.$cookies.set('access_token_cookie', res.body.access_token)
             this.$emit('set-is-authenticated', true)
           } else {
             console.log('Could not log in')
