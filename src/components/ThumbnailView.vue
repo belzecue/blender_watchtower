@@ -34,7 +34,6 @@
         <option v-if="mode === 'assets'" value="chronological">Ungrouped</option>
         <option v-if="mode === 'shots'" value="groupBySequence">Sequence</option>
         <option v-if="mode === 'assets'" value="groupByAssetType">Asset Type</option>
-        <option v-if="mode === 'assets'" value="groupByShot">Shot</option>
         <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
         <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
       </select>
@@ -161,7 +160,7 @@ export default {
         }
       } else {
         // Remove unsupported options for shots.
-        if (this.displayMode === 'groupByAssetType' || this.displayMode === 'groupByShot') {
+        if (this.displayMode === 'groupByAssetType') {
           this.displayMode = 'groupBySequence';
         }
       }
@@ -657,7 +656,6 @@ export default {
       }
       const groupBySequence = (this.displayMode === "groupBySequence");
       const groupByAssetType = (this.displayMode === "groupByAssetType");
-      const groupByShot = (this.displayMode === "groupByShot");
       const groupByStatus = (this.displayMode === "groupByTaskStatus");
       const groupByAssignee = (this.displayMode === "groupByAssignee");
       if ((groupByStatus || groupByAssignee) && !this.currTaskType) {
@@ -670,7 +668,6 @@ export default {
       const groupObjs =
         groupBySequence ? this.sequences :
         groupByAssetType ? this.assetTypes :
-        groupByShot ? this.getFilteredShots() :
         groupByStatus ? this.taskStatuses :
         /* groupByAssignee */ this.users;
       for (const obj of groupObjs) {
@@ -679,7 +676,6 @@ export default {
       const unassignedGroup =
         groupBySequence ? new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
         groupByAssetType ? new ThumbnailGroup("No Type", [0.8, 0.0, 0.0, 1.0]) :
-        groupByShot ? new ThumbnailGroup("Unused", [0.6, 0.6, 0.6, 1.0]) :
         groupByStatus ? new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]) :
         /* groupByAssignee */ new ThumbnailGroup("Unassigned", [0.6, 0.6, 0.6, 1.0]);
 
@@ -687,7 +683,6 @@ export default {
       const objBelongsToGroup =
         groupBySequence ? ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
         groupByAssetType ? ((objToGroupBy, asset) => { return objToGroupBy.id === asset.asset_type_id; }) :
-        groupByShot ? ((objToGroupBy, asset) => { return asset.shots.includes(objToGroupBy.id); }) :
         groupByStatus ? ((objToGroupBy, shotOrAsset) => {
           // Search if the shot/asset has a status for the current task type.
           for (const taskStatus of shotOrAsset.tasks) {
