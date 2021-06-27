@@ -26,6 +26,12 @@
 
         <input type="checkbox" id="showStatuses" v-model="showStatuses">
         <label for="showStatuses">Status</label>
+
+        <select v-model="statusDispMode" class="ml-4 mt-2" :disabled="showStatuses === false">
+          <option value="dots">Dots</option>
+          <option value="stripes">Stripes</option>
+          <option value="rects">Heatmap</option>
+        </select>
       </span>
 
       <label for="displayMode">Group by</label>
@@ -37,15 +43,6 @@
         <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
         <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
       </select>
-
-      <span v-if="taskTypeFilter !== ''">
-      <label for="debugOpt1">Show Task Status with</label>
-      <select v-model="debugOpt1" class="ml-4 mt-2">
-        <option value="dots">Dots</option>
-        <option value="stripes">Stripes</option>
-        <option value="rects">Heatmap</option>
-      </select>
-      </span>
 
       <canvas id="canvas-thumb-grid"></canvas>
       <canvas id="canvas-thumb-grid-text"
@@ -86,7 +83,7 @@ export default {
       showAssignees: true,
       showStatuses: true,
       displayMode: 'chronological',
-      debugOpt1: 'dots',
+      statusDispMode: 'dots',
       // Canvas & rendering context.
       canvas: null,
       canvasText: null,
@@ -121,6 +118,8 @@ export default {
       return {
         fontSize: 12,
         selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
+        currFrameHighlight: { width: 1.5, color: [0.85, 0.8, 0.7, 1.0], },
+        castingHighlight: { width: 1.5, color: [0.2, 0.58, 0.8, 1.0], },
         thumbOverlayInfo: { textPad: 5, color: [0.11, 0.11, 0.11, 0.8] },
         taskStatus: { radius: 5, offsetX: 5, offsetY: 6, disabledColor: [0.05, 0.05, 0.05, 0.8] },
         assignees: { avatarSize: 32, offsetX: 5, offsetY: 5, spaceInBetween: 2 },
@@ -198,7 +197,7 @@ export default {
     displayMode: function () {
       this.refreshAndDraw();
     },
-    debugOpt1: function () {
+    statusDispMode: function () {
       this.draw();
     },
     timelineVisibleFrames: function () {
@@ -263,10 +262,10 @@ export default {
     },
     currentFrame: function () {
       // Find the thumbnail that should be highlighted.
-      const previouslyCurrThumb = this.thumbForCurrentFrame;
       this.thumbForCurrentFrame = this.findThumbnailForCurrentFrame();
 
       // Find the shot and sequence that are active for the current frame.
+      const previouslyCurrShot = this.activeShot;
       this.activeShot = this.findShotForCurrentFrame();
       const currSequence = this.findSequenceForCurrentFrame();
       const previouslyCurrSequence = this.activeSequence;
@@ -275,7 +274,8 @@ export default {
       // Re-layout if the change in current scene affects the filtering.
       if (previouslyCurrSequence !== currSequence && this.seqFilterMode === "showActiveSequence") {
         this.refreshAndDraw();
-      } else if (previouslyCurrThumb !== this.thumbForCurrentFrame) {
+      } else if (previouslyCurrShot !== this.activeShot) {
+        // Update current frame or casting highlights.
         this.draw();
       }
     },
@@ -437,10 +437,11 @@ export default {
           const statusOffsetX = this.uiConfig.taskStatus.offsetX;
           const statusOffsetY = this.uiConfig.taskStatus.offsetY;
           const disabledColor = this.uiConfig.taskStatus.disabledColor;
+          const thumbDotRatio = 0.5; // Maximum amount of the thumbnail size that a dot can cover.
 
           const shouldDrawStatuses =
             // Draw if the dots are not too big relative to the thumb size.
-            ((thumbSize[0] > (statusRadius * 2) * 2) || this.debugOpt1 !== 'dots')
+            ((thumbSize[0] * thumbDotRatio > statusRadius * 2) || this.statusDispMode !== 'dots')
             // Don't draw if the view is grouped by status, since it would be duplicated information.
             && this.displayMode !== "groupByTaskStatus";
           if (shouldDrawStatuses) {
@@ -454,9 +455,9 @@ export default {
                   // It does, get the color for the status of this task.
                   for (const status of this.taskStatuses) { // e.g. "Done"
                     if (taskStatus.task_status_id === status.id) {
-                      if (this.debugOpt1 === 'dots') {
+                      if (this.statusDispMode === 'dots') {
                         ui.addCircle([thumb.pos[0] + offsetW, thumb.pos[1] + offsetH], statusRadius, status.color);
-                      } else if (this.debugOpt1 === 'stripes') {
+                      } else if (this.statusDispMode === 'stripes') {
                         ui.addRect(thumb.pos[0], thumb.pos[1] + thumbSize[1] - 6, thumbSize[0], 6, status.color);
                       } else {
                         const color = [status.color[0], status.color[1], status.color[2], 0.4];
@@ -513,15 +514,27 @@ export default {
         }
       }
 
+      // Draw a border around the thumbnail(s) of assets used in the current shot.
+      if (this.mode === 'assets' && this.activeShot) {
+        const rim = this.uiConfig.castingHighlight;
+        const transp_overlay_color = [rim.color[0], rim.color[1], rim.color[2], 0.4];
+        for (const thumb of this.thumbnails) {
+          if (thumb.obj.shots.includes(this.activeShot.id)) {
+            ui.addRect(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], transp_overlay_color);
+            ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
+          }
+        }
+      }
+
       // Draw a border around the thumbnail(s) corresponding to the current frame.
       if (this.thumbForCurrentFrame) {
         const thumb = this.thumbForCurrentFrame;
-        const sel = this.uiConfig.selectedHighlight;
+        const rim = this.uiConfig.currFrameHighlight;
         if (this.duplicatedThumbs[thumb.objIdx]) {
           for (const dupThumb of this.duplicatedThumbs[thumb.objIdx])
-            ui.addFrame(dupThumb.pos[0], dupThumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+            ui.addFrame(dupThumb.pos[0], dupThumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
         } else {
-          ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], sel.width, sel.color, 1);
+          ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
         }
       }
 

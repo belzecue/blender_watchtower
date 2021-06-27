@@ -64,7 +64,7 @@ export default {
       return {
         fontSize: 12,
         margin: {x: 15, top: 22, bottom: 7}, // Spacing around the contents of the timeline canvas. One side, in px.
-        selectedHighlight: { width: 1.5, color: [1.0, 0.561, 0.051, 1.0], },
+        currFrameHighlight: { width: 1.5, color: [0.85, 0.8, 0.7, 1.0], },
         playhead: {
           padY: 8, // From the absolute top. Ignores 'margin'.
           triangle: {width: 12.0, height: 8.0, flatHeight: 4.0},
@@ -306,12 +306,12 @@ export default {
       // Draw a border around the shot corresponding to the current frame.
       if (this.shotForCurrentFrame) {
         const shot = this.shotForCurrentFrame;
-        const sel = this.uiConfig.selectedHighlight;
+        const rim = this.uiConfig.currFrameHighlight;
         const startPos = timelineX + shot.startFrame * timelineW / this.totalFrames;
         const endFrame = shot.startFrame + shot.durationSeconds * this.fps;
         const endPos = timelineX + endFrame * timelineW / this.totalFrames;
         const shotWidth = endPos - startPos;
-        ui.addFrame(startPos, shotTop, shotWidth, shotHeight, sel.width, sel.color, shotsStyle.corner);
+        ui.addFrame(startPos, shotTop, shotWidth, shotHeight, rim.width, rim.color, shotsStyle.corner);
       }
 
       // Draw task statuses.
