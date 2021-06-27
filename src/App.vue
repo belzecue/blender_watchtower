@@ -28,8 +28,9 @@
             :frame-offset="frameOffset"
             :fps="fps"
             :options="videoPlayerOptions" />
-        <div> Frame {{ currentFrame }}</div>
-        <div>Properties editor</div>
+        <div>Frame {{ currentFrame }}</div>
+        <div v-if="currentSequence" >Sequence {{ currentSequence.name }}</div>
+        <div v-if="currentShot" >Shot {{ currentShot.name }}</div>
       </div>
     </div>
     <div class="columns is-gapless">
@@ -84,12 +85,36 @@ export default {
       isPlaying: false,
       currentFrame: 0,
       timelineVisibleFrames: [0, 1],
+      currentSequence: null,
+      currentShot: null,
       selectedAssets: [],
     }
   },
   methods: {
     setCurrentFrame: function (frame) {
       this.currentFrame = frame;
+
+      // Find the shot for the current frame (not necessarily visible as a thumbnail).
+      let shotForCurrentFrame = null;
+      for (const shot of this.shots) {
+        if (shot.startFrame > this.currentFrame) {
+          break;
+        }
+        shotForCurrentFrame = shot;
+      }
+      this.currentShot = shotForCurrentFrame;
+
+      // Find the corresponding sequence, if any.
+      let currSequence = null;
+      if (shotForCurrentFrame) {
+        for (const seq of this.sequences) {
+          if (seq.id === shotForCurrentFrame.sequence_id) {
+            currSequence = seq;
+            break;
+          }
+        }
+      }
+      this.currentSequence = currSequence;
     },
     setSelectedAssets: function (assets) {
       this.selectedAssets = assets;
