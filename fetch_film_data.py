@@ -15,6 +15,7 @@ def get_env_data_as_dict(path: str) -> dict:
 env_vars = get_env_data_as_dict('.env.local')
 BASE_URL = env_vars['KITSU_API']
 JWT = env_vars['JWT']
+PROJECT_ID = env_vars['PROJECT_ID']
 
 HEADERS = {'headers': {'Authorization': f"Bearer {JWT}"}}
 
@@ -55,6 +56,47 @@ def fetch_and_save_image(src_url, dst, force=False):
         open(dst, 'wb').write(r.content)
 
 
+def fetch_asset_types():
+    r_asset_types = requests.get(f"{BASE_URL}/data/asset-types", **HEADERS)
+    asset_types = []
+    for asset_type in r_asset_types.json():
+        asset_types.append({'name': asset_type['name'], 'id': asset_type['id']})
+    return asset_types
+
+
+def fetch_assets_and_previews(force=False):
+    r_assets = requests.get(f"{BASE_URL}/data/assets/with-tasks", **HEADERS)
+    parsed_assets = []
+
+    for asset in r_assets.json():
+        if asset['canceled']:
+            continue
+        print(f"Processing asset {asset['name']}")
+        asset_preview_name = 'preview' if not asset['preview_file_id'] else asset['preview_file_id']
+        dst = f"public/preview-files/{asset_preview_name}.png"
+        # If thumbnail is not found locally, download it
+        if asset['preview_file_id']:
+            src_url = f"{BASE_URL}/pictures/thumbnails/preview-files/{asset['preview_file_id']}.png"
+            fetch_and_save_image(src_url, dst)
+        # Format data as expected by edit breakdown
+        tasks = []
+        for task in asset['tasks']:
+            tasks.append({
+                'task_status_id': task['task_status_id'],
+                'task_type_id': task['task_type_id'],
+                'assignees': task['assignees'],
+            })
+        parsed_assets.append({
+            'id': asset['id'],
+            'asset_type_id': asset['asset_type_id'],
+            'name': asset['name'],
+            'thumbnailFile': dst.replace('public/', ''),
+            'tasks': tasks,
+        })
+
+    return parsed_assets
+
+
 def fetch_people():
     r_people = requests.get(f"{BASE_URL}/data/persons", **HEADERS)
 
@@ -76,11 +118,25 @@ def fetch_people():
 
 
 def fetch_sequences():
-    r_sequences = requests.get(f"{BASE_URL}/data/sequences", **HEADERS)
+    r_sequences = requests.get(f"{BASE_URL}/data/sequences",
+                               params={'project_id': PROJECT_ID}, **HEADERS)
     sequences = []
     for sequence in r_sequences.json():
         sequences.append({'name': sequence['name'], 'id': sequence['id']})
     return sequences
+
+
+def fetch_casting():
+    casting = {}
+    for sequence in fetch_sequences():
+        url = f"{BASE_URL}/data/projects/{PROJECT_ID}/sequences/{sequence['id']}/casting"
+        r_casting = requests.get(url, **HEADERS)
+        casting_per_shot = r_casting.json()
+        if not casting_per_shot:
+            continue
+        for shot_id, assets in casting_per_shot.items():
+            casting[shot_id] = [{'asset_id': asset['asset_id'], 'nb_occurences': asset['nb_occurences']} for asset in assets]
+    return casting
 
 
 def fetch_task_types():
@@ -91,11 +147,14 @@ def fetch_task_types():
         exit()
     task_types = []
     for task in r_task_types:
-        if not task['for_shots']:
-            continue
         color = hex_to_rgba(task['color'])
 
-        task_types.append({'name': task['name'], 'color': color, 'id': task['id']})
+        task_types.append({
+            'name': task['name'],
+            'color': color,
+            'id': task['id'],
+            'for_shots': task['for_shots']
+        })
     return task_types
 
 
@@ -128,6 +187,7 @@ def fetch_shots_and_previews(force=False):
                 'assignees': task['assignees'],
             })
         parsed_shots.append({
+            'id': shot['id'],
             'name': shot['name'],
             'thumbnailFile': dst.replace('public/', ''),
             'startFrame': shot['data']['frame_in'],
@@ -142,9 +202,9 @@ def fetch_shots_and_previews(force=False):
 def build_edit_data():
     edit_data = {
         'sourceBase': 'http://eb.local:8080/',
-        'sourceName': 'sf-edit-v101.mp4',
+        'sourceName': 'sf-edit-v106.mp4',
         'sourceType': 'video/mp4',
-        'totalFrames': 14696,
+        'totalFrames': 14043,
         'frameOffset': 100,
         'fps': 24,
         'taskTypes': fetch_task_types(),
@@ -152,6 +212,9 @@ def build_edit_data():
         'shots': fetch_shots_and_previews(),
         'sequences': fetch_sequences(),
         'users': fetch_people(),
+        'assetTypes': fetch_asset_types(),
+        'assets': fetch_assets_and_previews(),
+        'casting': fetch_casting(),
     }
     with open('public/edit.json', 'w') as outfile:
         json.dump(edit_data, outfile, indent=2)

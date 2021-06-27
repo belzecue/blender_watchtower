@@ -163,24 +163,22 @@ export default {
         this.assetTypes = data.assetTypes;
 
         // Index casting relations.
-        for (const item of data.casting) {
+        // Object.entries(data.casting).forEach(([shotId, assets]) => {
+        for (const [shotId, assets] of Object.entries(data.casting)) {
           for (let shot of this.shots) {
-            if (shot.name === item.shot_id) {
+            if (shot.id === shotId) {
               // Add assets to shot.
-              shot.assets = item.assets;
+              shot.assets = assets;
 
               // Add shot to each of the assets.
-              for (let asset_cast of item.assets) {
+              for (let asset_cast of assets) {
                 for (let asset of this.assets) {
                   if (asset.id === asset_cast.asset_id) {
-                    asset.shots.push(item.shot_id);
-                    // Add a link to the asset object.
-                    asset_cast.asset = asset;
+                    asset.shots.push(shotId);
                     break;
                   }
                 }
               }
-
               break;
             }
           }

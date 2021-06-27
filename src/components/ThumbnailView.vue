@@ -250,7 +250,7 @@ export default {
       console.log("Thumbnail View: Loading " + this.assets.length + " assets")
 
       if (this.assets.length) {
-        const thumb_size = [48, 48]; // WIP
+        const thumb_size = [150, 100]; // WIP
         this.assetsOriginalImageSize = thumb_size;
 
         let thumb_urls = []
@@ -550,6 +550,31 @@ export default {
       ui.draw();
     },
 
+    getFilteredShots: function () {
+          // Find which shots to filter by.
+          let filtered_shots = [];
+          if (this.seqFilterMode === "showActiveSequence") {
+            // Get the shots associated with the active sequence.
+            if (this.activeSequence) {
+              for (const shot of this.shots) {
+                if (shot.sequence_id === this.activeSequence.id) {
+                  filtered_shots.push(shot);
+                }
+              }
+            }
+          } else if (this.seqFilterMode === "showShotsInTimelineView") {
+            // Get the shots that are visible in the timeline.
+            for (const shot of this.shots) {
+              const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
+              if (lastShotFrame > this.timelineVisibleFrames[0]
+                  && shot.startFrame < this.timelineVisibleFrames[1]) {
+                filtered_shots.push(shot);
+              }
+            }
+          }
+      return filtered_shots;
+    },
+
     filterThumbnails: function () {
 
       this.thumbnails = [];
@@ -594,26 +619,7 @@ export default {
           }
         } else {
           // Find which shots to filter by.
-          let filtered_shots = [];
-          if (this.seqFilterMode === "showActiveSequence") {
-            // Get the shots associated with the active sequence.
-            if (this.activeSequence) {
-              for (const shot of this.shots) {
-                if (shot.sequence_id === this.activeSequence.id) {
-                  filtered_shots.push(shot);
-                }
-              }
-            }
-          } else if (this.seqFilterMode === "showShotsInTimelineView") {
-            // Get the shots that are visible in the timeline.
-            for (const shot of this.shots) {
-              const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
-              if (lastShotFrame > this.timelineVisibleFrames[0]
-                  && shot.startFrame < this.timelineVisibleFrames[1]) {
-                filtered_shots.push(shot);
-              }
-            }
-          }
+          let filtered_shots = this.getFilteredShots();
 
           // Create a thumbnail for each asset to be shown.
           for (let i = 0; i < this.assets.length; i++) {
@@ -664,7 +670,7 @@ export default {
       const groupObjs =
         groupBySequence ? this.sequences :
         groupByAssetType ? this.assetTypes :
-        groupByShot ? this.shots :
+        groupByShot ? this.getFilteredShots() :
         groupByStatus ? this.taskStatuses :
         /* groupByAssignee */ this.users;
       for (const obj of groupObjs) {
@@ -681,7 +687,7 @@ export default {
       const objBelongsToGroup =
         groupBySequence ? ((objToGroupBy, shot) => { return objToGroupBy.id === shot.sequence_id; }) :
         groupByAssetType ? ((objToGroupBy, asset) => { return objToGroupBy.id === asset.asset_type_id; }) :
-        groupByShot ? ((objToGroupBy, asset) => { return asset.shots.includes(objToGroupBy.name); }) :
+        groupByShot ? ((objToGroupBy, asset) => { return asset.shots.includes(objToGroupBy.id); }) :
         groupByStatus ? ((objToGroupBy, shotOrAsset) => {
           // Search if the shot/asset has a status for the current task type.
           for (const taskStatus of shotOrAsset.tasks) {
