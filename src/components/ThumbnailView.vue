@@ -70,9 +70,10 @@ export default {
     shots: Array,
     assets: Array,
     assetTypes: Array,
-    currentFrame: Number,
     fps: Number,
+    currentFrame: Number,
     timelineVisibleFrames: Array,
+    selectedAssets: Array,
   },
   data () {
     return {
@@ -162,6 +163,7 @@ export default {
         if (this.displayMode === 'groupByAssetType') {
           this.displayMode = 'groupBySequence';
         }
+        this.selectedAssets = [];
       }
 
       this.refreshAndDraw();
@@ -278,6 +280,9 @@ export default {
         // Update current frame or casting highlights.
         this.draw();
       }
+    },
+    selectedAssets: function () {
+      this.draw();
     },
   },
   mounted: function () {
@@ -535,6 +540,18 @@ export default {
             ui.addFrame(dupThumb.pos[0], dupThumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
         } else {
           ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
+        }
+      }
+
+      // Draw a border around the thumbnail(s) of selected assets.
+      if (this.mode === 'assets') {
+        const rim = this.uiConfig.selectedHighlight;
+        for (const asset of this.selectedAssets) {
+          for (const thumb of this.thumbnails) {
+            if (thumb.obj.id === asset.id) {
+              ui.addFrame(thumb.pos[0], thumb.pos[1], thumbSize[0], thumbSize[1], rim.width, rim.color, 1);
+            }
+          }
         }
       }
 
@@ -857,6 +874,10 @@ export default {
       this.$emit('set-current-frame', frame);
     },
 
+    setSelectedAssets: function (assets) {
+      this.$emit('set-selected-assets', assets);
+    },
+
     onMouseEvent: function (event) {
       // Set a new current frame when LMB clicking or dragging.
       if (this.isMouseDragging
@@ -864,14 +885,24 @@ export default {
         // Hit test against each thumbnail
         const mouse = this.clientToCanvasCoords(event);
         const thumbSize = this.thumbnailSize;
+        let hitThumb = false;
         for (const thumb of this.thumbnails) {
           if ( thumb.pos[0] <= mouse.x && mouse.x <= thumb.pos[0] + thumbSize[0]
             && thumb.pos[1] <= mouse.y && mouse.y <= thumb.pos[1] + thumbSize[1]) {
 
+            hitThumb = true;
             if (this.mode === 'shots') {
               this.setCurrentFrame(thumb.obj.startFrame);
+            } else {
+              this.setSelectedAssets([thumb.obj]);
             }
             break;
+          }
+        }
+
+        if (!hitThumb) {
+          if (this.mode === 'assets') {
+            this.setSelectedAssets([]);
           }
         }
       }

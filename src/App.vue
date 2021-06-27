@@ -5,6 +5,7 @@
       <div class="column is-two-thirds">
         <ThumbnailView
             @set-current-frame="setCurrentFrame"
+            @set-selected-assets="setSelectedAssets"
             :taskTypes="taskTypes"
             :taskStatuses="taskStatuses"
             :users="users"
@@ -15,6 +16,7 @@
             :current-frame="currentFrame"
             :fps="fps"
             :timeline-visible-frames="timelineVisibleFrames"
+            :selected-assets="selectedAssets"
         />
       </div>
       <div class="column">
@@ -42,6 +44,7 @@
             :current-frame="currentFrame"
             :total-frames="totalFrames"
             :fps="fps"
+            :selected-assets="selectedAssets"
         />
       </div>
     </div>
@@ -65,7 +68,7 @@ export default {
   },
   data () {
     return {
-      isPlaying: false,
+      // Query data
       taskTypes: [],
       taskStatuses: [],
       users: [],
@@ -73,17 +76,23 @@ export default {
       shots: [],
       assets: [],
       assetTypes: [],
-      currentFrame: 0,
       totalFrames: 1,
       frameOffset: 0,
       fps: 24,
-      timelineVisibleFrames: [0, 1],
       videoPlayerOptions: null,
+      // Runtime state
+      isPlaying: false,
+      currentFrame: 0,
+      timelineVisibleFrames: [0, 1],
+      selectedAssets: [],
     }
   },
   methods: {
     setCurrentFrame: function (frame) {
       this.currentFrame = frame;
+    },
+    setSelectedAssets: function (assets) {
+      this.selectedAssets = assets;
     },
     setTimelineVisibleFrames: function (frameRange) {
       this.timelineVisibleFrames = frameRange;

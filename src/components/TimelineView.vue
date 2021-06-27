@@ -6,6 +6,11 @@
       <label for="showTasksStatus">Show Tasks Status</label>
     </span>
 
+    <span v-if="this.selectedAssets.length" >
+      <input type="checkbox" id="showSelectedAssets" v-model="showSelectedAssets">
+      <label for="showSelectedAssets">Show Selected Assets</label>
+    </span>
+
     <button @click="fitTimelineView">Fit View</button>
 
     <canvas id="canvas-timeline"></canvas>
@@ -31,14 +36,16 @@ export default {
     taskStatuses: Array,
     sequences: Array,
     shots: Array,
-    currentFrame: Number,
     totalFrames: Number,
     fps: Number,
+    currentFrame: Number,
+    selectedAssets: Array,
   },
   data () {
     return {
       // View user configuration.
       showTasksStatus: true,
+      showSelectedAssets: true,
       // Canvas & rendering context.
       canvas: null,
       canvasText: null,
@@ -65,6 +72,7 @@ export default {
         fontSize: 12,
         margin: {x: 15, top: 22, bottom: 7}, // Spacing around the contents of the timeline canvas. One side, in px.
         currFrameHighlight: { width: 1.5, color: [0.85, 0.8, 0.7, 1.0], },
+        castingHighlight: { width: 1.5, color: [0.2, 0.58, 0.8, 1.0], },
         playhead: {
           padY: 8, // From the absolute top. Ignores 'margin'.
           triangle: {width: 12.0, height: 8.0, flatHeight: 4.0},
@@ -105,20 +113,13 @@ export default {
   },
   watch: {
     showTasksStatus: function () {
-      this.resizeCanvas();
+      this.onChannelsUpdated();
+    },
+    showSelectedAssets: function () {
+      this.onChannelsUpdated();
     },
     taskTypes: function () {
-      // Update the width needed to show the task names.
-      this.updateChannelNamesWidth();
-      // Resize the timeline area to fit all channels (that are visible).
-      this.resizeCanvas();
-
-      // Ensure the timeline area view doesn't go under the channel names.
-      const overlap = this.timelineRange.x - this.timelineView.x;
-      if (overlap > 0) {
-        this.timelineView.x = this.timelineRange.x;
-        this.timelineView.w -= overlap;
-      }
+      this.onChannelsUpdated();
     },
     taskStatuses: function () {
       this.draw();
@@ -134,6 +135,9 @@ export default {
       this.findShotForCurrentFrame();
 
       this.draw();
+    },
+    selectedAssets: function () {
+      this.onChannelsUpdated();
     },
     totalFrames: function () {
       this.onVisibleFrameRangeUpdated();
@@ -179,7 +183,9 @@ export default {
     resizeCanvas: function (shouldDraw = true) {
       // Resize canvas height according to the number of channels and to the full available width.
       const canvasContainer = document.getElementById('canvas-timeline-container');
-      const numChannels = this.showTasksStatus ? this.taskTypesForShots.length : 0;
+      let numChannels = 0;
+      if (this.showSelectedAssets) { numChannels += this.selectedAssets.length; }
+      if (this.showTasksStatus) { numChannels += this.taskTypesForShots.length; }
       this.canvas.width = canvasContainer.offsetWidth;
       this.canvas.height = this.uiConfig.margin.top
           + this.uiConfig.sequences.channelHeight
@@ -229,6 +235,9 @@ export default {
       let channelNamesWidth = this.ui2D.measureText("Sequences").width;
       for (const task of this.taskTypesForShots) {
         channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(task.name).width);
+      }
+      for (const asset of this.selectedAssets) {
+        channelNamesWidth = Math.max(channelNamesWidth, this.ui2D.measureText(asset.name).width);
       }
 
       this.channelNamesWidth = channelNamesWidth;
@@ -314,9 +323,22 @@ export default {
         ui.addFrame(startPos, shotTop, shotWidth, shotHeight, rim.width, rim.color, shotsStyle.corner);
       }
 
+      // Draw selected assets.
+      channelY = channelStartY + channelContentPadY;
+      if (this.showSelectedAssets) {
+        for (const asset of this.selectedAssets) {
+          // Get the contiguous frame ranges where this asset appears.
+          let {startPos, widths} = this.getRangesWhere((shot) => { return asset.shots.includes(shot.id); });
+          // Draw a rect for each range of shots.
+          for (let i = 0; i < startPos.length; i++) {
+            ui.addRect(startPos[i], channelY, widths[i], taskHeight, this.uiConfig.castingHighlight.color);
+          }
+          channelY += channelStep;
+        }
+      }
+
       // Draw task statuses.
       if (this.showTasksStatus) {
-        channelY = channelStartY + channelContentPadY;
         for (const taskType of this.taskTypesForShots) { // e.g. "Animation"
           for (const status of this.taskStatuses) { // e.g. "Done"
             // Get the contiguous frame ranges for this task status.
@@ -429,8 +451,14 @@ export default {
       this.ui2D.fillText("Sequences", textX, textY);
       textY = shotChannelTop + Math.round(shotChannelHeight / 2) - halfFontSize;
       this.ui2D.fillText("Shots", textX, textY);
+      textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
+      if (this.showSelectedAssets) {
+        for (const asset of this.selectedAssets) {
+          this.ui2D.fillText(asset.name, textX, textY);
+          textY += channelStep;
+        }
+      }
       if (this.showTasksStatus) {
-        textY = channelStartY + Math.round(channelStep / 2) - halfFontSize;
         for (const task of this.taskTypesForShots) {
           this.ui2D.fillText(task.name, textX, textY);
           textY += channelStep;
@@ -498,6 +526,21 @@ export default {
       this.$emit('set-timeline-visible-frames', [startFrame, endFrame]);
 
       this.draw();
+    },
+
+    onChannelsUpdated: function() {
+      // Update the width needed to show the channel names.
+      this.updateChannelNamesWidth();
+      // Resize the timeline area to fit all channels (that are visible).
+      this.resizeCanvas();
+
+      // Ensure the timeline area view doesn't go under the channel names.
+      const overlap = this.timelineRange.x - this.timelineView.x;
+      if (overlap > 0) {
+        this.timelineView.x = this.timelineRange.x;
+        this.timelineView.w -= overlap;
+      }
+      // draw() will be trigger by the update to timelineView.
     },
 
     fitTimelineView: function() {
