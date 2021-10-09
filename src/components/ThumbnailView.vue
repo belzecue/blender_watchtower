@@ -347,6 +347,8 @@ export default {
 
     draw: function () {
       const ui = this.uiRenderer;
+      ui.beginFrame();
+
       // Setup style for the text rendering in the overlaid canvas for text.
       const fontSize = this.uiConfig.fontSize;
       this.ui2D.clearRect(0, 0, this.canvasText.width, this.canvasText.height);
