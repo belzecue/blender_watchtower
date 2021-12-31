@@ -1,4 +1,15 @@
-# edit-breakdown-web
+# Watchtower
+
+Interactive film production management tool. Watchtower allows you to see the big picture of a 
+short film or episode and unpack as much information as needed, down to the duration of a shot and
+assets used in it. All in the space of one screen.
+
+## Features
+
+* Grid view (for shots and assets) with grouping and filtering tools
+* Detail view
+* Timeline showing individual shots as well as task statuses
+* Compatible with zou as data backend
 
 ## Project setup
 ```
@@ -20,5 +31,5 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+Watchtower is a Vue application. It can be managed through the [vue-cli package](https://cli.vuejs.org/).
