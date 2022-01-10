@@ -22,7 +22,7 @@ pnpm-debug.log*
 *.sln
 *.sw?
 *.paw
-/public/preview-files/
-/public/pictures/
 /public/*.mkv
 /public/*.mp4
+/public/static-previews/*/*/*/*.png
+/public/static-projects/*

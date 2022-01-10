@@ -25,7 +25,7 @@ export default {
       console.log(this);
       superagent
         .get('/api/data/sequences')
-        .set('Authorization', 'Bearer ' + this.$cookie.get('access_token_cookie'))
+        // .set('Authorization', 'Bearer ' + this.$cookie.get('access_token_cookie'))
         .end((err, res) => {
           console.log(err, res.body)
         })

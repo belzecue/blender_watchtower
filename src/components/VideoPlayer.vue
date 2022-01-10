@@ -47,17 +47,21 @@ export default {
       this.player.currentTime(currentTime);
     },
     options: function () {
-      if (this.player) {this.player.dispose()}
-      this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
-        console.log('Player is ready');
-      })
-      this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
-      // Update global isPlaying status
-      this.player.on('play', () => {this.$emit('playback-status-updated', true)});
-      this.player.on('pause', this.cancelSetCurrentFrame);
-      // Update global isPlaying status
-      this.player.on('pause', () => {this.$emit('playback-status-updated', false)});
-      this.player.on('seeking', this.setCurrentFrame);
+      if (this.player) {
+        // this.player.dispose()
+        this.player.options.sources = this.options.sources;
+      } else {
+        this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
+          console.log('Player is ready');
+        })
+        this.player.on('play', this.setCurrentFrameAndRequestAnimationFrame);
+        // Update global isPlaying status
+        this.player.on('play', () => {this.$emit('playback-status-updated', true)});
+        this.player.on('pause', this.cancelSetCurrentFrame);
+        // Update global isPlaying status
+        this.player.on('pause', () => {this.$emit('playback-status-updated', false)});
+        this.player.on('seeking', this.setCurrentFrame);
+      }
     },
   },
   methods: {

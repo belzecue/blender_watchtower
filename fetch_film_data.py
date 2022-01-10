@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from dataclasses import dataclass
 import json
 import os.path
 import pathlib
@@ -13,11 +14,10 @@ def get_env_data_as_dict(path: str) -> dict:
                 in f.readlines() if not line.startswith('#'))
 
 env_vars = get_env_data_as_dict('.env.local')
-BASE_URL = env_vars['KITSU_API']
-JWT = env_vars['JWT']
-PROJECT_ID = env_vars['PROJECT_ID']
+BASE_URL = env_vars['KITSU_API_TARGET']
+# JWT = None  # Set at runtime
 
-HEADERS = {'headers': {'Authorization': f"Bearer {JWT}"}}
+# HEADERS = {'headers': {'Authorization': f"Bearer {JWT}"}}
 
 COLORS_PALETTE = [
     [0.8197601437568665, 0.7117544412612915, 0.5497459173202515, 1.0],
@@ -43,6 +43,23 @@ COLORS_PALETTE = [
 ]
 
 
+@dataclass
+class KitsuClient:
+    """Client to query the Kitsu API."""
+    base_url: str
+    jwt: float
+
+    @property
+    def headers(self):
+        return {'Authorization': f"Bearer {self.jwt}"}
+
+    def get(self, path, params=None):
+        return requests.get(f"{self.base_url}{path}", params=params, headers=self.headers, allow_redirects=True)
+
+    # def get_asset_type(self):
+    #     return self.get('/data/asset-types')
+
+
 def hex_to_rgba(hex):
     color = hex.lstrip('#')
     color = [int(color[i:i + 2], 16) / 255 for i in (0, 2, 4)]
@@ -50,33 +67,78 @@ def hex_to_rgba(hex):
     return color
 
 
-def fetch_and_save_image(src_url, dst, force=False):
-    if not os.path.exists(dst) or force:
-        r = requests.get(src_url, **HEADERS, allow_redirects=True)
-        open(dst, 'wb').write(r.content)
+def generate_preview_file_path(file_id: str) -> pathlib.Path:
+    """Generate a normalized file path.
+    This forces .png extension, which for now is ok since all image
+    file use that extension, and we do not need to deal with videos.
+
+    For example:
+    - 0a32d425-6723-4f2b-baf7-2a6d457fa669
+    becomes:
+    - 0a3/2d4/0a32d425-6723-4f2b-baf7-2a6d457fa669.png
+    """
+    folder_one = file_id[:3]
+    folder_two = file_id[3:6]
+    filename = f'{file_id}.png'
+    return pathlib.Path('public') / 'static-previews' / folder_one / folder_two / filename
+
+
+def fetch_jwt() -> str:
+    payload = {
+        'email': env_vars['KITSU_USER_EMAIL'],
+        'password': env_vars['KITSU_USER_PASSWORD']
+    }
+    r_jwt = requests.post(f"{BASE_URL}/auth/login", data=payload)
+    r_jwt = r_jwt.json()
+    if 'error' in r_jwt:
+        print(r_jwt['message'])
+        exit()
+    return r_jwt['access_token']
+
+
+kitsu_client = KitsuClient(base_url=env_vars['KITSU_API_TARGET'], jwt=fetch_jwt())
+
+
+def fetch_user_context():
+    r_context = kitsu_client.get('/data/user/context')
+    return r_context.json()
+
+
+def fetch_and_save_image(src_url, dst: pathlib.Path, force=False):
+    if not dst.is_file() or force:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        r_file = kitsu_client.get(src_url)
+        dst.write_bytes(r_file.content)
+
+
+def fetch_project(project):
+    return kitsu_client.get(f"/data/projects/{project['id']}").json()
 
 
 def fetch_asset_types():
-    r_asset_types = requests.get(f"{BASE_URL}/data/asset-types", **HEADERS)
+    # r_asset_types = requests.get(f"{BASE_URL}/data/asset-types", **HEADERS)
+    r_asset_types = kitsu_client.get('/data/asset-types')
     asset_types = []
     for asset_type in r_asset_types.json():
         asset_types.append({'name': asset_type['name'], 'id': asset_type['id']})
     return asset_types
 
 
-def fetch_assets_and_previews(force=False):
-    r_assets = requests.get(f"{BASE_URL}/data/assets/with-tasks", **HEADERS)
+def fetch_assets_and_previews(project, force=False):
+    r_assets = kitsu_client.get('/data/assets/with-tasks', params={'project_id': project['id']})
     parsed_assets = []
 
     for asset in r_assets.json():
         if asset['canceled']:
             continue
         print(f"Processing asset {asset['name']}")
-        asset_preview_name = 'preview' if not asset['preview_file_id'] else asset['preview_file_id']
-        dst = f"public/preview-files/{asset_preview_name}.png"
+        asset_preview_name = 'placeholder-asset' if not asset['preview_file_id'] else asset['preview_file_id']
+        dst = f"public/static-previews/placeholder-asset.png" if not asset['preview_file_id'] else ''
         # If thumbnail is not found locally, download it
         if asset['preview_file_id']:
-            src_url = f"{BASE_URL}/pictures/thumbnails/preview-files/{asset['preview_file_id']}.png"
+            # dst = generate_preview_file_path(asset['preview_file_id'])
+            src_url = f"pictures/thumbnails/preview-files/{asset['preview_file_id']}.png"
+            dst = pathlib.Path(f"public/static-previews/{src_url}")
             fetch_and_save_image(src_url, dst)
         # Format data as expected by edit breakdown
         tasks = []
@@ -90,7 +152,7 @@ def fetch_assets_and_previews(force=False):
             'id': asset['id'],
             'asset_type_id': asset['asset_type_id'],
             'name': asset['name'],
-            'thumbnailFile': dst.replace('public/', ''),
+            'thumbnailUrl': str(dst).replace('public/', ''),
             'tasks': tasks,
         })
 
@@ -98,45 +160,44 @@ def fetch_assets_and_previews(force=False):
 
 
 def fetch_people():
-    r_people = requests.get(f"{BASE_URL}/data/persons", **HEADERS)
+    r_people = kitsu_client.get('/data/persons')
 
     people = []
-    # Ensure that public/pictures/thumbnails/persons/ exists
-    pathlib.Path('public/pictures/thumbnails/persons').mkdir(parents=True, exist_ok=True)
     for person in r_people.json():
-        profile_picture_path = f"pictures/thumbnails/persons/{person['id'] if person['has_avatar'] else 'placeholder'}.png"
+        dst = 'public/static-previews/pictures/thumbnails/persons/placeholder.png'
+        if person['has_avatar']:
+            src = f"pictures/thumbnails/persons/{person['id']}.png"
+            dst = f"public/static-previews/{src}"
+            fetch_and_save_image(src, pathlib.Path(dst))
+
         people.append({
             'name': person['full_name'],
             'id': person['id'],
-            'profilePicture': profile_picture_path,
+            'profilePicture': dst,
             'color': random.choice(COLORS_PALETTE),
         })
-        if profile_picture_path:
-            src = f"{BASE_URL}/pictures/thumbnails/persons/{person['id']}.png"
-            fetch_and_save_image(src, f"public/{profile_picture_path}")
+
     return people
 
 
-def fetch_sequences():
-    r_sequences = requests.get(f"{BASE_URL}/data/sequences",
-                               params={'project_id': PROJECT_ID}, **HEADERS)
+def fetch_sequences(project):
+    r_sequences = kitsu_client.get('/data/sequences', params={'project_id': project['id']})
     sequences = []
     for sequence in r_sequences.json():
         sequences.append({'name': sequence['name'], 'id': sequence['id']})
     return sequences
 
 
-def fetch_casting():
-    casting = {}
-    for sequence in fetch_sequences():
-        url = f"{BASE_URL}/data/projects/{PROJECT_ID}/sequences/{sequence['id']}/casting"
-        r_casting = requests.get(url, **HEADERS)
+def fetch_casting(project):
+    for sequence in fetch_sequences(project):
+        r_casting = kitsu_client.get(f"/data/projects/{project['id']}/sequences/{sequence['id']}/casting")
         casting_per_shot = r_casting.json()
         if not casting_per_shot:
             continue
-        for shot_id, assets in casting_per_shot.items():
-            casting[shot_id] = [{'asset_id': asset['asset_id'], 'nb_occurences': asset['nb_occurences']} for asset in assets]
-    return casting
+        dst = pathlib.Path(f"public/static-projects/{project['id']}/sequences/{sequence['id']}/casting.json")
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        with open(dst, 'w') as outfile:
+            json.dump(casting_per_shot, outfile, indent=2)
 
 
 def fetch_task_types():
@@ -168,16 +229,24 @@ def fetch_task_statuses():
     return task_statuses
 
 
-def fetch_shots_and_previews(force=False):
-    r_shots = requests.get(f"{BASE_URL}/data/shots/with-tasks", **HEADERS)
+def fetch_shots_and_previews(project, force=False):
+    # r_shots = requests.get(f"{BASE_URL}/data/shots/with-tasks", **HEADERS)
+    r_shots = kitsu_client.get('/data/shots/with-tasks', params={'project_id': project['id']})
     parsed_shots = []
 
     for shot in r_shots.json():
         print(f"Processing shot {shot['name']}")
-        dst = f"public/preview-files/{shot['preview_file_id']}.png"
-        # If thumbnail is not found locally, download it
-        src_url = f"{BASE_URL}/pictures/thumbnails/preview-files/{shot['preview_file_id']}.png"
-        fetch_and_save_image(src_url, dst)
+        if 'frame_in' not in shot['data']:
+            print("Skipping shot with no frame_in data")
+            continue
+        if shot['preview_file_id']:
+            # dst = f"public/preview-files/{shot['preview_file_id']}.png"
+            # dst = generate_preview_file_path(shot['preview_file_id'])
+            src_url = f"/pictures/thumbnails/preview-files/{shot['preview_file_id']}.png"
+            dst = pathlib.Path(f"public/static-previews/{src_url}")
+            fetch_and_save_image(src_url, dst)
+        else:
+            dst = None
         # Format data as expected by edit breakdown
         tasks = []
         for task in shot['tasks']:
@@ -189,9 +258,9 @@ def fetch_shots_and_previews(force=False):
         parsed_shots.append({
             'id': shot['id'],
             'name': shot['name'],
-            'thumbnailFile': dst.replace('public/', ''),
+            'thumbnailUrl': None if not dst else str(dst).replace('public/', ''),
             'startFrame': shot['data']['frame_in'],
-            'durationSeconds': (shot['data']['frame_out'] - shot['data']['frame_in']) / shot['data']['fps'],
+            'durationSeconds': (shot['data']['frame_out'] - shot['data']['frame_in']) / int(project['fps']),
             'tasks': tasks,
             'sequence_id': shot['sequence_id'],
         })
@@ -207,17 +276,71 @@ def build_edit_data():
         'totalFrames': 14043,
         'frameOffset': 100,
         'fps': 24,
-        'taskTypes': fetch_task_types(),
-        'taskStatuses': fetch_task_statuses(),
-        'shots': fetch_shots_and_previews(),
-        'sequences': fetch_sequences(),
-        'users': fetch_people(),
-        'assetTypes': fetch_asset_types(),
-        'assets': fetch_assets_and_previews(),
-        'casting': fetch_casting(),
+        # 'taskTypes': fetch_task_types(),
+        # 'taskStatuses': fetch_task_statuses(),
+        # 'shots': fetch_shots_and_previews(),
+        # 'sequences': fetch_sequences(),
+        # 'users': fetch_people(),
+        # 'assetTypes': fetch_asset_types(),
+        # 'assets': fetch_assets_and_previews(),
+        # 'casting': fetch_casting(),
     }
     with open('public/edit.json', 'w') as outfile:
         json.dump(edit_data, outfile, indent=2)
 
 
-build_edit_data()
+# build_edit_data()
+
+
+def save_user_context():
+    """Save globally available settings.
+
+    In particular, we are interested in these:
+
+    - asset_types
+    - persons
+    - projects
+    - task_types
+    - task_status
+    """
+    with open('public/context.json', 'w') as outfile:
+        user_context = fetch_user_context()
+        for project in user_context['projects']:
+            # Fetch project thumbnail
+            src_url = f"/pictures/thumbnails/projects/{project['id']}.png"
+            dst = pathlib.Path(f"public/static-previews/{src_url}")
+            fetch_and_save_image(src_url, dst)
+            project['thumbnailUrl'] = str(dst).replace('public/', '')
+        json.dump(user_context, outfile, indent=2)
+        print('Saved user context')
+
+
+def dump_data(project, name, data):
+    with open(f"public/static-projects/{project['id']}/{name}.json", 'w') as outfile:
+        json.dump(data, outfile, indent=2)
+    print(f"Saved {name} data for project {project['id']}")
+
+
+def save_project_data(project):
+    project_data = {
+        'project': fetch_project(project),
+        'shots': fetch_shots_and_previews(project),
+        'sequences': fetch_sequences(project),
+        'assets': fetch_assets_and_previews(project),
+    }
+
+    for k, v in project_data.items():
+        dump_data(project, k, v)
+
+    # with open(f"public/static-projects/{project['id']}/project.json", 'w') as outfile:
+    #     json.dump(project_data, outfile, indent=2)
+    # print(f"Saved project data for {project['id']}")
+
+
+save_user_context()
+fetch_people()
+
+for p in fetch_user_context()['projects']:
+    save_project_data(p)
+    fetch_casting(p)
+

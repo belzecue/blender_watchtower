@@ -4,7 +4,16 @@ module.exports = {
     ? '/watchtower/'
     : '/',
   devServer: {
-    host: 'eb.local'
+    host: 'localhost',
+    proxy: {
+      '/api': {
+        target: process.env.KITSU_API_TARGET || 'http://localhost:5000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   },
   chainWebpack: config => {
     config.module
