@@ -1,17 +1,18 @@
 <template>
-  <div id="canvas-timeline-container">
-
-    <span>
-      <input type="checkbox" id="showTasksStatus" v-model="showTasksStatus">
-      <label for="showTasksStatus">Show Tasks Status</label>
-    </span>
-
-    <span v-if="this.selectedAssets.length" >
-      <input type="checkbox" id="showSelectedAssets" v-model="showSelectedAssets">
-      <label for="showSelectedAssets">Show Selected Assets</label>
-    </span>
-
-    <button @click="fitTimelineView">Fit View</button>
+  <div id="canvas-timeline-container" class="timeline-container">
+    <div class="toolbar">
+      <div class="toolbar-item">
+        <span>
+          <input type="checkbox" id="showTasksStatus" v-model="showTasksStatus">
+          <label for="showTasksStatus">Show Tasks Status</label>
+        </span>
+        <span v-if="this.selectedAssets.length" >
+          <input type="checkbox" id="showSelectedAssets" v-model="showSelectedAssets">
+          <label for="showSelectedAssets">Show Selected Assets</label>
+        </span>
+        <button @click="fitTimelineView">Fit View</button>
+      </div>
+    </div>
 
     <canvas id="canvas-timeline"></canvas>
     <canvas id="canvas-timeline-text"
@@ -27,7 +28,7 @@
 
 <script>
 
-import { UIRenderer } from '../shading';
+import { UIRenderer } from '@/shading';
 
 export default {
   name: "TimelineView",
@@ -647,30 +648,30 @@ export default {
 </script>
 
 <style scoped>
-  canvas { display:block; }
+canvas {
+  display: block;
+}
 
-  #canvas-timeline-container {
-    position: relative;
-    background-color: rgb(46, 46, 46);
-  }
-  #canvas-timeline {
-    position: absolute;
-  }
-  #canvas-timeline-text {
-    position: absolute;
-    z-index: 10;
-  }
+.timeline-container {
+  position: relative;
+  background-color: var(--panel-bg-color);
+}
+#canvas-timeline {
+  position: absolute;
+}
+#canvas-timeline-text {
+  position: absolute;
+  z-index: 10;
+}
 
-  label {
-    color: #dadada;
-    font-size: 0.83em;
-    margin-left: 20px;
-  }
-  input {
-    margin-left: 1rem;
-    margin-right: -0.8rem;
-  }
-  button {
-    margin-left: 1.5rem;
-  }
+label {
+  padding-left: var(--spacer-1);
+}
+input {
+  margin-left: 1rem;
+  /* margin-right: -0.8rem; */
+}
+button {
+  margin-left: 1.5rem;
+}
 </style>

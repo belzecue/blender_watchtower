@@ -1,11 +1,11 @@
 <template>
-  <div class="container is-fluid p-0">
+  <div class="app-container">
     <Toolbar
         @set-current-project-id="setCurrentProjectId"
         :projects="projectsFromContext"
         :current-project-id="currentProjectId" />
-    <div class="columns is-gapless">
-      <div class="column is-two-thirds">
+    <div class="row">
+      <div class="col section-thumbnailview">
         <ThumbnailView
             @set-current-frame="setCurrentFrame"
             @set-selected-assets="setSelectedAssets"
@@ -22,22 +22,53 @@
             :selected-assets="selectedAssets"
         />
       </div>
-      <div class="column">
-        <VideoPlayer
+      <div class="col-3">
+        <section class="inspector-videoplayer">
+          <div class="player-header">
+            <div
+              v-if="currentSequence"
+              class="toolbar-item"
+              title="Current Sequence"
+            >
+              <span
+                :style="uiCurrentSequenceColor(currentSequence.color)"
+                class="current-sequence-indicator"
+              ></span>
+              {{ currentSequence.name }}
+              <span v-if="currentShot">
+                <span class="breadcrumb-separator">|</span
+                >{{ currentShot.name }}
+              </span>
+            </div>
+            <div class="toolbar-item right" title="Frame Number">
+              {{ currentFrame }}
+            </div>
+          </div>
+
+          <VideoPlayer
             @set-current-frame="setCurrentFrame"
             @playback-status-updated="setIsPlaying"
             :is-playing="isPlaying"
             :current-frame="currentFrame"
             :frame-offset="frameOffset"
             :fps="fps"
-            :options="videoPlayerOptions" />
-        <div>Frame {{ currentFrame }}</div>
-        <div v-if="currentSequence" >Sequence {{ currentSequence.name }}</div>
-        <div v-if="currentShot" >Shot {{ currentShot.name }}</div>
+            :options="videoPlayerOptions"
+          />
+        </section>
+        <section class="inspector-details" v-if="currentShot">
+          <h5 class="section-headline">SHOT</h5>
+          <h3 class="section-title">{{ currentShot.name }}</h3>
+          <ul>
+            <li>Duration: {{ currentShot.durationSeconds.toFixed(2) }} sec</li>
+            <li>Start Frame: {{ currentShot.startFrame }}</li>
+            <li>Assets: {{ currentShot.assets.length }}</li>
+            <li>Tasks: {{ currentShot.tasks.length }}</li>
+          </ul>
+        </section>
       </div>
     </div>
-    <div class="columns is-gapless">
-      <div class="column is-full">
+    <div class="row">
+      <div class="col-12">
         <TimelineView
             @set-current-frame="setCurrentFrame"
             @set-timeline-visible-frames="setTimelineVisibleFrames"
@@ -328,7 +359,16 @@ export default {
           this.fetchProjectAssets(projectId);
           this.fetchEditData(projectId);
         })
-    }
+    },
+    uiCurrentSequenceColor: function (color) {
+      let [r, g, b, a] = color;
+      r = r * 100;
+      g = g * 100;
+      b = b * 100;
+      return {
+        backgroundColor: `rgb(${r}%,${g}%,${b}%)`,
+      };
+    },
   },
   unmounted () {
     document.body.removeEventListener('keydown', this.handleHotkey);
@@ -342,22 +382,24 @@ export default {
 </script>
 
 <style scoped>
-  h3 {
-    margin: 40px 0 0;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
-  canvas {
-    border: 2px solid black;
-    background-color: black;
-  }
+.current-sequence-indicator {
+  display: inline-block;
+  margin-right: var(--spacer-2);
+  height: var(--font-size-base);
+  width: 3px;
+  border-radius: var(--border-radius);
+}
+.player-header {
+  color: var(--text-color-muted);
+  display: flex;
+  padding-bottom: var(--spacer-3);
+}
+ul {
+  padding-left: var(--spacer-3);
+  margin-left: var(--spacer-2);
+}
+
+canvas {
+  background-color: black;
+}
 </style>

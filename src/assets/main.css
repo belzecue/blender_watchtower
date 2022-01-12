@@ -1,0 +1,121 @@
+:root {
+  --bg-color: #111;
+  --text-color: #ccc;
+  --text-color-highlight: #fff;
+  --text-color-muted: #999;
+  --text-color-hint: #666;
+
+  --panel-bg-color: #191919;
+
+  --spacer: .25rem;
+  --spacer-2: calc(var(--spacer) * 2);
+  --spacer-3: calc(var(--spacer) * 3);
+
+  --border-radius: .33rem;
+
+  --font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+  --font-size-base: 14px;
+  --font-size-small: 12px;
+  --font-size-large: 20px;
+  --font-weight-bold: 600;
+}
+
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  width: 50%;
+}
+
+.col-3 {
+  width: calc(100% / 3);
+}
+
+.col-12 {
+  width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-toolbar {
+  padding: var(--spacer-3)
+}
+
+.section-headline {
+  color: var(--text-color-hint);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.section-title {
+  color: var(--text-color-highlight);
+  font-size: var(--font-size-large);
+  margin-top: var(--spacer);
+}
+
+.section-thumbnailview {
+  flex: 1;
+}
+
+.section-inspector {
+  width: 30%;
+}
+
+.section-inspector > section {
+  border-radius: var(--border-radius);
+  background-color: var(--panel-bg-color);
+  padding: var(--spacer-3);
+  margin: var(--spacer-2);
+}
+
+section.inspector-videoplayer {
+  padding: var(--spacer-3) var(--spacer-3) 2.66rem;
+}
+
+.toolbar {
+  align-items: center;
+  display: flex;
+  padding: var(--spacer-3) var(--spacer-3) 0;
+}
+
+.toolbar-item {
+  align-items: center;
+  display: flex;
+  margin-right: var(--spacer-3);
+}
+
+.toolbar-item.right {
+  margin-left: auto;
+  margin-right: 0
+}
+
+.toolbar-item label {
+  padding-right: var(--spacer-2);
+}
+
+.breadcrumb-separator {
+  color: var(--text-color-hint);
+  font-weight: var(--font-weight-bold);
+  padding: 0 var(--spacer-2)
+}

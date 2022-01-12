@@ -1,13 +1,11 @@
 <template>
-  <div class="columns">
-    <div class="column">
-      <span>Watchtower</span>
-      <select v-if="projects" @change="switchToProject" v-model="currentProjectSelected" class="ml-4 mt-2">
-        <option v-for="project in projects" :key="project.id" :value="project.id">
-          {{ project.name }}
-        </option>
-      </select>
-    </div>
+  <div class="app-toolbar">
+    <span>Watchtower</span>
+    <select v-if="projects" @change="switchToProject" v-model="currentProjectSelected" class="ml-4 mt-2">
+      <option v-for="project in projects" :key="project.id" :value="project.id">
+        {{ project.name }}
+      </option>
+    </select>
   </div>
 </template>
 

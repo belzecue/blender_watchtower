@@ -1,5 +1,5 @@
 <template>
-  <div class="container is-fluid p-0">
+  <div class="app-container">
     <Toolbar/>
     <p>Landing dashboard, pick a project here.</p>
     <ul v-if="context">

@@ -1,64 +1,77 @@
 <template>
-    <div id="canvas-thumb-grid-container">
-
-      <select v-model="mode" class="ml-4 mt-2">
-        <option value="shots">Shots</option>
-        <option value="assets">Assets</option>
-      </select>
-
-      <label for="seqFilterMode">Show</label>
-      <select v-model="seqFilterMode" class="ml-4 mt-2">
-        <option value="showAll">All</option>
-        <option value="showActiveSequence">Current Sequence</option>
-        <option value="showShotsInTimelineView">Timeline View</option>
-      </select>
-
-      <select v-model="taskTypeFilter" class="ml-4 mt-2">
-        <option value="">No Task Type</option>
-        <option v-for="option in taskTypesForMode" :key="option.id" :value="option.id">
-          {{ option.name }}
-        </option>
-      </select>
-
-      <span v-if="taskTypeFilter !== ''" >
-        <input type="checkbox" id="showAssignees" v-model="showAssignees">
-        <label for="showAssignees">Assignees</label>
-
-        <input type="checkbox" id="showStatuses" v-model="showStatuses">
-        <label for="showStatuses">Status</label>
-
-        <select v-model="statusDispMode" class="ml-4 mt-2" :disabled="showStatuses === false">
-          <option value="dots">Dots</option>
-          <option value="stripes">Stripes</option>
-          <option value="rects">Heatmap</option>
+  <div id="canvas-thumb-grid-container" class="thumbnailview-container">
+    <div class="toolbar">
+      <div class="toolbar-item">
+        <select v-model="mode">
+          <option value="shots">Shots</option>
+          <option value="assets">Assets</option>
         </select>
-      </span>
+      </div>
+      <div class="toolbar-item">
+        <label for="seqFilterMode">Show</label>
+        <select v-model="seqFilterMode">
+          <option value="showAll">All</option>
+          <option value="showActiveSequence">Current Sequence</option>
+          <option value="showShotsInTimelineView">Timeline View</option>
+        </select>
+      </div>
 
-      <label for="displayMode">Group by</label>
-      <select v-model="displayMode" class="ml-4 mt-2">
-        <option v-if="mode === 'shots'" value="chronological">Chronological (ungrouped)</option>
-        <option v-if="mode === 'assets'" value="chronological">Ungrouped</option>
-        <option v-if="mode === 'shots'" value="groupBySequence">Sequence</option>
-        <option v-if="mode === 'assets'" value="groupByAssetType">Asset Type</option>
-        <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
-        <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
-      </select>
+      <div class="toolbar-item">
+        <select v-model="taskTypeFilter">
+          <option value="">No Task Type</option>
+          <option v-for="option in taskTypesForMode" :key="option.id" :value="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+      <div class="toolbar-item">
+        <span v-if="taskTypeFilter !== ''" >
+          <input type="checkbox" id="showAssignees" v-model="showAssignees">
+          <label for="showAssignees">Assignees</label>
 
-      <canvas id="canvas-thumb-grid"></canvas>
-      <canvas id="canvas-thumb-grid-text"
-        @mousedown="onMouseEvent($event)"
-        @mouseup="onMouseEvent($event)"
-        @mousemove="onMouseEvent($event)"
-        @mouseleave="onMouseEvent($event)"
-      >
-      </canvas>
+          <input type="checkbox" id="showStatuses" v-model="showStatuses">
+          <label for="showStatuses">Status</label>
+
+          <select v-model="statusDispMode" :disabled="showStatuses === false">
+            <option value="dots">Dots</option>
+            <option value="stripes">Stripes</option>
+            <option value="rects">Heatmap</option>
+          </select>
+        </span>
+      </div>
+      <div class="toolbar-item">
+        <label for="displayMode">Group by</label>
+        <select v-model="displayMode">
+          <option v-if="mode === 'shots'" value="chronological">Chronological (ungrouped)</option>
+          <option v-if="mode === 'assets'" value="chronological">Ungrouped</option>
+          <option v-if="mode === 'shots'" value="groupBySequence">Sequence</option>
+          <option v-if="mode === 'assets'" value="groupByAssetType">Asset Type</option>
+          <option v-if="taskTypeFilter !== ''" value="groupByTaskStatus">Task Status</option>
+          <option v-if="taskTypeFilter !== ''" value="groupByAssignee">Assignee</option>
+        </select>
+      </div>
     </div>
+
+    <canvas id="canvas-thumb-grid"></canvas>
+    <canvas id="canvas-thumb-grid-text"
+      @mousedown="onMouseEvent($event)"
+      @mouseup="onMouseEvent($event)"
+      @mousemove="onMouseEvent($event)"
+      @mouseleave="onMouseEvent($event)"
+    >
+    </canvas>
+  </div>
 </template>
 
 <script>
 
-import { UIRenderer } from '../shading';
-import {ThumbnailImage, ThumbnailGroup, fitThumbsInGrid, fitThumbsInGroup} from '../layout';
+import { UIRenderer } from '@/shading';
+import {
+  ThumbnailImage,
+  ThumbnailGroup,
+  fitThumbsInGrid,
+  fitThumbsInGroup}
+  from '@/layout';
 
 export default {
   name: "ThumbnailView",
@@ -932,27 +945,24 @@ function secToStr(timeInSeconds) {
 </script>
 
 <style scoped>
-  canvas { display:block; }
+.thumbnailview-container {
+  background-color: var(--panel-bg-color);
+  border-radius: var(--border-radius);
+  margin: var(--spacer-2);
+}
 
-  #canvas-thumb-grid-container {
-    position: relative;
-    background-color: rgb(46, 46, 46);
-  }
-  #canvas-thumb-grid {
-    position: absolute;
-  }
-  #canvas-thumb-grid-text {
-    position: absolute;
-    z-index: 10;
-  }
+canvas {
+  display: block;
+}
 
-  label {
-    color: #dadada;
-    font-size: 0.83em;
-    margin-left: 20px;
-  }
-  input {
-    margin-left: 1rem;
-    margin-right: -0.8rem;
-  }
+#canvas-thumb-grid-container {
+  position: relative;
+}
+#canvas-thumb-grid {
+  position: absolute;
+}
+#canvas-thumb-grid-text {
+  position: absolute;
+  z-index: 10;
+}
 </style>

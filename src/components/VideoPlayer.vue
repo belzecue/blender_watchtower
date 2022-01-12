@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="videojs-container">
     <video ref="videoPlayer" class="video-js vjs-fluid"></video>
   </div>
 </template>
@@ -88,7 +88,25 @@ export default {
 </script>
 
 <style>
-  .vjs-paused .vjs-big-play-button {
-    display: none;
-  }
+.video-js {
+  border-radius: var(--border-radius);
+}
+
+video {
+  border-radius: var(--border-radius);
+}
+
+.video-js .vjs-control-bar {
+  background-color: var(--bg-color);
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  display: flex;
+  opacity: 1;
+}
+.vjs-paused .vjs-big-play-button {
+  display: none;
+}
+.video-js .vjs-control-bar {
+  position: initial;
+}
 </style>
