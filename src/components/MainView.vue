@@ -271,6 +271,10 @@ export default {
             }
           }
         })
+      .catch(err => {
+        // Handle all fetching or parsing errors
+        console.log(err);
+      })
     },
     fetchEditData: function (projectId) {
       let urlEdit = `static-projects/${projectId}/edit.json`
