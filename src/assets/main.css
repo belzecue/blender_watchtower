@@ -9,12 +9,17 @@
   --panel-bg-color: #191919;
   --panel-bg-color-highlight: #232323;
 
+  --input-select-bg-color: #292929;
+  --input-select-bg-color-highlight: #323232;
+  --input-box-shadow: 1px 1px 2px 0 rgba(0,0,0,.2);
+
   --spacer: .25rem;
   --spacer-2: calc(var(--spacer) * 2);
   --spacer-3: calc(var(--spacer) * 3);
 
   --border-color: #292929;
   --border-radius: .33rem;
+  --border-radius-sm: .2rem;
   --border-width: .1rem;
 
   --font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
@@ -137,4 +142,33 @@ section.inspector-videoplayer {
   color: var(--text-color-hint);
   font-weight: var(--font-weight-bold);
   padding: 0 var(--spacer-2)
+}
+
+/* Input fields. */
+select {
+  align-items: center;
+  background: linear-gradient(to left, var(--input-select-bg-color-highlight) 1.5em, var(--input-select-bg-color) 1.5em);
+  border-radius: var(--border-radius-sm);
+  border: 0;
+  box-shadow: var(--input-box-shadow);
+  color: var(--text-color);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  outline: 0;
+  padding: 0 1.5em 0 var(--spacer);
+  position: relative;
+}
+
+select:hover, select:focus {
+  background: var(--input-select-bg-color-highlight);
+}
+
+select option {
+  background-color: var(--panel-bg-color);
+  color: inherit;
+}
+
+select option:focus {
+  outline: none;
 }
