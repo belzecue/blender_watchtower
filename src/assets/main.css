@@ -4,20 +4,26 @@
   --text-color-highlight: #fff;
   --text-color-muted: #999;
   --text-color-hint: #666;
+  --text-color-accent: rgb(0, 132, 255);
 
   --panel-bg-color: #191919;
+  --panel-bg-color-highlight: #232323;
 
   --spacer: .25rem;
   --spacer-2: calc(var(--spacer) * 2);
   --spacer-3: calc(var(--spacer) * 3);
 
+  --border-color: #292929;
   --border-radius: .33rem;
+  --border-width: .1rem;
 
   --font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
   --font-size-base: 14px;
   --font-size-small: 12px;
   --font-size-large: 20px;
   --font-weight-bold: 600;
+
+  --transition-speed: 150ms;
 }
 
 html, body {
@@ -32,6 +38,19 @@ html, body {
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
+}
+
+h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+a {
+  color: var(--text-color-accent);
+  transition: color var(--transition-speed) ease-in-out;
+}
+
+a:hover {
+  color: var(--text-color-highlight);
 }
 
 .row {
