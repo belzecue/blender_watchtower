@@ -82,7 +82,9 @@ a:hover {
 }
 
 .app-toolbar {
-  padding: var(--spacer-3)
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacer-3) var(--spacer-2) var(--spacer);
 }
 
 .section-headline {
