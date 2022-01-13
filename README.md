@@ -28,6 +28,7 @@ Watchtower is a Vue application. It can be managed through the [vue-cli package]
   * `static-projects`: containing all the data required by watchtower
   * `static-previews`: containing shot and asset thumbnails
 * At this point it's possible to run Watchtower and check the status of your production
+* For each project it's currently necessary to manually place an `edit.mp4`file in `static-projects/<project-id>/`
 
 ### Compiles and hot-reloads for development
 ```
