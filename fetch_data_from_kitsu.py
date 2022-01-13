@@ -232,12 +232,21 @@ def fetch_and_save_context():
     """
     with open('public/context.json', 'w') as outfile:
         user_context = fetch_user_context()
+        # Fetch project thumbnails
         for project in user_context['projects']:
-            # Fetch project thumbnails
             src_url = f"/pictures/thumbnails/projects/{project['id']}.png"
             dst = pathlib.Path(f"public/static-previews/{src_url}")
             fetch_and_save_image(src_url, dst)
             project['thumbnailUrl'] = str(dst).replace('public/', '')
+        # Remove private details from users
+        processed_users = []
+        for user in user_context['persons']:
+            processed_users.append({
+                'full_name': user['full_name'],
+                'has_avatar': user['has_avatar'],
+                'id': user['id']
+            })
+        user_context['persons'] = processed_users
         json.dump(user_context, outfile, indent=2)
         print('Saved user context')
 
