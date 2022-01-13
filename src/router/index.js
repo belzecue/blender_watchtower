@@ -13,28 +13,27 @@ const routes = [
     name: 'dashboard',
     component: Dashboard,
     beforeEnter: (to, from, next) => {
-      if (process.env.VUE_APP_DATA_SOURCE === 'static') {
+      if (process.env.VUE_APP_DATA_IS_STATIC === 'true') {
         next()
-        // return
+      } else {
+        // Check for logged in status if we use Kitsu as data store
+        auth.isServerLoggedIn((err, isLoggedIn) => {
+          if (err) {
+            next({
+              path: '/server-down',
+              query: { redirect: to.fullPath }
+            })
+          } else if (isLoggedIn === undefined) {
+            next({
+              path: '/login',
+              query: { redirect: to.fullPath }
+            })
+          } else {
+            // User is authenticated
+            next()
+          }
+        })
       }
-
-      // Check for logged in status if we use Kitsu as data store
-      auth.isServerLoggedIn((err, isLoggedIn) => {
-        if (err) {
-          next({
-            path: '/server-down',
-            query: { redirect: to.fullPath }
-          })
-        } else if (isLoggedIn === undefined) {
-          next({
-            path: '/login',
-            query: { redirect: to.fullPath }
-          })
-        } else {
-          // User is authenticated
-          next()
-        }
-      })
     }
   },
   {
