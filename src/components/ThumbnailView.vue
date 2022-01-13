@@ -65,13 +65,7 @@
 
 <script>
 
-import { UIRenderer } from '@/shading';
-import {
-  ThumbnailImage,
-  ThumbnailGroup,
-  fitThumbsInGrid,
-  fitThumbsInGroup}
-  from '@/layout';
+import {UIRenderer, UILayout} from "uirenderer-canvas";
 
 export default {
   name: "ThumbnailView",
@@ -109,10 +103,10 @@ export default {
       assetsTexBundleID: null,
       assetsOriginalImageSize: [0,0],
       thumbnailSize: [0,0], // Resolution at which to render the thumbnails.
-      thumbnails: [], // Display info for the thumbs that should be rendered. List of ThumbnailImage.
+      thumbnails: [], // Display info for the thumbs that should be rendered. List of UILayout.ThumbnailImage.
       duplicatedThumbs: [], // Keep track of thumbnails that represent the same shot (because it shows in multiple groups).
       // Grouped view.
-      thumbGroups: [], // Display info for groups. List of ThumbnailGroup.
+      thumbGroups: [], // Display info for groups. List of UILayout.ThumbnailGroup.
       summaryText: { str: "", pos: [], }, // Heading with aggregated information of the displayed groups.
       // Assignees.
       usersTexBundleID: null, // Rendering context texture ID for the packed user avatar images.
@@ -633,7 +627,7 @@ export default {
             for (let i = 0; i < this.shots.length; i++) {
               const shot = this.shots[i];
               if (shot.sequence_id === this.activeSequence.id) {
-                this.thumbnails.push(new ThumbnailImage(shot, i));
+                this.thumbnails.push(new UILayout.ThumbnailImage(shot, i));
               }
             }
           }
@@ -644,13 +638,13 @@ export default {
             const lastShotFrame = shot.startFrame + shot.durationSeconds * this.fps;
             if (lastShotFrame > this.timelineVisibleFrames[0]
                 && shot.startFrame < this.timelineVisibleFrames[1]) {
-              this.thumbnails.push(new ThumbnailImage(shot, i));
+              this.thumbnails.push(new UILayout.ThumbnailImage(shot, i));
             }
           }
         } else {
           // Show all the shots.
           for (let i = 0; i < this.shots.length; i++) {
-            this.thumbnails.push(new ThumbnailImage(this.shots[i], i));
+            this.thumbnails.push(new UILayout.ThumbnailImage(this.shots[i], i));
           }
         }
 
@@ -659,7 +653,7 @@ export default {
         if (this.seqFilterMode === 'showAll') {
           // Show all the assets.
           for (let i = 0; i < this.assets.length; i++) {
-            this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+            this.thumbnails.push(new UILayout.ThumbnailImage(this.assets[i], i));
           }
         } else {
           // Find which shots to filter by.
@@ -678,7 +672,7 @@ export default {
               if (is_asset_used_in_a_filtered_shot) { break; }
             }
             if (is_asset_used_in_a_filtered_shot) {
-              this.thumbnails.push(new ThumbnailImage(this.assets[i], i));
+              this.thumbnails.push(new UILayout.ThumbnailImage(this.assets[i], i));
             }
           }
 
@@ -716,13 +710,13 @@ export default {
         groupByStatus ? this.taskStatuses :
         /* groupByAssignee */ this.users;
       for (const obj of groupObjs) {
-        thumbGroups.push(new ThumbnailGroup(obj.name, obj.color, obj));
+        thumbGroups.push(new UILayout.ThumbnailGroup(obj.name, obj.color, obj));
       }
       const unassignedGroup =
-        groupBySequence ? new ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
-        groupByAssetType ? new ThumbnailGroup("No Type", [0.8, 0.0, 0.0, 1.0]) :
-        groupByStatus ? new ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]) :
-        /* groupByAssignee */ new ThumbnailGroup("Unassigned", [0.6, 0.6, 0.6, 1.0]);
+        groupBySequence ? new UILayout.ThumbnailGroup("Unassigned", [0.8, 0.0, 0.0, 1.0]) :
+        groupByAssetType ? new UILayout.ThumbnailGroup("No Type", [0.8, 0.0, 0.0, 1.0]) :
+        groupByStatus ? new UILayout.ThumbnailGroup("No Status", [0.6, 0.6, 0.6, 1.0]) :
+        /* groupByAssignee */ new UILayout.ThumbnailGroup("Unassigned", [0.6, 0.6, 0.6, 1.0]);
 
       // Assign thumbnails to groups.
       const objBelongsToGroup =
@@ -773,7 +767,7 @@ export default {
           let thumbIdx = i;
           if (g >= 1) {
             // Create a duplicate thumbnail if the shot is in multiple groups.
-            thumbIdx = this.thumbnails.push(new ThumbnailImage(
+            thumbIdx = this.thumbnails.push(new UILayout.ThumbnailImage(
               this.thumbnails[i].obj, this.thumbnails[i].objIdx)
             ) - 1;
             if (!this.duplicatedThumbs[this.thumbnails[i].objIdx]) {
@@ -835,10 +829,10 @@ export default {
         this.assetsOriginalImageSize;
 
       if (this.displayMode === "chronological") {
-        this.thumbnailSize = fitThumbsInGrid(
+        this.thumbnailSize = UILayout.fitThumbsInGrid(
           this.thumbnails, originalImageSize, this.uiConfig, this.getCanvasRect());
       } else {
-        this.thumbnailSize = fitThumbsInGroup(
+        this.thumbnailSize = UILayout.fitThumbsInGroup(
           this.summaryText, this.thumbGroups,
           this.thumbnails, originalImageSize, this.uiConfig, this.getCanvasRect());
       }

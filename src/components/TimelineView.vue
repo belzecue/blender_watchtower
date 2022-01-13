@@ -28,7 +28,7 @@
 
 <script>
 
-import { UIRenderer } from '@/shading';
+import { UIRenderer } from 'uirenderer-canvas';
 
 export default {
   name: "TimelineView",

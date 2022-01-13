@@ -8104,6 +8104,11 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
+uirenderer-canvas@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/uirenderer-canvas/-/uirenderer-canvas-1.0.0.tgz#f58ed8a1fa823edc56fb245b0f1f102fe96388d8"
+  integrity sha512-2SM0KXl2CaGmGW7AW2cvMz9xKlI7wpR9jy9BgI5rMBO2Qn66K6cbB63nAbL3Q27KIeZlZxFs6pkL4IwLkh2+DQ==
+
 unbox-primitive@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/unbox-primitive/-/unbox-primitive-1.0.1.tgz#085e215625ec3162574dc8859abee78a59b14471"
