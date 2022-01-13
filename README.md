@@ -22,7 +22,7 @@ Watchtower is a Vue application. It can be managed through the [vue-cli package]
 ### Populate with data
 
 * Have access to the API of a working Zou (and optionally Kitsu) installation
-* Create an `env.local` file (see the example one) and set the required env variables
+* Create an `.env.local` file (see the example one) and set the required env variables
 * Run the `fetch_data_from_kitsu.py` script. The script will connect to a zou instance, query for the needed information 
   and create a few files in the `public` directory: 
   * `static-projects`: containing all the data required by watchtower
