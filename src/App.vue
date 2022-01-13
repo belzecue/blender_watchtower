@@ -26,7 +26,7 @@ export default {
     .then(data => {
       this.context = {}
       for (let project of data.projects) {
-        if (!dataurls.isStatic()) {
+        if (!dataurls.isStatic) {
           project.thumbnailUrl = `/api/pictures/thumbnails/projects/${project.id}.png`;
         }
       }

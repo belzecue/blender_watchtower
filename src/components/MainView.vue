@@ -217,7 +217,7 @@ export default {
           // Setup data for Shots.
           for (let shot of data) {
             // If the shot comes from Kitsu, we need to add some properties.
-            if (!dataurls.isStatic()) {
+            if (!dataurls.isStatic) {
               shot.thumbnailUrl = `/api/pictures/thumbnails/preview-files/${shot.preview_file_id}.png`;
               shot.startFrame = shot.data.frame_in;
               shot.durationSeconds = (shot.data.frame_out - shot.data.frame_in) / this.fps;
@@ -235,7 +235,7 @@ export default {
         .then(data => {
           // Setup data for Assets.
           for (let asset of data) {
-            if (!dataurls.isStatic()) {
+            if (!dataurls.isStatic) {
               // If the shot comes from Kitsu, we need to add the thumbnailUrl property.
               asset.thumbnailUrl = `/api/pictures/thumbnails/preview-files/${asset.preview_file_id}.png`;
             }
