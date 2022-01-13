@@ -26,3 +26,4 @@ pnpm-debug.log*
 /public/*.mp4
 /public/static-previews/*/*/*/*.png
 /public/static-projects/*
+/public/context.json
