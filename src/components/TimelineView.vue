@@ -653,9 +653,13 @@ canvas {
 }
 
 .timeline-container {
-  position: relative;
   background-color: var(--panel-bg-color);
+  border-radius: var(--border-radius);
+  margin: 0 auto;
+  position: relative;
+  width: calc(100vw - var(--spacer-3));
 }
+
 #canvas-timeline {
   position: absolute;
 }
