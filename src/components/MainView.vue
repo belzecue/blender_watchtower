@@ -22,7 +22,7 @@
             :selected-assets="selectedAssets"
         />
       </div>
-      <div class="col-3">
+      <div class="col-3 section-inspector">
         <section class="inspector-videoplayer">
           <div class="player-header">
             <div

@@ -317,9 +317,10 @@ export default {
 
     resizeCanvas: function (shouldDraw = true) {
       const canvasContainer = document.getElementById('canvas-thumb-grid-container');
-      canvasContainer.style.height = window.innerHeight - 400 + "px";
+      const positionOffset = 436;
+      canvasContainer.style.height = window.innerHeight - positionOffset + "px";
       this.canvas.width = canvasContainer.offsetWidth;
-      this.canvas.height = window.innerHeight - 400;
+      this.canvas.height = window.innerHeight - positionOffset;
 
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
@@ -942,7 +943,7 @@ function secToStr(timeInSeconds) {
 .thumbnailview-container {
   background-color: var(--panel-bg-color);
   border-radius: var(--border-radius);
-  margin: var(--spacer-2);
+  margin: var(--spacer-2) 0 var(--spacer-2) var(--spacer-2);
 }
 
 canvas {

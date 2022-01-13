@@ -109,8 +109,8 @@ a:hover {
 .section-inspector > section {
   border-radius: var(--border-radius);
   background-color: var(--panel-bg-color);
-  padding: var(--spacer-3);
   margin: var(--spacer-2);
+  padding: var(--spacer-3);
 }
 
 section.inspector-videoplayer {
