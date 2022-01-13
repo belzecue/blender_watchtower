@@ -208,7 +208,7 @@ def fetch_shots_and_previews(project, force=False):
 
 def generate_edit_data(project, shots):
     edit_data = {
-        'sourceName': 'edit.mp4',
+        'sourceName': f"/static-projects/{project['id']}/edit.mp4",
         'sourceType': 'video/mp4',
         'totalFrames': int(shots[-1]['data']['frame_out']) - int(shots[0]['data']['frame_in']),
         'frameOffset': int(shots[0]['data']['frame_in']),
