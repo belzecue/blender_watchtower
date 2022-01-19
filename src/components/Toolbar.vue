@@ -7,8 +7,8 @@
     </select>
     <div class="app-links">
       <ul>
-        <li><a href="/#/" title="Dashboard">Dashboard</a></li>
-        <li><a href="/about" title="About Watchtower">About Watchtower</a></li>
+        <li><router-link to="/">Dashboard</router-link></li>
+        <li><router-link to="/about">About</router-link></li>
       </ul>
     </div>
   </div>
