@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainView from "@/components/MainView";
 import Dashboard from "@/components/Dashboard";
+import About from "@/components/About";
 import auth from "@/lib/auth";
 
 Vue.use(VueRouter)
@@ -34,13 +35,19 @@ const routes = [
           }
         })
       }
-    }
+    },
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About,
   },
   {
     path: '/pro/:projectId',
     name: 'pro',
     component: MainView,
-  }]
+  }
+]
 
 const router = new VueRouter({
   // mode: 'history',
