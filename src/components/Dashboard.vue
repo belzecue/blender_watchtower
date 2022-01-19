@@ -32,8 +32,9 @@ export default {
 .dashboard {
   background-color: var(--panel-bg-color);
   border-radius: var(--border-radius);
-  margin: var(--spacer-3);
+  margin: var(--spacer-3) auto;
   padding: 0 var(--spacer-3);
+  width: 50%;
 }
 
 .projects-list {
