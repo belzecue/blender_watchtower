@@ -103,8 +103,8 @@ export default {
           namePadX: 8,
           height: 24,
           contentHeight: 12,
-          colorOdd: [0.167, 0.167, 0.167, 1.0],
-          colorEven: [0.21, 0.21, 0.21, 1.0],
+          colorOdd: [0.12, 0.12, 0.12, 1.0],
+          colorEven: [0.16, 0.16, 0.16, 1.0],
         }
       };
     },
