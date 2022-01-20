@@ -320,7 +320,7 @@ export default {
       const positionOffset = 436;
       canvasContainer.style.height = window.innerHeight - positionOffset + "px";
       this.canvas.width = canvasContainer.offsetWidth;
-      this.canvas.height = window.innerHeight - positionOffset;
+      this.canvas.height = canvasContainer.offsetHeight - 50;
 
       this.canvasText.width = this.canvas.width;
       this.canvasText.height = this.canvas.height;
