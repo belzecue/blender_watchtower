@@ -197,7 +197,7 @@ def fetch_shots_and_previews(project, force=False):
             'name': shot['name'],
             'thumbnailUrl': None if not dst else str(dst).replace('public/', ''),
             'startFrame': shot['data']['frame_in'],
-            'durationSeconds': (shot['data']['frame_out'] - shot['data']['frame_in']) / int(project['fps']),
+            'durationSeconds': (int(shot['data']['frame_out']) - int(shot['data']['frame_in'])) / int(project['fps']),
             'tasks': tasks,
             'sequence_id': shot['sequence_id'],
             'data': shot['data'],
